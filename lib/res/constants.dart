@@ -16,6 +16,7 @@ class AppColors {
   static const textFieldBorderColor = Color(0xFFF1F1FA);
   static const shadowColor = Color(0xffe8e8e8);
   static const fillingColor = Color(0xfffcfcfc);
+  static const gray = Color(0xFFE0E2E9);
 }
 
 class AppStyles {

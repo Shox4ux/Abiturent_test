@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:test_app/res/constants.dart';
+import 'package:test_app/ui/intro/intro.dart';
+import 'package:test_app/ui/navigation/main_navigation.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -24,7 +26,11 @@ class _SplashScreenState extends State<SplashScreen> {
     return Timer(duration, route);
   }
 
-  void route() {}
+  void route() {
+    Navigator.pushNamedAndRemoveUntil(
+        context, RouteNames.smsVerification, (route) => false,
+        arguments: "+998912222222");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,11 +57,11 @@ class _SplashScreenState extends State<SplashScreen> {
           Gap(30.h),
           Text(
             "e-abiturent ",
-            style: AppStyles.mainTextStyle,
+            style: AppStyles.mainTextStyle.copyWith(color: Colors.white),
           ),
           Text(
             "test",
-            style: AppStyles.mainTextStyle,
+            style: AppStyles.mainTextStyle.copyWith(color: Colors.white),
           )
         ]),
       ),
