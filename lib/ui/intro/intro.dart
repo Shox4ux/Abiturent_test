@@ -46,10 +46,9 @@ class _IntroScreenState extends State<IntroScreen> {
           ElevatedButton(
               style: AppStyles.introUpButton,
               onPressed: () {
-                Navigator.pushNamedAndRemoveUntil(
+                Navigator.pushNamed(
                   context,
                   RouteNames.signup,
-                  (route) => false,
                 );
               },
               child: Text(
@@ -63,11 +62,7 @@ class _IntroScreenState extends State<IntroScreen> {
                   backgroundColor:
                       MaterialStateProperty.all(AppColors.secondaryColor)),
               onPressed: () {
-                Navigator.pushNamedAndRemoveUntil(
-                  context,
-                  RouteNames.signin,
-                  (route) => false,
-                );
+                Navigator.pushNamed(context, RouteNames.signin);
               },
               child: Text(
                 "Kirish",

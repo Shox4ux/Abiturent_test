@@ -15,9 +15,9 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  int selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
-    int selectedIndex = 0;
     final screens = [
       const SubjectsScreen(),
       const DtmScreen(),
@@ -28,27 +28,7 @@ class _MainScreenState extends State<MainScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.mainColor,
-      body: Column(
-        children: [
-          Gap(50.h),
-          mainAppBar(),
-          Gap(9.h),
-          Expanded(
-            child: Container(
-                height: double.maxFinite,
-                width: double.maxFinite,
-                padding: EdgeInsets.only(top: 14.h, right: 24.w, left: 24.w),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(25.r),
-                    topLeft: Radius.circular(25.r),
-                  ),
-                ),
-                child: screens[selectedIndex]),
-          ),
-        ],
-      ),
+      body: screens[selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
           onTap: (int index) {
             setState(() {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:test_app/ui/main_page/main_page.dart';
 
 import '../../../res/constants.dart';
 
@@ -9,31 +10,53 @@ class SubjectsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "Tarix fani",
-          style: AppStyles.introButtonText.copyWith(
-            color: Colors.black,
-          ),
-        ),
-        Gap(10.h),
-        Expanded(
-          child: ListView.builder(
-              padding: const EdgeInsets.all(8),
-              itemCount: 10,
-              itemBuilder: (BuildContext context, int index) {
-                return subjectItem();
-              }),
-        ),
-      ],
+    final topPadding = MediaQuery.of(context).padding.top;
+    return SafeArea(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          customAppBar(),
+          Expanded(
+              child: Container(
+            padding: EdgeInsets.only(top: 14.h),
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(28.r),
+                  topRight: Radius.circular(28.r),
+                )),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.w),
+                  child: Text(
+                    "Tarix fani",
+                    style: AppStyles.introButtonText.copyWith(
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+                Gap(10.h),
+                Expanded(
+                  child: ListView.builder(
+                      padding: const EdgeInsets.only(bottom: 20),
+                      itemCount: 10,
+                      itemBuilder: (BuildContext context, int index) {
+                        return subjectItem();
+                      }),
+                ),
+              ],
+            ),
+          ))
+        ],
+      ),
     );
   }
 
   Widget subjectItem() {
     return Container(
-      margin: EdgeInsets.only(bottom: 20.h),
+      margin: EdgeInsets.only(bottom: 20.h, left: 20.w, right: 20.w),
       width: 333.w,
       height: 90.h,
       padding: EdgeInsets.only(
@@ -43,18 +66,16 @@ class SubjectsScreen extends StatelessWidget {
         left: 9.w,
       ),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16.r),
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.grey,
-              blurRadius: 5.0,
-              offset: Offset(0, 5),
-            ),
-            BoxShadow(
-              color: Colors.white,
-              offset: Offset(0, 0),
-            ),
-          ]),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16.r),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.grey,
+            blurRadius: 5.0,
+            offset: Offset(0, 5),
+          ),
+        ],
+      ),
       child: Column(children: [
         Row(
           children: [

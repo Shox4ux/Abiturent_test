@@ -26,11 +26,7 @@ class _CustomSimpleAppBarState extends State<CustomSimpleAppBar> {
       child: Row(children: [
         GestureDetector(
             onTap: () {
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                widget.routeText,
-                (route) => false,
-              );
+              Navigator.pop(context);
             },
             child: const Icon(Icons.arrow_back)),
         Container(

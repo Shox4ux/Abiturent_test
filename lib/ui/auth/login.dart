@@ -15,11 +15,16 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final formKey = GlobalKey<FormState>();
+  bool isObscure = true;
+
+  void changeObscureMode() {
+    isObscure = !isObscure;
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
-
-    bool isObscure = true;
     return Scaffold(
       body: SingleChildScrollView(
         child: Form(
@@ -60,11 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   decoration: InputDecoration(
                     hintText: "Maxfiy so’z",
                     suffixIcon: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          isObscure = !isObscure;
-                        });
-                      },
+                      onTap: changeObscureMode,
                       child: Icon(
                         isObscure
                             ? Icons.visibility_off_outlined
@@ -136,10 +137,6 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void launch() {
-    Navigator.pushNamedAndRemoveUntil(
-      context,
-      RouteNames.signup,
-      (route) => false,
-    );
+    Navigator.pushNamed(context, RouteNames.signup);
   }
 }
