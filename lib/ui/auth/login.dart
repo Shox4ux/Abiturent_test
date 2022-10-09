@@ -2,8 +2,10 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:test_app/ui/navigation/main_navigation.dart';
 
 import '../../res/constants.dart';
+import '../components/custom_simple_appbar.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -16,7 +18,8 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
-    bool isObscure = false;
+
+    bool isObscure = true;
     return Scaffold(
       body: SingleChildScrollView(
         child: Form(
@@ -25,22 +28,9 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Gap(40.h),
-              Container(
-                padding: EdgeInsets.all(16.h),
-                height: 64.h,
-                width: 375.w,
-                child: Row(children: [
-                  const Icon(Icons.arrow_back),
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 64.w),
-                    child: Text(
-                      "Ro’yhatdan o’tish",
-                      style: AppStyles.introButtonText.copyWith(
-                        color: AppColors.titleColor,
-                      ),
-                    ),
-                  )
-                ]),
+              const CustomSimpleAppBar(
+                titleText: "Tizimga kirish",
+                routeText: RouteNames.intro,
               ),
               Gap(56.h),
               Padding(
@@ -70,14 +60,17 @@ class _LoginScreenState extends State<LoginScreen> {
                   decoration: InputDecoration(
                     hintText: "Maxfiy so’z",
                     suffixIcon: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            isObscure = !isObscure;
-                          });
-                        },
-                        child: Icon(isObscure
-                            ? Icons.visibility_off
-                            : Icons.visibility)),
+                      onTap: () {
+                        setState(() {
+                          isObscure = !isObscure;
+                        });
+                      },
+                      child: Icon(
+                        isObscure
+                            ? Icons.visibility_off_outlined
+                            : Icons.visibility_outlined,
+                      ),
+                    ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(16.h),
                       borderSide: BorderSide(color: Colors.red, width: 2.w),
@@ -93,9 +86,13 @@ class _LoginScreenState extends State<LoginScreen> {
               Gap(27.h),
               ElevatedButton(
                 style: AppStyles.introUpButton,
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, RouteNames.smsVerification, (route) => false,
+                      arguments: "+998912222222");
+                },
                 child: Text(
-                  AppStrings.introUpButtonText,
+                  "Kirish",
                   style: AppStyles.introButtonText
                       .copyWith(color: const Color(0xffFCFCFC)),
                 ),
@@ -129,11 +126,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       ],
                     ),
                   )
-                  // Text(,
-                  //     style: AppStyles.subtitleTextStyle.copyWith(
-                  //         color: AppColors.violetColor,
-                  //         textBaseline:
-                  //         )),
                 ],
               )
             ],
@@ -143,5 +135,11 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void launch() {}
+  void launch() {
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      RouteNames.signup,
+      (route) => false,
+    );
+  }
 }

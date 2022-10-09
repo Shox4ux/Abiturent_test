@@ -7,9 +7,13 @@ import 'package:pinput/pinput.dart';
 import 'package:test_app/ui/components/custom_pinput_widget.dart';
 
 import '../../res/constants.dart';
+import '../navigation/main_navigation.dart';
 
 class SmsVerification extends StatelessWidget {
-  const SmsVerification({Key? key, required this.number}) : super(key: key);
+  const SmsVerification({
+    Key? key,
+    required this.number,
+  }) : super(key: key);
   final String number;
 
   @override
@@ -84,7 +88,13 @@ class SmsVerification extends StatelessWidget {
               Gap(55.h),
               ElevatedButton(
                 style: AppStyles.introUpButton,
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    RouteNames.main,
+                    (route) => false,
+                  );
+                },
                 child: Text(
                   "Tasdiqlash",
                   style: AppStyles.introButtonText

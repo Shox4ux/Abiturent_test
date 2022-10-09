@@ -4,6 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:test_app/res/constants.dart';
 
+import '../components/custom_simple_appbar.dart';
+import '../navigation/main_navigation.dart';
+
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
 
@@ -26,22 +29,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Gap(40.h),
-              Container(
-                padding: EdgeInsets.all(16.h),
-                height: 64.h,
-                width: 375.w,
-                child: Row(children: [
-                  const Icon(Icons.arrow_back),
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 64.w),
-                    child: Text(
-                      "Ro’yhatdan o’tish",
-                      style: AppStyles.introButtonText.copyWith(
-                        color: AppColors.titleColor,
-                      ),
-                    ),
-                  )
-                ]),
+              const CustomSimpleAppBar(
+                titleText: "Ro’yhatdan o’tish",
+                routeText: RouteNames.intro,
               ),
               Gap(56.h),
               Padding(
@@ -95,8 +85,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           });
                         },
                         child: Icon(_isObscure
-                            ? Icons.visibility_off
-                            : Icons.visibility)),
+                            ? Icons.visibility_off_outlined
+                            : Icons.visibility_outlined)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(16.h),
                       borderSide: BorderSide(color: Colors.red, width: 2.w),
@@ -160,7 +150,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
               Gap(27.h),
               ElevatedButton(
                 style: AppStyles.introUpButton,
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, RouteNames.smsVerification, (route) => false,
+                      arguments: "+998912222222");
+                },
                 child: Text(
                   AppStrings.introUpButtonText,
                   style: AppStyles.introButtonText
@@ -169,7 +163,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               Gap(12.h),
               Text(
-                "Yoki",
+                "yoki",
                 style: AppStyles.subtitleTextStyle,
               ),
               Gap(24.h),
@@ -192,11 +186,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ],
                     ),
                   )
-                  // Text(,
-                  //     style: AppStyles.subtitleTextStyle.copyWith(
-                  //         color: AppColors.violetColor,
-                  //         textBaseline:
-                  //         )),
                 ],
               )
             ],
@@ -206,5 +195,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  void launch() {}
+  void launch() {
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      RouteNames.signin,
+      (route) => false,
+    );
+  }
 }

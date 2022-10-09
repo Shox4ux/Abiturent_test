@@ -28,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void route() {
     Navigator.pushNamedAndRemoveUntil(
-        context, RouteNames.smsVerification, (route) => false,
+        context, RouteNames.intro, (route) => false,
         arguments: "+998912222222");
   }
 

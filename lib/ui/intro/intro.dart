@@ -6,6 +6,8 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:test_app/res/constants.dart';
 import 'package:test_app/res/models/intro_data.dart';
 
+import '../navigation/main_navigation.dart';
+
 class IntroScreen extends StatefulWidget {
   const IntroScreen({Key? key}) : super(key: key);
 
@@ -39,11 +41,17 @@ class _IntroScreenState extends State<IntroScreen> {
                 buildSlide(AppIntroImages.introList[index], index),
           ),
           Gap(20.h),
-          _DotIndicator(),
+          dotIndicator(),
           Gap(40.h),
           ElevatedButton(
               style: AppStyles.introUpButton,
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  RouteNames.signup,
+                  (route) => false,
+                );
+              },
               child: Text(
                 AppStrings.introUpButtonText,
                 style: AppStyles.introButtonText
@@ -54,7 +62,13 @@ class _IntroScreenState extends State<IntroScreen> {
               style: AppStyles.introUpButton.copyWith(
                   backgroundColor:
                       MaterialStateProperty.all(AppColors.secondaryColor)),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  RouteNames.signin,
+                  (route) => false,
+                );
+              },
               child: Text(
                 "Kirish",
                 style: AppStyles.introButtonText
@@ -67,6 +81,7 @@ class _IntroScreenState extends State<IntroScreen> {
 
   Widget buildSlide(IntroData data, int index) {
     return Container(
+      padding: EdgeInsets.all(5.w),
       margin: EdgeInsets.symmetric(horizontal: 12.w),
       child: Column(children: [
         SizedBox(
@@ -80,10 +95,10 @@ class _IntroScreenState extends State<IntroScreen> {
         Gap(10.h),
         Text(
           data.mainTitle,
-          style: AppStyles.mainTextStyle,
+          style: AppStyles.mainTextStyle.copyWith(color: Colors.black),
           textAlign: TextAlign.center,
         ),
-        Gap(10.h),
+        Gap(16.h),
         Text(
           data.secondaryTitle,
           style: AppStyles.subtitleTextStyle,
@@ -93,16 +108,17 @@ class _IntroScreenState extends State<IntroScreen> {
     );
   }
 
-  Widget _DotIndicator() {
+  Widget dotIndicator() {
     return AnimatedSmoothIndicator(
       activeIndex: activeIndex,
       count: AppIntroImages.introList.length,
-      effect: JumpingDotEffect(
-        jumpScale: 1,
+      effect: ScrollingDotsEffect(
+        spacing: 16.w,
+        activeDotScale: 1.8.h,
         activeDotColor: AppColors.mainColor,
         dotColor: AppColors.secondaryColor,
-        dotHeight: 16.h,
-        dotWidth: 16.w,
+        dotHeight: 10.h,
+        dotWidth: 10.w,
       ),
     );
   }

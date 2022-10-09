@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:test_app/res/constants.dart';
 import 'package:test_app/ui/bottom_navigation/dtm/dtm.dart';
+import 'package:test_app/ui/bottom_navigation/profile/profile.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/my_budget.dart';
 import 'package:test_app/ui/bottom_navigation/subjects/subject_screen.dart';
 
@@ -16,7 +17,14 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
-    int _selectedIndex = 0;
+    int selectedIndex = 0;
+    final screens = [
+      const SubjectsScreen(),
+      const DtmScreen(),
+      const ProfileScreen(),
+      const Text("Mistakes"),
+      const Text("Rates"),
+    ];
 
     return Scaffold(
       backgroundColor: AppColors.mainColor,
@@ -37,48 +45,71 @@ class _MainScreenState extends State<MainScreen> {
                     topLeft: Radius.circular(25.r),
                   ),
                 ),
-                child: MyBudgetScreen()),
+                child: screens[selectedIndex]),
           ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
           onTap: (int index) {
             setState(() {
-              _selectedIndex = index;
+              selectedIndex = index;
+              print(selectedIndex);
             });
           },
-          currentIndex: _selectedIndex,
+          currentIndex: selectedIndex,
           showSelectedLabels: true,
           showUnselectedLabels: true,
           elevation: 10,
           type: BottomNavigationBarType.fixed,
           selectedItemColor: AppColors.mainColor,
           unselectedItemColor: AppColors.mainColor,
-          selectedLabelStyle: AppStyles.subtitleTextStyle
-              .copyWith(color: AppColors.mainColor, fontSize: 10.sp),
+          selectedLabelStyle: AppStyles.subtitleTextStyle.copyWith(
+            color: AppColors.mainColor,
+            fontSize: 10.sp,
+          ),
           unselectedLabelStyle:
               AppStyles.subtitleTextStyle.copyWith(fontSize: 10.sp),
           backgroundColor: Colors.white,
           items: [
             BottomNavigationBarItem(
-                icon: bottomBarIcon(AppIcons.sub, false),
-                activeIcon: bottomBarIcon(AppIcons.subFilled, false),
+                icon: bottomBarIcon(
+                  AppIcons.sub,
+                ),
+                activeIcon: bottomBarIcon(
+                  AppIcons.subFilled,
+                ),
                 label: "Fanlar"),
             BottomNavigationBarItem(
-                icon: bottomBarIcon(AppIcons.dtm, false),
-                activeIcon: bottomBarIcon(AppIcons.dtmFilled, false),
+                icon: bottomBarIcon(
+                  AppIcons.dtm,
+                ),
+                activeIcon: bottomBarIcon(
+                  AppIcons.dtmFilled,
+                ),
                 label: "Testlar"),
             BottomNavigationBarItem(
-                icon: bottomBarIcon(AppIcons.profile, false),
-                activeIcon: bottomBarIcon(AppIcons.profileFilled, false),
+                icon: bottomBarIcon(
+                  AppIcons.profile,
+                ),
+                activeIcon: bottomBarIcon(
+                  AppIcons.profileFilled,
+                ),
                 label: "Profile"),
             BottomNavigationBarItem(
-                icon: bottomBarIcon(AppIcons.mistakes, false),
-                activeIcon: bottomBarIcon(AppIcons.mistakesFilled, false),
+                icon: bottomBarIcon(
+                  AppIcons.mistakes,
+                ),
+                activeIcon: bottomBarIcon(
+                  AppIcons.mistakesFilled,
+                ),
                 label: "Xatolar"),
             BottomNavigationBarItem(
-                icon: bottomBarIcon(AppIcons.medl, true),
-                activeIcon: bottomBarIcon(AppIcons.medlFilled, true),
+                icon: bottomBarIcon(
+                  AppIcons.medl,
+                ),
+                activeIcon: bottomBarIcon(
+                  AppIcons.medlFilled,
+                ),
                 label: "Reyting"),
           ]),
     );
@@ -154,12 +185,13 @@ Widget mainAppBar() {
   );
 }
 
-Widget bottomBarIcon(String iconPath, bool isMedl) {
+Widget bottomBarIcon(String iconPath) {
   return Padding(
     padding: EdgeInsets.only(bottom: 5.h),
     child: Image.asset(
+      height: 30.h,
+      width: 50.w,
       iconPath,
-      scale: isMedl ? 5.h : 3.h,
     ),
   );
 }
