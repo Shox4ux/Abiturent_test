@@ -154,12 +154,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           Gap(9.h),
           Expanded(
-            child: ListView.builder(
-                padding: EdgeInsets.only(bottom: 20.h),
-                itemCount: 10,
-                itemBuilder: (BuildContext context, int index) {
-                  return subcriptionsItem();
-                }),
+            child: ListView.separated(
+              padding: EdgeInsets.only(bottom: 20.h),
+              itemCount: 10,
+              itemBuilder: (BuildContext context, int index) {
+                return subcriptionsItem();
+              },
+              separatorBuilder: (context, index) => SizedBox(height: 6.h),
+            ),
           ),
         ],
       ),
@@ -267,64 +269,64 @@ class _ProfileScreenState extends State<ProfileScreen> {
 }
 
 Widget subcriptionsItem() {
-  return Container(
-    margin: EdgeInsets.only(bottom: 6.h),
-    padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 11.w),
-    height: 55.h,
-    width: 331.w,
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(10.r),
-    ),
-    child: Row(
-      children: [
-        SizedBox(
-          height: 24.h,
-          width: 24.w,
-          child: Image.asset(Subscriptions.green.iconPath),
-        ),
-        Gap(11.w),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      "11.01.2022",
-                      style: TextStyle(
-                          fontWeight: FontWeight.w200,
-                          fontSize: 10.sp,
-                          color: const Color(0xff161719)),
-                    ),
-                    // Gap(80.w),
-                    Text(
-                      "+2 200 000 UZS",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w200,
-                        fontSize: 14.sp,
-                        color: const Color(0xff161719),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Gap(4.h),
-              Text(
-                Subscriptions.green.text,
-                style: TextStyle(
-                  fontWeight: FontWeight.w200,
-                  fontSize: 14.sp,
-                  color: const Color(0xff161719),
-                ),
-              ),
-            ],
+  return AspectRatio(
+    aspectRatio: 331 / 55,
+    child: Container(
+      padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 11.w),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10.r),
+      ),
+      child: Row(
+        children: [
+          SizedBox(
+            height: 24.h,
+            width: 24.w,
+            child: Image.asset(Subscriptions.green.iconPath),
           ),
-        )
-      ],
+          Gap(11.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "11.01.2022",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w200,
+                            fontSize: 10.sp,
+                            color: const Color(0xff161719)),
+                      ),
+                      // Gap(80.w),
+                      Text(
+                        "+2 200 000 UZS",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w200,
+                          fontSize: 14.sp,
+                          color: const Color(0xff161719),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Gap(4.h),
+                Text(
+                  Subscriptions.green.text,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w200,
+                    fontSize: 14.sp,
+                    color: const Color(0xff161719),
+                  ),
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
     ),
   );
 }

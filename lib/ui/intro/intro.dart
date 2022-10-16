@@ -17,35 +17,34 @@ class IntroScreen extends StatefulWidget {
 
 class _IntroScreenState extends State<IntroScreen> {
   int activeIndex = 0;
+  final _controller = PageController();
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: Column(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Column(
           children: [
-            Gap(60.h),
-            CarouselSlider.builder(
-              options: CarouselOptions(
-                height: 500.h,
-                // autoPlay: true,
-                enableInfiniteScroll: false,
-                viewportFraction: 1,
-                onPageChanged: ((index, reason) {
+            Expanded(
+              child: PageView.builder(
+                controller: _controller,
+                itemCount: AppIntroImages.introList.length,
+                itemBuilder: (context, index) =>
+                    buildSlide(AppIntroImages.introList[index], index),
+                onPageChanged: (value) {
                   setState(() {
-                    activeIndex = index;
+                    activeIndex = value;
                   });
-                }),
+                },
               ),
-              itemCount: AppIntroImages.introList.length,
-              itemBuilder: (context, index, realIndex) =>
-                  buildSlide(AppIntroImages.introList[index], index),
             ),
             Gap(20.h),
             dotIndicator(),
-            Gap(40.h),
-            ElevatedButton(
+            Gap(31.h),
+            SizedBox(
+              height: 56.h,
+              child: ElevatedButton(
                 style: AppStyles.introUpButton,
                 onPressed: () {
                   Navigator.pushNamed(
@@ -57,20 +56,24 @@ class _IntroScreenState extends State<IntroScreen> {
                   AppStrings.introUpButtonText,
                   style: AppStyles.introButtonText
                       .copyWith(color: const Color(0xffFCFCFC)),
-                )),
+                ),
+              ),
+            ),
             Gap(16.h),
             ElevatedButton(
-                style: AppStyles.introUpButton.copyWith(
-                    backgroundColor:
-                        MaterialStateProperty.all(AppColors.secondaryColor)),
-                onPressed: () {
-                  Navigator.pushNamed(context, RouteNames.signin);
-                },
-                child: Text(
-                  "Kirish",
-                  style: AppStyles.introButtonText
-                      .copyWith(color: const Color(0xff7F3DFF)),
-                ))
+              style: AppStyles.introUpButton.copyWith(
+                  backgroundColor:
+                      MaterialStateProperty.all(AppColors.secondaryColor)),
+              onPressed: () {
+                Navigator.pushNamed(context, RouteNames.signin);
+              },
+              child: Text(
+                "Kirish",
+                style: AppStyles.introButtonText
+                    .copyWith(color: const Color(0xff7F3DFF)),
+              ),
+            ),
+            Gap((MediaQuery.of(context).padding.bottom == 0) ? 30.h : 0)
           ],
         ),
       ),
@@ -81,28 +84,30 @@ class _IntroScreenState extends State<IntroScreen> {
     return Container(
       padding: EdgeInsets.all(5.w),
       margin: EdgeInsets.symmetric(horizontal: 12.w),
-      child: Column(children: [
-        SizedBox(
-          width: 324.w,
-          height: 162.h,
-          child: Image.asset(
-            data.imgPath,
-            fit: BoxFit.fitHeight,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+            width: 324.w,
+            child: Image.asset(
+              data.imgPath,
+              fit: BoxFit.fitHeight,
+            ),
           ),
-        ),
-        Gap(20.h),
-        Text(
-          data.mainTitle,
-          style: AppStyles.mainTextStyle.copyWith(color: Colors.black),
-          textAlign: TextAlign.center,
-        ),
-        Gap(16.h),
-        Text(
-          data.secondaryTitle,
-          style: AppStyles.subtitleTextStyle,
-          textAlign: TextAlign.center,
-        )
-      ]),
+          Gap(20.h),
+          Text(
+            data.mainTitle,
+            style: AppStyles.mainTextStyle.copyWith(color: Colors.black),
+            textAlign: TextAlign.center,
+          ),
+          Gap(10.h),
+          Text(
+            data.secondaryTitle,
+            style: AppStyles.subtitleTextStyle,
+            textAlign: TextAlign.center,
+          )
+        ],
+      ),
     );
   }
 
