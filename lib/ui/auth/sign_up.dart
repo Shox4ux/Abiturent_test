@@ -21,174 +21,182 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Form(
-          key: formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Gap(40.h),
-              const CustomSimpleAppBar(
-                titleText: "Ro’yhatdan o’tish",
-                routeText: RouteNames.intro,
-              ),
-              Gap(56.h),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: "Abiturent FISH",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16.h),
-                      borderSide: BorderSide(color: Colors.red, width: 2.w),
+    return SafeArea(
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: Form(
+            key: formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 16.w),
+                  child: CustomSimpleAppBar(
+                    titleText: "Ro’yhatdan o’tish",
+                    routeText: RouteNames.intro,
+                    style: AppStyles.introButtonText.copyWith(
+                      color: AppColors.smsVerColor,
                     ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16.h),
-                      borderSide: BorderSide(
-                          color: AppColors.textFieldBorderColor, width: 2.w),
-                    ),
+                    iconColor: AppColors.smsVerColor,
                   ),
                 ),
-              ),
-              Gap(24.h),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: "Telefon raqami",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16.h),
-                      borderSide: BorderSide(color: Colors.red, width: 2.w),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16.h),
-                      borderSide: BorderSide(
-                          color: AppColors.textFieldBorderColor, width: 2.w),
-                    ),
-                  ),
-                ),
-              ),
-              Gap(24.h),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 16.w,
-                ),
-                child: TextField(
-                  obscureText: _isObscure,
-                  decoration: InputDecoration(
-                    hintText: "Maxfiy so’z",
-                    suffixIcon: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _isObscure = !_isObscure;
-                          });
-                        },
-                        child: Icon(_isObscure
-                            ? Icons.visibility_off_outlined
-                            : Icons.visibility_outlined)),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16.h),
-                      borderSide: BorderSide(color: Colors.red, width: 2.w),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16.h),
-                      borderSide: BorderSide(
-                          color: AppColors.textFieldBorderColor, width: 2.w),
-                    ),
-                  ),
-                ),
-              ),
-              Gap(21.h),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
-                child: Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _isChecked = !_isChecked;
-                        });
-                      },
-                      child: AnimatedContainer(
-                        duration: const Duration(microseconds: 200),
-                        height: 24.h,
-                        width: 24.w,
-                        decoration: BoxDecoration(
-                            color: _isChecked
-                                ? AppColors.mainColor
-                                : Colors.transparent,
-                            borderRadius: BorderRadius.circular(5.r),
-                            border: Border.all(
-                              color: AppColors.mainColor,
-                              width: 2.w,
-                            )),
-                        child: _isChecked
-                            ? Icon(
-                                Icons.check,
-                                color: Colors.white,
-                                size: 16.h,
-                              )
-                            : null,
+                Gap(56.h),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: "Abiturent FISH",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16.h),
+                        borderSide: BorderSide(color: Colors.red, width: 2.w),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16.h),
+                        borderSide: BorderSide(
+                            color: AppColors.textFieldBorderColor, width: 2.w),
                       ),
                     ),
-                    Gap(14.w),
-                    Expanded(
-                      child: Text(
-                        AppStrings.checkBoxText,
-                        style: AppStyles.subtitleTextStyle.copyWith(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14.sp,
+                  ),
+                ),
+                Gap(24.h),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: "Telefon raqami",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16.h),
+                        borderSide: BorderSide(color: Colors.red, width: 2.w),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16.h),
+                        borderSide: BorderSide(
+                            color: AppColors.textFieldBorderColor, width: 2.w),
+                      ),
+                    ),
+                  ),
+                ),
+                Gap(24.h),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16.w,
+                  ),
+                  child: TextField(
+                    obscureText: _isObscure,
+                    decoration: InputDecoration(
+                      hintText: "Maxfiy so’z",
+                      suffixIcon: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _isObscure = !_isObscure;
+                            });
+                          },
+                          child: Icon(_isObscure
+                              ? Icons.visibility_off_outlined
+                              : Icons.visibility_outlined)),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16.h),
+                        borderSide: BorderSide(color: Colors.red, width: 2.w),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16.h),
+                        borderSide: BorderSide(
+                            color: AppColors.textFieldBorderColor, width: 2.w),
+                      ),
+                    ),
+                  ),
+                ),
+                Gap(21.h),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.w),
+                  child: Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _isChecked = !_isChecked;
+                          });
+                        },
+                        child: AnimatedContainer(
+                          duration: const Duration(microseconds: 200),
+                          height: 24.h,
+                          width: 24.w,
+                          decoration: BoxDecoration(
+                              color: _isChecked
+                                  ? AppColors.mainColor
+                                  : Colors.transparent,
+                              borderRadius: BorderRadius.circular(5.r),
+                              border: Border.all(
+                                color: AppColors.mainColor,
+                                width: 2.w,
+                              )),
+                          child: _isChecked
+                              ? Icon(
+                                  Icons.check,
+                                  color: Colors.white,
+                                  size: 16.h,
+                                )
+                              : null,
                         ),
-                        maxLines: 2,
+                      ),
+                      Gap(14.w),
+                      Expanded(
+                        child: Text(
+                          AppStrings.checkBoxText,
+                          style: AppStyles.subtitleTextStyle.copyWith(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14.sp,
+                          ),
+                          maxLines: 2,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                Gap(27.h),
+                ElevatedButton(
+                  style: AppStyles.introUpButton,
+                  onPressed: () {
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, RouteNames.smsVerification, (route) => false,
+                        arguments: "+998912222222");
+                  },
+                  child: Text(
+                    AppStrings.introUpButtonText,
+                    style: AppStyles.introButtonText
+                        .copyWith(color: const Color(0xffFCFCFC)),
+                  ),
+                ),
+                Gap(12.h),
+                Text(
+                  "yoki",
+                  style: AppStyles.subtitleTextStyle,
+                ),
+                Gap(24.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    RichText(
+                      text: TextSpan(
+                        text: "Ro’yhatdan o’tganmisiz? ",
+                        style: AppStyles.subtitleTextStyle,
+                        children: [
+                          TextSpan(
+                              text: "Kirish",
+                              style: AppStyles.subtitleTextStyle.copyWith(
+                                  color: AppColors.mainColor,
+                                  decoration: TextDecoration.underline),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap =
+                                    launch), // launch function for navigating to other screen
+                        ],
                       ),
                     )
                   ],
-                ),
-              ),
-              Gap(27.h),
-              ElevatedButton(
-                style: AppStyles.introUpButton,
-                onPressed: () {
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, RouteNames.smsVerification, (route) => false,
-                      arguments: "+998912222222");
-                },
-                child: Text(
-                  AppStrings.introUpButtonText,
-                  style: AppStyles.introButtonText
-                      .copyWith(color: const Color(0xffFCFCFC)),
-                ),
-              ),
-              Gap(12.h),
-              Text(
-                "yoki",
-                style: AppStyles.subtitleTextStyle,
-              ),
-              Gap(24.h),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  RichText(
-                    text: TextSpan(
-                      text: "Ro’yhatdan o’tganmisiz? ",
-                      style: AppStyles.subtitleTextStyle,
-                      children: [
-                        TextSpan(
-                            text: "Kirish",
-                            style: AppStyles.subtitleTextStyle.copyWith(
-                                color: AppColors.mainColor,
-                                decoration: TextDecoration.underline),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap =
-                                  launch), // launch function for navigating to other screen
-                      ],
-                    ),
-                  )
-                ],
-              )
-            ],
+                )
+              ],
+            ),
           ),
         ),
       ),

@@ -3,8 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:test_app/res/constants.dart';
 import 'package:test_app/ui/bottom_navigation/dtm/dtm.dart';
+import 'package:test_app/ui/bottom_navigation/mistakes/mistakes_screen.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile.dart';
-import 'package:test_app/ui/bottom_navigation/profile/profile_sections/my_budget.dart';
+import 'package:test_app/ui/bottom_navigation/rating/rating_screen.dart';
+
 import 'package:test_app/ui/bottom_navigation/subjects/subject_screen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -22,8 +24,8 @@ class _MainScreenState extends State<MainScreen> {
       const SubjectsScreen(),
       const DtmScreen(),
       const ProfileScreen(),
-      const Text("Mistakes"),
-      const Text("Rates"),
+      const MistakesScreen(),
+      const RatingScreen(),
     ];
 
     return Scaffold(
@@ -172,75 +174,6 @@ Widget bottomBarIcon(String iconPath) {
       height: 30.h,
       width: 50.w,
       iconPath,
-    ),
-  );
-}
-
-Widget customAppBar() {
-  return Padding(
-    padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 20.w),
-    child: Row(
-      children: [
-        Container(
-          height: 17.h,
-          width: 23.w,
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(AppIcons.menu),
-            ),
-          ),
-        ),
-        Gap(100.w),
-        Row(
-          children: [
-            Container(
-              height: 17.h,
-              width: 23.w,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(AppIcons.check),
-                ),
-              ),
-            ),
-            Gap(8.w),
-            Text(
-              "1340",
-              style: AppStyles.subtitleTextStyle
-                  .copyWith(color: const Color(0xffFCFCFC), fontSize: 24.sp),
-            )
-          ],
-        ),
-        Gap(16.w),
-        Row(
-          children: [
-            Container(
-              height: 19.h,
-              width: 19.w,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(AppIcons.clock),
-                ),
-              ),
-            ),
-            Gap(7.w),
-            Text(
-              "4",
-              style: AppStyles.subtitleTextStyle
-                  .copyWith(color: const Color(0xffFCFCFC), fontSize: 24.sp),
-            ),
-            Gap(29.w),
-            Container(
-              height: 20.h,
-              width: 25.w,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(AppIcons.group),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
     ),
   );
 }

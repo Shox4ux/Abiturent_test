@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:test_app/ui/components/custom_dot.dart';
 import 'package:test_app/ui/main_page/main_page.dart';
 
 import '../../../res/constants.dart';
+import '../../components/custom_appbar.dart';
 
 class SubjectsScreen extends StatelessWidget {
   const SubjectsScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final topPadding = MediaQuery.of(context).padding.top;
+    // final topPadding = MediaQuery.of(context).padding.top; this alternative of safeArea
     return SafeArea(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,9 +42,15 @@ class SubjectsScreen extends StatelessWidget {
                 Gap(10.h),
                 Expanded(
                   child: ListView.builder(
-                      padding: const EdgeInsets.only(bottom: 20),
+                      padding: EdgeInsets.only(
+                        bottom: 20.h,
+                        top: 10.h,
+                      ),
                       itemCount: 10,
-                      itemBuilder: (BuildContext context, int index) {
+                      itemBuilder: (
+                        BuildContext context,
+                        int index,
+                      ) {
                         return subjectItem();
                       }),
                 ),
@@ -79,14 +87,10 @@ class SubjectsScreen extends StatelessWidget {
       child: Column(children: [
         Row(
           children: [
-            Container(
-              alignment: Alignment.centerRight,
-              height: 14.h,
+            CustomDot(
+              hight: 14.h,
               width: 14.w,
-              decoration: BoxDecoration(
-                color: AppColors.mainColor,
-                borderRadius: BorderRadius.circular(120.r),
-              ),
+              color: AppColors.mainColor,
             ),
             Gap(5.w),
             Expanded(

@@ -3,10 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:test_app/res/enum.dart';
 
-import '../../../../res/constants.dart';
+import '../../../../../res/constants.dart';
 
-class MyBudgetScreen extends StatelessWidget {
-  const MyBudgetScreen({Key? key}) : super(key: key);
+class MySubscriptionsScreen extends StatelessWidget {
+  const MySubscriptionsScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +44,7 @@ class MyBudgetScreen extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Container(
+          SizedBox(
             height: 24.h,
             width: 24.w,
             child: Image.asset(Subscriptions.green.iconPath),

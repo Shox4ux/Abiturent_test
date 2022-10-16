@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:test_app/ui/components/custom_simple_appbar.dart';
 
 import '../../res/constants.dart';
 
@@ -24,23 +25,13 @@ class _ResetPassWordState extends State<ResetPassWord> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Gap(40.h),
-              Container(
-                padding: EdgeInsets.all(16.h),
-                height: 64.h,
-                width: 375.w,
-                child: Row(children: [
-                  const Icon(Icons.arrow_back),
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 44.w),
-                    child: Text(
-                      "Maxfiy so’zni tiklash",
-                      style: AppStyles.introButtonText.copyWith(
-                        color: AppColors.titleColor,
-                      ),
-                    ),
-                  )
-                ]),
+              CustomSimpleAppBar(
+                titleText: "Abiturentni tasniqlash",
+                routeText: "routeText",
+                style: AppStyles.introButtonText.copyWith(
+                  color: AppColors.titleColor,
+                ),
+                iconColor: AppColors.smsVerColor,
               ),
               Gap(56.h),
               Padding(

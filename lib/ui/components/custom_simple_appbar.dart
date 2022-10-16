@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 
 import '../../res/constants.dart';
-import '../navigation/main_navigation.dart';
 
 class CustomSimpleAppBar extends StatefulWidget {
-  const CustomSimpleAppBar(
-      {Key? key, required this.titleText, required this.routeText})
-      : super(key: key);
+  const CustomSimpleAppBar({
+    Key? key,
+    required this.titleText,
+    required this.routeText,
+    required this.style,
+    required this.iconColor,
+  }) : super(key: key);
 
   final String titleText;
   final String routeText;
+  final TextStyle style;
+  final Color iconColor;
 
   @override
   State<CustomSimpleAppBar> createState() => _CustomSimpleAppBarState();
@@ -19,26 +25,33 @@ class CustomSimpleAppBar extends StatefulWidget {
 class _CustomSimpleAppBarState extends State<CustomSimpleAppBar> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(16.h),
-      height: 64.h,
-      width: 375.w,
-      child: Row(children: [
-        GestureDetector(
+    return Padding(
+      padding: EdgeInsets.only(top: 20.h),
+      child: Row(
+        children: [
+          GestureDetector(
             onTap: () {
-              Navigator.pop(context);
+              Navigator.pop(
+                context,
+                widget.routeText,
+              );
             },
-            child: const Icon(Icons.arrow_back)),
-        Container(
-          margin: EdgeInsets.symmetric(horizontal: 64.w),
-          child: Text(
-            widget.titleText,
-            style: AppStyles.introButtonText.copyWith(
-              color: AppColors.titleColor,
+            child: SizedBox(
+              height: 24.h,
+              width: 24.w,
+              child: Image.asset(
+                AppIcons.arrowBack,
+                color: widget.iconColor,
+              ),
             ),
           ),
-        )
-      ]),
+          Gap(12.w),
+          Text(
+            widget.titleText,
+            style: widget.style,
+          )
+        ],
+      ),
     );
   }
 }

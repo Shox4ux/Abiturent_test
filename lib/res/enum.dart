@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:test_app/res/constants.dart';
 
 enum Subscriptions {
@@ -9,4 +11,14 @@ enum Subscriptions {
   final String text;
 
   const Subscriptions(this.iconPath, this.text);
+}
+
+enum TestVertions {
+  correct(AppColors.greenBackground),
+  incorrect(AppColors.error),
+  neutral(AppColors.subtitleColor);
+
+  final Color testColor;
+
+  const TestVertions(this.testColor);
 }

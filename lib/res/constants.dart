@@ -17,6 +17,7 @@ class AppColors {
   static const shadowColor = Color(0xffe8e8e8);
   static const fillingColor = Color(0xfffcfcfc);
   static const gray = Color(0xFFE0E2E9);
+  static const error = Color(0xFFFD3C4A);
 }
 
 class AppStyles {
@@ -67,6 +68,9 @@ class AppStrings {
 
   static const String smsText =
       "Bizning telegon +99899 *** ** 88 raqamingizga sms-kod xabarnomasini jo’natdik.";
+
+  static const String newsString =
+      "NASA yaqin 10 yillikning asosiy missiyasi – Artemis dasturi ishga tushirilganini e’lon qildi. U uchta bosqichdan iborat: uchuvchisiz parvoz, ekipajning Oy atrofidagi parvozi va astronavtlarning Oyga qo‘nishi. Uchuvchisiz parvoz 27 sentabr kuni start oladi";
 }
 
 class AppIntroImages {
@@ -119,10 +123,10 @@ class AppIcons {
   static const String dtmFilled = "assets/dtm_filled.png";
   static const String dtm = "assets/dtm.png";
 
-  static const String purplePocket = "assets/purlpe.png";
+  static const String purplePocket = "assets/wallet.png";
   static const String greenPocket = "assets/green.png";
 
-  static const String person = "assets/pesron.png";
+  static const String man = "assets/man.png";
   static const String info = "assets/info.png";
   static const String arrow = "assets/arrow.png";
   static const String down = "assets/down.png";
@@ -130,16 +134,20 @@ class AppIcons {
   static const String group = "assets/group.png";
   static const String gallery = "assets/gallery.png";
   static const String check = "assets/check.png";
-  static const String purpleDone = "assets/pesron.png";
+  static const String purpleDone = "assets/done.png";
   static const String clock = "assets/clock.png";
   static const String menu = "assets/menu.png";
   static const String logout = "assets/logout.png";
   static const String payme = "assets/payme.png";
   static const String bigEnvy = "assets/envy.png";
   static const String bigGreenDone = "assets/envy.png";
-  static const String arrowBack = "assets/back.png";
-
+  static const String arrowBack = "assets/arrow_back.png";
+  static const String card = "assets/card.png";
+  static const String news = "assets/news.png";
+  static const String bell = "assets/bell.png";
+  static const String bigNews = "assets/big_news.png";
   static const String greenSub = "assets/green_sub.png";
   static const String redSub = "assets/red_sub.png";
+  static const String members = "assets/members.png";
   static const String purpleSub = "assets/purple_sub.png";
 }

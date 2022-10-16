@@ -25,111 +25,121 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Form(
-          key: formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Gap(40.h),
-              const CustomSimpleAppBar(
-                titleText: "Tizimga kirish",
-                routeText: RouteNames.intro,
-              ),
-              Gap(56.h),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: "Telefon raqami",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16.h),
-                      borderSide: BorderSide(color: Colors.red, width: 2.w),
+    return SafeArea(
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: Form(
+            key: formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 16.w),
+                  child: CustomSimpleAppBar(
+                    titleText: "Tizimga kirish",
+                    routeText: RouteNames.intro,
+                    style: AppStyles.introButtonText.copyWith(
+                      color: AppColors.smsVerColor,
                     ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16.h),
-                      borderSide: BorderSide(
-                          color: AppColors.textFieldBorderColor, width: 2.w),
-                    ),
+                    iconColor: AppColors.smsVerColor,
                   ),
                 ),
-              ),
-              Gap(24.h),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 16.w,
-                ),
-                child: TextField(
-                  obscureText: isObscure,
-                  decoration: InputDecoration(
-                    hintText: "Maxfiy so’z",
-                    suffixIcon: GestureDetector(
-                      onTap: changeObscureMode,
-                      child: Icon(
-                        isObscure
-                            ? Icons.visibility_off_outlined
-                            : Icons.visibility_outlined,
+                Gap(56.h),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: "Telefon raqami",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16.h),
+                        borderSide: BorderSide(color: Colors.red, width: 2.w),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16.h),
+                        borderSide: BorderSide(
+                            color: AppColors.textFieldBorderColor, width: 2.w),
                       ),
                     ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16.h),
-                      borderSide: BorderSide(color: Colors.red, width: 2.w),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16.h),
-                      borderSide: BorderSide(
-                          color: AppColors.textFieldBorderColor, width: 2.w),
+                  ),
+                ),
+                Gap(24.h),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16.w,
+                  ),
+                  child: TextField(
+                    obscureText: isObscure,
+                    decoration: InputDecoration(
+                      hintText: "Maxfiy so’z",
+                      suffixIcon: GestureDetector(
+                        onTap: changeObscureMode,
+                        child: Icon(
+                          isObscure
+                              ? Icons.visibility_off_outlined
+                              : Icons.visibility_outlined,
+                        ),
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16.h),
+                        borderSide: BorderSide(color: Colors.red, width: 2.w),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16.h),
+                        borderSide: BorderSide(
+                            color: AppColors.textFieldBorderColor, width: 2.w),
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Gap(27.h),
-              ElevatedButton(
-                style: AppStyles.introUpButton,
-                onPressed: () {
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, RouteNames.smsVerification, (route) => false,
-                      arguments: "+998912222222");
-                },
-                child: Text(
-                  "Kirish",
+                Gap(27.h),
+                ElevatedButton(
+                  style: AppStyles.introUpButton,
+                  onPressed: () {
+                    Navigator.pushNamed(
+                      context,
+                      RouteNames.smsVerification,
+                      arguments: "+998912222222",
+                    );
+                  },
+                  child: Text(
+                    "Kirish",
+                    style: AppStyles.introButtonText
+                        .copyWith(color: const Color(0xffFCFCFC)),
+                  ),
+                ),
+                Gap(33.h),
+                Text(
+                  "Maxfiy so’zni tiklash",
                   style: AppStyles.introButtonText
-                      .copyWith(color: const Color(0xffFCFCFC)),
+                      .copyWith(color: AppColors.mainColor),
                 ),
-              ),
-              Gap(33.h),
-              Text(
-                "Maxfiy so’zni tiklash",
-                style: AppStyles.introButtonText
-                    .copyWith(color: AppColors.mainColor),
-              ),
-              Gap(33.h),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Yangi foydalanuvchimisiz ? ",
-                    style: AppStyles.subtitleTextStyle,
-                  ),
-                  RichText(
-                    text: TextSpan(
+                Gap(33.h),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Yangi foydalanuvchimisiz ? ",
                       style: AppStyles.subtitleTextStyle,
-                      children: [
-                        TextSpan(
-                            text: "Ro’yhatdan o’tish",
-                            style: AppStyles.subtitleTextStyle.copyWith(
-                                color: AppColors.mainColor,
-                                decoration: TextDecoration.underline),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap =
-                                  launch), // launch function for navigating to other screen
-                      ],
                     ),
-                  )
-                ],
-              )
-            ],
+                    RichText(
+                      text: TextSpan(
+                        style: AppStyles.subtitleTextStyle,
+                        children: [
+                          TextSpan(
+                              text: "Ro’yhatdan o’tish",
+                              style: AppStyles.subtitleTextStyle.copyWith(
+                                  color: AppColors.mainColor,
+                                  decoration: TextDecoration.underline),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap =
+                                    launch), // launch function for navigating to other screen
+                        ],
+                      ),
+                    )
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),

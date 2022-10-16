@@ -20,56 +20,59 @@ class _IntroScreenState extends State<IntroScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          Gap(60.h),
-          CarouselSlider.builder(
-            options: CarouselOptions(
-              height: 500.h,
-              // autoPlay: true,
-              enableInfiniteScroll: false,
-              viewportFraction: 1,
-              onPageChanged: ((index, reason) {
-                setState(() {
-                  activeIndex = index;
-                });
-              }),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: Column(
+          children: [
+            Gap(60.h),
+            CarouselSlider.builder(
+              options: CarouselOptions(
+                height: 500.h,
+                // autoPlay: true,
+                enableInfiniteScroll: false,
+                viewportFraction: 1,
+                onPageChanged: ((index, reason) {
+                  setState(() {
+                    activeIndex = index;
+                  });
+                }),
+              ),
+              itemCount: AppIntroImages.introList.length,
+              itemBuilder: (context, index, realIndex) =>
+                  buildSlide(AppIntroImages.introList[index], index),
             ),
-            itemCount: AppIntroImages.introList.length,
-            itemBuilder: (context, index, realIndex) =>
-                buildSlide(AppIntroImages.introList[index], index),
-          ),
-          Gap(20.h),
-          dotIndicator(),
-          Gap(40.h),
-          ElevatedButton(
-              style: AppStyles.introUpButton,
-              onPressed: () {
-                Navigator.pushNamed(
-                  context,
-                  RouteNames.signup,
-                );
-              },
-              child: Text(
-                AppStrings.introUpButtonText,
-                style: AppStyles.introButtonText
-                    .copyWith(color: const Color(0xffFCFCFC)),
-              )),
-          Gap(16.h),
-          ElevatedButton(
-              style: AppStyles.introUpButton.copyWith(
-                  backgroundColor:
-                      MaterialStateProperty.all(AppColors.secondaryColor)),
-              onPressed: () {
-                Navigator.pushNamed(context, RouteNames.signin);
-              },
-              child: Text(
-                "Kirish",
-                style: AppStyles.introButtonText
-                    .copyWith(color: const Color(0xff7F3DFF)),
-              ))
-        ],
+            Gap(20.h),
+            dotIndicator(),
+            Gap(40.h),
+            ElevatedButton(
+                style: AppStyles.introUpButton,
+                onPressed: () {
+                  Navigator.pushNamed(
+                    context,
+                    RouteNames.signup,
+                  );
+                },
+                child: Text(
+                  AppStrings.introUpButtonText,
+                  style: AppStyles.introButtonText
+                      .copyWith(color: const Color(0xffFCFCFC)),
+                )),
+            Gap(16.h),
+            ElevatedButton(
+                style: AppStyles.introUpButton.copyWith(
+                    backgroundColor:
+                        MaterialStateProperty.all(AppColors.secondaryColor)),
+                onPressed: () {
+                  Navigator.pushNamed(context, RouteNames.signin);
+                },
+                child: Text(
+                  "Kirish",
+                  style: AppStyles.introButtonText
+                      .copyWith(color: const Color(0xff7F3DFF)),
+                ))
+          ],
+        ),
       ),
     );
   }
@@ -80,14 +83,14 @@ class _IntroScreenState extends State<IntroScreen> {
       margin: EdgeInsets.symmetric(horizontal: 12.w),
       child: Column(children: [
         SizedBox(
-          width: 280.w,
-          height: 344.h,
+          width: 324.w,
+          height: 162.h,
           child: Image.asset(
             data.imgPath,
             fit: BoxFit.fitHeight,
           ),
         ),
-        Gap(10.h),
+        Gap(20.h),
         Text(
           data.mainTitle,
           style: AppStyles.mainTextStyle.copyWith(color: Colors.black),

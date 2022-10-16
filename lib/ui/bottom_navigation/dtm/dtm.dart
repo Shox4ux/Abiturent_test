@@ -1,59 +1,77 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:test_app/res/constants.dart';
+import 'package:test_app/ui/components/custom_appbar.dart';
 
 class DtmScreen extends StatelessWidget {
   const DtmScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "DTM testlar",
-              style: AppStyles.introButtonText
-                  .copyWith(color: AppColors.titleColor),
+    return SafeArea(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          customAppBar(),
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.only(top: 20.h, left: 20.w, right: 20.w),
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(28.r),
+                    topRight: Radius.circular(28.r),
+                  )),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "DTM testlar",
+                        style: AppStyles.introButtonText
+                            .copyWith(color: AppColors.titleColor),
+                      ),
+                      Gap(5.h),
+                      Text(
+                        "Tarix fani",
+                        style: AppStyles.introButtonText
+                            .copyWith(color: AppColors.titleColor),
+                      ),
+                    ],
+                  ),
+                  Gap(20.h),
+                  Expanded(
+                    child: GridView.count(
+                      crossAxisCount: 2,
+                      children: [
+                        gridItem(),
+                        gridItem(),
+                        gridItem(),
+                        gridItem(),
+                        gridItem(),
+                        gridItem(),
+                        gridItem(),
+                        gridItem(),
+                        gridItem(),
+                        gridItem(),
+                        gridItem(),
+                        gridItem(),
+                        gridItem(),
+                        gridItem(),
+                        gridItem(),
+                        gridItem(),
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
-            Gap(5.h),
-            Text(
-              "Tarix fani",
-              style: AppStyles.introButtonText
-                  .copyWith(color: AppColors.titleColor),
-            ),
-          ],
-        ),
-        Gap(20.h),
-        Expanded(
-          child: GridView.count(
-            crossAxisCount: 2,
-            children: [
-              gridItem(),
-              gridItem(),
-              gridItem(),
-              gridItem(),
-              gridItem(),
-              gridItem(),
-              gridItem(),
-              gridItem(),
-              gridItem(),
-              gridItem(),
-              gridItem(),
-              gridItem(),
-              gridItem(),
-              gridItem(),
-              gridItem(),
-              gridItem(),
-            ],
           ),
-        )
-      ],
+        ],
+      ),
     );
   }
 

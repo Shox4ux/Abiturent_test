@@ -7,6 +7,7 @@ import 'package:pinput/pinput.dart';
 import 'package:test_app/ui/components/custom_pinput_widget.dart';
 
 import '../../res/constants.dart';
+import '../components/custom_simple_appbar.dart';
 import '../navigation/main_navigation.dart';
 
 class SmsVerification extends StatelessWidget {
@@ -19,89 +20,82 @@ class SmsVerification extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print(number);
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Gap(40.h),
-              SizedBox(
-                height: 64.h,
-                width: 375.w,
-                child: Row(children: [
-                  const Icon(Icons.arrow_back),
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 44.w),
-                    child: Text(
-                      "Abiturentni tasniqlash",
-                      style: AppStyles.introButtonText.copyWith(
-                        color: AppColors.titleColor,
-                      ),
-                    ),
-                  )
-                ]),
-              ),
-              Gap(27.h),
-              Text(
-                "Tasdiqlash uchun SMS kodni kiriting",
-                style: AppStyles.smsVerBigTextStyle,
-              ),
-              Gap(12.h),
-              PinPutWidget(
-                lenth: 4,
-                onChanged: (value) {
-                  print(value);
-                },
-              ),
-              Gap(15.h),
-              Text(
-                "04:59",
-                style: AppStyles.introButtonText.copyWith(
-                  color: AppColors.mainColor,
+    return SafeArea(
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CustomSimpleAppBar(
+                  titleText: "Abiturentni tasniqlash",
+                  routeText: "routeText",
+                  style: AppStyles.introButtonText.copyWith(
+                    color: AppColors.titleColor,
+                  ),
+                  iconColor: AppColors.smsVerColor,
                 ),
-              ),
-              Gap(10.h),
-              Text(
-                AppStrings.smsText,
-                style: AppStyles.subtitleTextStyle.copyWith(
-                  color: Colors.black,
+                Gap(27.h),
+                Text(
+                  "Tasdiqlash uchun SMS kodni kiriting",
+                  style: AppStyles.smsVerBigTextStyle,
                 ),
-              ),
-              Gap(6.h),
-              RichText(
-                text: TextSpan(
-                  style: AppStyles.subtitleTextStyle,
-                  children: [
-                    TextSpan(
-                        text: "Ro’yhatdan o’tish",
-                        style: AppStyles.subtitleTextStyle.copyWith(
-                            color: AppColors.mainColor,
-                            decoration: TextDecoration.underline),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap =
-                              launch), // launch function for navigating to other screen
-                  ],
+                Gap(12.h),
+                PinPutWidget(
+                  lenth: 4,
+                  onChanged: (value) {
+                    print(value);
+                  },
                 ),
-              ),
-              Gap(55.h),
-              ElevatedButton(
-                style: AppStyles.introUpButton,
-                onPressed: () {
-                  Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    RouteNames.main,
-                    (route) => false,
-                  );
-                },
-                child: Text(
-                  "Tasdiqlash",
-                  style: AppStyles.introButtonText
-                      .copyWith(color: const Color(0xffFCFCFC)),
+                Gap(15.h),
+                Text(
+                  "04:59",
+                  style: AppStyles.introButtonText.copyWith(
+                    color: AppColors.mainColor,
+                  ),
                 ),
-              ),
-            ],
+                Gap(10.h),
+                Text(
+                  AppStrings.smsText,
+                  style: AppStyles.subtitleTextStyle.copyWith(
+                    color: Colors.black,
+                  ),
+                ),
+                Gap(6.h),
+                RichText(
+                  text: TextSpan(
+                    style: AppStyles.subtitleTextStyle,
+                    children: [
+                      TextSpan(
+                          text: "Ro’yhatdan o’tish",
+                          style: AppStyles.subtitleTextStyle.copyWith(
+                              color: AppColors.mainColor,
+                              decoration: TextDecoration.underline),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap =
+                                launch), // launch function for navigating to other screen
+                    ],
+                  ),
+                ),
+                Gap(55.h),
+                ElevatedButton(
+                  style: AppStyles.introUpButton,
+                  onPressed: () {
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      RouteNames.main,
+                      (route) => false,
+                    );
+                  },
+                  child: Text(
+                    "Tasdiqlash",
+                    style: AppStyles.introButtonText
+                        .copyWith(color: const Color(0xffFCFCFC)),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
