@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:test_app/ui/components/custom_drawer.dart';
 
 import '../../../res/constants.dart';
 import '../../components/custom_appbar.dart';
@@ -10,60 +11,50 @@ class RatingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Column(children: [
-        customAppBar(),
-        Expanded(
-          child: Container(
-            padding: EdgeInsets.only(top: 20.h, left: 20.w, right: 20.w),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(28.r),
-                topRight: Radius.circular(28.r),
+    final GlobalKey<ScaffoldState> scaffKey = GlobalKey<ScaffoldState>();
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    return Scaffold(
+      backgroundColor: AppColors.mainColor,
+      key: scaffKey,
+      drawer: CustomDrawer(mainWidth: screenWidth),
+      body: SafeArea(
+        child: Column(children: [
+          customAppBar(scaffKey, context),
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.only(top: 20.h, left: 20.w, right: 20.w),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(28.r),
+                  topRight: Radius.circular(28.r),
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Umumiy reyting",
+                    style: AppStyles.introButtonText.copyWith(
+                      color: Colors.black,
+                    ),
+                  ),
+                  Gap(18.h),
+                  Expanded(
+                    child: ListView.builder(
+                        padding: const EdgeInsets.only(bottom: 20),
+                        itemCount: 20,
+                        itemBuilder: (BuildContext context, int index) {
+                          return ratingItem();
+                        }),
+                  ),
+                ],
               ),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Umumiy reyting",
-                  style: AppStyles.introButtonText.copyWith(
-                    color: Colors.black,
-                  ),
-                ),
-                Gap(12.h),
-                Row(
-                  children: [
-                    SizedBox(
-                      width: 24.w,
-                      height: 24.h,
-                      child: Image.asset(AppIcons.medlFilled),
-                    ),
-                    Gap(10.w),
-                    Text(
-                      "Tarix fani",
-                      style: AppStyles.subtitleTextStyle.copyWith(
-                        color: AppColors.smsVerColor,
-                        fontSize: 20.sp,
-                      ),
-                    )
-                  ],
-                ),
-                Gap(18.h),
-                Expanded(
-                  child: ListView.builder(
-                      padding: const EdgeInsets.only(bottom: 20),
-                      itemCount: 20,
-                      itemBuilder: (BuildContext context, int index) {
-                        return ratingItem();
-                      }),
-                ),
-              ],
-            ),
           ),
-        ),
-      ]),
+        ]),
+      ),
     );
   }
 

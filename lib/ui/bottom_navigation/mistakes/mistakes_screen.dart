@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:test_app/res/enum.dart';
 import 'package:test_app/ui/components/custom_appbar.dart';
 import 'package:test_app/ui/components/custom_dot.dart';
+import 'package:test_app/ui/components/custom_drawer.dart';
 
 import '../../../res/constants.dart';
 
@@ -12,42 +13,50 @@ class MistakesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Column(children: [
-        customAppBar(),
-        Expanded(
-          child: Container(
-            padding: EdgeInsets.only(top: 20.h, left: 20.w, right: 20.w),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(28.r),
-                topRight: Radius.circular(28.r),
+    final GlobalKey<ScaffoldState> _scaffKey = GlobalKey<ScaffoldState>();
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    return Scaffold(
+      drawer: CustomDrawer(mainWidth: screenWidth),
+      backgroundColor: AppColors.mainColor,
+      key: _scaffKey,
+      body: SafeArea(
+        child: Column(children: [
+          customAppBar(_scaffKey, context),
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.only(top: 20.h, left: 20.w, right: 20.w),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(28.r),
+                  topRight: Radius.circular(28.r),
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Xatolar bilan ishlash",
+                    style: AppStyles.introButtonText.copyWith(
+                      color: Colors.black,
+                    ),
+                  ),
+                  Gap(10.h),
+                  Expanded(
+                    child: ListView.builder(
+                        padding: const EdgeInsets.only(bottom: 20),
+                        itemCount: 10,
+                        itemBuilder: (BuildContext context, int index) {
+                          return testItem();
+                        }),
+                  ),
+                ],
               ),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Xatolar bilan ishlash",
-                  style: AppStyles.introButtonText.copyWith(
-                    color: Colors.black,
-                  ),
-                ),
-                Gap(10.h),
-                Expanded(
-                  child: ListView.builder(
-                      padding: const EdgeInsets.only(bottom: 20),
-                      itemCount: 10,
-                      itemBuilder: (BuildContext context, int index) {
-                        return testItem();
-                      }),
-                ),
-              ],
-            ),
           ),
-        ),
-      ]),
+        ]),
+      ),
     );
   }
 

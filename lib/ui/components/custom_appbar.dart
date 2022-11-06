@@ -1,20 +1,24 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:test_app/ui/navigation/main_navigation.dart';
 
 import '../../res/constants.dart';
 
-Widget customAppBar() {
+Widget customAppBar(GlobalKey<ScaffoldState> key, BuildContext context) {
   return Padding(
     padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 20.w),
     child: Row(
       children: [
-        Container(
-          height: 17.h,
-          width: 23.w,
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(AppIcons.menu),
+        InkWell(
+          onTap: () => key.currentState?.openDrawer(),
+          child: Container(
+            height: 17.h,
+            width: 23.w,
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(AppIcons.menu),
+              ),
             ),
           ),
         ),
@@ -57,12 +61,20 @@ Widget customAppBar() {
                   .copyWith(color: const Color(0xffFCFCFC), fontSize: 24.sp),
             ),
             Gap(29.w),
-            Container(
-              height: 20.h,
-              width: 25.w,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(AppIcons.group),
+            InkWell(
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  RouteNames.group,
+                );
+              },
+              child: Container(
+                height: 20.h,
+                width: 25.w,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(AppIcons.group),
+                  ),
                 ),
               ),
             ),

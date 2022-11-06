@@ -1,9 +1,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:test_app/ui/navigation/main_navigation.dart';
 
+import '../../core/block/auth_block/auth_cubit.dart';
 import '../../res/constants.dart';
 import '../components/custom_simple_appbar.dart';
 
@@ -15,27 +17,58 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final formKey = GlobalKey<FormState>();
   bool isObscure = true;
+  var _isAllfilled = false;
+  var _phoneNumber = "";
+  var _password = "";
 
   void changeObscureMode() {
     isObscure = !isObscure;
     setState(() {});
   }
 
+  void checkFields() {
+    if (_password.isNotEmpty && _phoneNumber.isNotEmpty) {
+      setState(() {
+        _isAllfilled = true;
+      });
+    } else {
+      setState(() {
+        _isAllfilled = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    checkFields();
+    return BlocListener<AuthCubit, AuthState>(
+      listener: (context, state) {
+        if (state is UserActive) {
+          print("from login: ${state.userInfo.fullname}");
+
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Successfully logged in!")));
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            RouteNames.main,
+            (Route<dynamic> route) => false,
+          );
+        }
+        if (state is AuthDenied) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(state.error)));
+        }
+      },
       child: Scaffold(
-        body: SingleChildScrollView(
-          child: Form(
-            key: formKey,
+        body: SafeArea(
+          child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Padding(
                   padding: EdgeInsets.only(left: 16.w),
                   child: CustomSimpleAppBar(
+                    isSimple: false,
                     titleText: "Tizimga kirish",
                     routeText: RouteNames.intro,
                     style: AppStyles.introButtonText.copyWith(
@@ -48,8 +81,17 @@ class _LoginScreenState extends State<LoginScreen> {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
                   child: TextField(
+                    maxLength: 9,
+                    onChanged: (value) {
+                      setState(() {
+                        _phoneNumber = value;
+                      });
+                    },
+                    keyboardType: TextInputType.number,
                     decoration: InputDecoration(
-                      hintText: "Telefon raqami",
+                      labelText: "Telefon raqami",
+                      prefixText: "+998 ",
+                      counter: const SizedBox.shrink(),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16.h),
                         borderSide: BorderSide(color: Colors.red, width: 2.w),
@@ -68,9 +110,17 @@ class _LoginScreenState extends State<LoginScreen> {
                     horizontal: 16.w,
                   ),
                   child: TextField(
+                    maxLength: 6,
+                    onChanged: (value) {
+                      setState(() {
+                        _password = value;
+                      });
+                    },
+                    keyboardType: TextInputType.number,
                     obscureText: isObscure,
                     decoration: InputDecoration(
-                      hintText: "Maxfiy so’z",
+                      counter: const SizedBox.shrink(),
+                      labelText: "Maxfiy so’z",
                       suffixIcon: GestureDetector(
                         onTap: changeObscureMode,
                         child: Icon(
@@ -92,26 +142,51 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 Gap(27.h),
-                ElevatedButton(
-                  style: AppStyles.introUpButton,
-                  onPressed: () {
+                _isAllfilled
+                    ? BlocBuilder<AuthCubit, AuthState>(
+                        builder: (context, state) {
+                          if (state is OnProgress) {
+                            return const CircularProgressIndicator(
+                              color: AppColors.mainColor,
+                            );
+                          }
+                          return ElevatedButton(
+                            style: AppStyles.introUpButton,
+                            onPressed: () async {
+                              await context
+                                  .read<AuthCubit>()
+                                  .authLogin(_phoneNumber, _password);
+                            },
+                            child: Text(
+                              "Kirish",
+                              style: AppStyles.introButtonText
+                                  .copyWith(color: const Color(0xffFCFCFC)),
+                            ),
+                          );
+                        },
+                      )
+                    : ElevatedButton(
+                        style: AppStyles.disabledButton,
+                        onPressed: null,
+                        child: Text(
+                          "Kirish",
+                          style: AppStyles.introButtonText
+                              .copyWith(color: const Color(0xffFCFCFC)),
+                        ),
+                      ),
+                Gap(33.h),
+                InkWell(
+                  onTap: () {
                     Navigator.pushNamed(
                       context,
-                      RouteNames.smsVerification,
-                      arguments: "+998912222222",
+                      RouteNames.forget,
                     );
                   },
                   child: Text(
-                    "Kirish",
+                    "Maxfiy so’zni tiklash",
                     style: AppStyles.introButtonText
-                        .copyWith(color: const Color(0xffFCFCFC)),
+                        .copyWith(color: AppColors.mainColor),
                   ),
-                ),
-                Gap(33.h),
-                Text(
-                  "Maxfiy so’zni tiklash",
-                  style: AppStyles.introButtonText
-                      .copyWith(color: AppColors.mainColor),
                 ),
                 Gap(33.h),
                 Column(

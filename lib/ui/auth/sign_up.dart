@@ -1,9 +1,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:test_app/res/constants.dart';
 
+import '../../core/block/auth_block/auth_cubit.dart';
 import '../components/custom_simple_appbar.dart';
 import '../navigation/main_navigation.dart';
 
@@ -18,12 +20,34 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final formKey = GlobalKey<FormState>();
   bool _isChecked = false;
   bool _isObscure = false;
+  bool _isAllFilled = false;
+
+  var _fulnameC = "";
+  var _phoneC = "";
+  var _passwordC = "";
+
+  checkFields() {
+    if (_fulnameC.isNotEmpty && _phoneC.isNotEmpty && _passwordC.length < 7) {
+      print(_fulnameC);
+      print(_phoneC);
+      print(_passwordC);
+
+      setState(() {
+        _isAllFilled = true;
+      });
+    } else {
+      setState(() {
+        _isAllFilled = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: SingleChildScrollView(
+    checkFields();
+    return Scaffold(
+      body: SafeArea(
+        child: SingleChildScrollView(
           child: Form(
             key: formKey,
             child: Column(
@@ -32,6 +56,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 Padding(
                   padding: EdgeInsets.only(left: 16.w),
                   child: CustomSimpleAppBar(
+                    isSimple: false,
                     titleText: "Ro’yhatdan o’tish",
                     routeText: RouteNames.intro,
                     style: AppStyles.introButtonText.copyWith(
@@ -44,8 +69,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
                   child: TextField(
+                    onChanged: (value) {
+                      setState(() {
+                        _fulnameC = value;
+                      });
+                    },
                     decoration: InputDecoration(
-                      hintText: "Abiturent FISH",
+                      labelText: "Abiturent FISH",
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16.h),
                         borderSide: BorderSide(color: Colors.red, width: 2.w),
@@ -62,8 +92,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
                   child: TextField(
+                    maxLength: 9,
+                    onChanged: (value) {
+                      setState(() {
+                        _phoneC = value;
+                      });
+                    },
+                    keyboardType: TextInputType.number,
                     decoration: InputDecoration(
-                      hintText: "Telefon raqami",
+                      labelText: "Telefon raqami",
+                      prefixText: "+998 ",
+                      counter: const SizedBox.shrink(),
+                      prefixStyle: const TextStyle(color: Colors.black),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16.h),
                         borderSide: BorderSide(color: Colors.red, width: 2.w),
@@ -82,9 +122,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     horizontal: 16.w,
                   ),
                   child: TextField(
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      setState(() {
+                        _passwordC = value;
+                      });
+                    },
                     obscureText: _isObscure,
                     decoration: InputDecoration(
-                      hintText: "Maxfiy so’z",
+                      counter: const SizedBox.shrink(),
+                      labelText: "Maxfiy so’z",
                       suffixIcon: GestureDetector(
                           onTap: () {
                             setState(() {
@@ -111,34 +158,48 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   padding: EdgeInsets.symmetric(horizontal: 20.w),
                   child: Row(
                     children: [
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _isChecked = !_isChecked;
-                          });
-                        },
-                        child: AnimatedContainer(
-                          duration: const Duration(microseconds: 200),
-                          height: 24.h,
-                          width: 24.w,
-                          decoration: BoxDecoration(
-                              color: _isChecked
-                                  ? AppColors.mainColor
-                                  : Colors.transparent,
-                              borderRadius: BorderRadius.circular(5.r),
-                              border: Border.all(
-                                color: AppColors.mainColor,
-                                width: 2.w,
-                              )),
-                          child: _isChecked
-                              ? Icon(
-                                  Icons.check,
-                                  color: Colors.white,
-                                  size: 16.h,
-                                )
-                              : null,
-                        ),
-                      ),
+                      _isAllFilled
+                          ? GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _isChecked = !_isChecked;
+                                });
+                              },
+                              child: AnimatedContainer(
+                                duration: const Duration(microseconds: 200),
+                                height: 24.h,
+                                width: 24.w,
+                                decoration: BoxDecoration(
+                                  color: _isChecked
+                                      ? AppColors.mainColor
+                                      : Colors.transparent,
+                                  borderRadius: BorderRadius.circular(5.r),
+                                  border: Border.all(
+                                    color: AppColors.mainColor,
+                                    width: 2.w,
+                                  ),
+                                ),
+                                child: _isChecked
+                                    ? Icon(
+                                        Icons.check,
+                                        color: Colors.white,
+                                        size: 16.h,
+                                      )
+                                    : null,
+                              ),
+                            )
+                          : Container(
+                              height: 24.h,
+                              width: 24.w,
+                              decoration: BoxDecoration(
+                                color: Colors.transparent,
+                                borderRadius: BorderRadius.circular(5.r),
+                                border: Border.all(
+                                  color: AppColors.subtitleColor,
+                                  width: 2.w,
+                                ),
+                              ),
+                            ),
                       Gap(14.w),
                       Expanded(
                         child: Text(
@@ -155,18 +216,55 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                 ),
                 Gap(27.h),
-                ElevatedButton(
-                  style: AppStyles.introUpButton,
-                  onPressed: () {
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, RouteNames.smsVerification, (route) => false,
-                        arguments: "+998912222222");
+                BlocConsumer<AuthCubit, AuthState>(
+                  listener: (context, state) {
+                    if (state is AuthOnSMS) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            "Successfully registered",
+                          ),
+                        ),
+                      );
+
+                      Navigator.pushNamed(context, RouteNames.smsVerification,
+                          arguments: RouteNames.signup);
+                    }
+                    if (state is AuthDenied) {
+                      (ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            state.error,
+                          ),
+                        ),
+                      ));
+                    }
                   },
-                  child: Text(
-                    AppStrings.introUpButtonText,
-                    style: AppStyles.introButtonText
-                        .copyWith(color: const Color(0xffFCFCFC)),
-                  ),
+                  builder: (context, state) {
+                    return _isChecked
+                        ? ElevatedButton(
+                            style: AppStyles.introUpButton,
+                            onPressed: () async {
+                              context
+                                  .read<AuthCubit>()
+                                  .checkFields(_fulnameC, _phoneC, _passwordC);
+                            },
+                            child: Text(
+                              AppStrings.introUpButtonText,
+                              style: AppStyles.introButtonText
+                                  .copyWith(color: const Color(0xffFCFCFC)),
+                            ),
+                          )
+                        : ElevatedButton(
+                            style: AppStyles.disabledButton,
+                            onPressed: null,
+                            child: Text(
+                              AppStrings.introUpButtonText,
+                              style: AppStyles.introButtonText
+                                  .copyWith(color: const Color(0xffFCFCFC)),
+                            ),
+                          );
+                  },
                 ),
                 Gap(12.h),
                 Text(
@@ -204,10 +302,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   void launch() {
-    Navigator.pushNamedAndRemoveUntil(
+    Navigator.pushNamed(
       context,
       RouteNames.signin,
-      (route) => false,
     );
   }
 }

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:test_app/res/enum.dart';
 import 'package:test_app/res/models/intro_data.dart';
 import 'package:test_app/res/models/subject_data.dart';
+import 'package:test_app/res/models/test_model.dart';
 
 class AppColors {
   static const splashColor = Color(0xFFFCAC12);
@@ -38,14 +40,29 @@ class AppStyles {
       fontWeight: FontWeight.w500,
       color: AppColors.smsVerColor);
 
-  static ButtonStyle introUpButton = ButtonStyle(
-      backgroundColor: MaterialStateProperty.all(AppColors.mainColor),
-      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-        RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16.h),
-        ),
+  static ButtonStyle disabledButton = ButtonStyle(
+    backgroundColor: MaterialStateProperty.all(AppColors.subtitleColor),
+    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+      RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16.h),
       ),
-      fixedSize: MaterialStateProperty.all(Size(343.w, 56.h)));
+    ),
+    fixedSize: MaterialStateProperty.all(
+      Size(343.w, 56.h),
+    ),
+  );
+
+  static ButtonStyle introUpButton = ButtonStyle(
+    backgroundColor: MaterialStateProperty.all(AppColors.mainColor),
+    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+      RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16.h),
+      ),
+    ),
+    fixedSize: MaterialStateProperty.all(
+      Size(343.w, 56.h),
+    ),
+  );
 }
 
 class AppStrings {
@@ -53,7 +70,7 @@ class AppStrings {
   static const String secondHeadIntro = "Turli xil fanlar";
   static const String thirdHeadIntro = "O’z ustada ishlash";
 
-  static const String introUpButtonText = "Ro’yhatdan o’rish";
+  static const String introUpButtonText = "Ro’yhatdan o’tish";
 
   static const String checkBoxText =
       "Barcha ma’lumotlarinmi qayta ishlash uchun va foydalanishga ruxsat etaman";
@@ -105,6 +122,117 @@ class SubjectList {
             " 1918-1939- yillarda Osiyo davlatlarining iqtisodiy va siyosiy rivojlanishi",
         quantity: "12"),
   ];
+
+  static List<TestModel> tests = [
+    TestModel(
+        question:
+            "... miloddan avvalgi VII-VI asrlardagi O‘rta Osiyo tarixiga xos emas.",
+        options: [
+          TestOptionModel(
+              optionText: "Shaharlarda ichki qal’alar borligi",
+              status: TestVertions.neutral),
+          TestOptionModel(
+              optionText: "Shahar-davlatlar mavjudligi",
+              status: TestVertions.correct),
+          TestOptionModel(
+              optionText:
+                  "Kulolchilik charxida ishlangan sopol idishlar mavjudligi",
+              status: TestVertions.neutral),
+          TestOptionModel(
+              optionText: "Bronzadan ishlangan o‘q uchlari",
+              status: TestVertions.neutral),
+        ]),
+    TestModel(
+        question:
+            "... miloddan avvalgi VII-VI asrlardagi O‘rta Osiyo tarixiga xos emas.",
+        options: [
+          TestOptionModel(
+              optionText: "Shaharlarda ichki qal’alar borligi",
+              status: TestVertions.incorrect),
+          TestOptionModel(
+              optionText: "Shahar-davlatlar mavjudligi",
+              status: TestVertions.neutral),
+          TestOptionModel(
+              optionText:
+                  "Kulolchilik charxida ishlangan sopol idishlar mavjudligi",
+              status: TestVertions.neutral),
+          TestOptionModel(
+              optionText: "Bronzadan ishlangan o‘q uchlari",
+              status: TestVertions.neutral),
+        ]),
+    TestModel(
+        question:
+            "... miloddan avvalgi VII-VI asrlardagi O‘rta Osiyo tarixiga xos emas.",
+        options: [
+          TestOptionModel(
+              optionText: "Shaharlarda ichki qal’alar borligi",
+              status: TestVertions.neutral),
+          TestOptionModel(
+              optionText: "Shahar-davlatlar mavjudligi",
+              status: TestVertions.correct),
+          TestOptionModel(
+              optionText:
+                  "Kulolchilik charxida ishlangan sopol idishlar mavjudligi",
+              status: TestVertions.neutral),
+          TestOptionModel(
+              optionText: "Bronzadan ishlangan o‘q uchlari",
+              status: TestVertions.neutral),
+        ]),
+    TestModel(
+        question:
+            "... miloddan avvalgi VII-VI asrlardagi O‘rta Osiyo tarixiga xos emas.",
+        options: [
+          TestOptionModel(
+              optionText: "Shaharlarda ichki qal’alar borligi",
+              status: TestVertions.incorrect),
+          TestOptionModel(
+              optionText: "Shahar-davlatlar mavjudligi",
+              status: TestVertions.neutral),
+          TestOptionModel(
+              optionText:
+                  "Kulolchilik charxida ishlangan sopol idishlar mavjudligi",
+              status: TestVertions.neutral),
+          TestOptionModel(
+              optionText: "Bronzadan ishlangan o‘q uchlari",
+              status: TestVertions.neutral),
+        ]),
+    TestModel(
+        question:
+            "... miloddan avvalgi VII-VI asrlardagi O‘rta Osiyo tarixiga xos emas.",
+        options: [
+          TestOptionModel(
+              optionText: "Shaharlarda ichki qal’alar borligi",
+              status: TestVertions.neutral),
+          TestOptionModel(
+              optionText: "Shahar-davlatlar mavjudligi",
+              status: TestVertions.correct),
+          TestOptionModel(
+              optionText:
+                  "Kulolchilik charxida ishlangan sopol idishlar mavjudligi",
+              status: TestVertions.neutral),
+          TestOptionModel(
+              optionText: "Bronzadan ishlangan o‘q uchlari",
+              status: TestVertions.neutral),
+        ]),
+    TestModel(
+        question:
+            "... miloddan avvalgi VII-VI asrlardagi O‘rta Osiyo tarixiga xos emas.",
+        options: [
+          TestOptionModel(
+              optionText: "Shaharlarda ichki qal’alar borligi",
+              status: TestVertions.incorrect),
+          TestOptionModel(
+              optionText: "Shahar-davlatlar mavjudligi",
+              status: TestVertions.neutral),
+          TestOptionModel(
+              optionText:
+                  "Kulolchilik charxida ishlangan sopol idishlar mavjudligi",
+              status: TestVertions.neutral),
+          TestOptionModel(
+              optionText: "Bronzadan ishlangan o‘q uchlari",
+              status: TestVertions.neutral),
+        ]),
+  ];
 }
 
 class AppIcons {
@@ -122,6 +250,9 @@ class AppIcons {
 
   static const String dtmFilled = "assets/dtm_filled.png";
   static const String dtm = "assets/dtm.png";
+  static const String bilim = "assets/bilim.png";
+
+  static const String mobile = "assets/mobile.png";
 
   static const String purplePocket = "assets/wallet.png";
   static const String greenPocket = "assets/green.png";
@@ -150,4 +281,38 @@ class AppIcons {
   static const String redSub = "assets/red_sub.png";
   static const String members = "assets/members.png";
   static const String purpleSub = "assets/purple_sub.png";
+  static const String bi = "assets/bi.png";
+  static const String errorImg = "assets/error.png";
+
+  static const String arrowForward = "assets/arrow_forward.png";
+  static const String white = "assets/white.png";
+  static const String newsError = "assets/news_error.png";
+}
+
+class AuthKeys {
+  static const String changePasswordKey = "Q2fw_BnQwGm_CxuR75thtc5VTeTDCAnW";
+  static const String logoutKey = "-u1DAPOeGKL0sNDdeI-E14ifkeDv1H9A8-`sd3";
+}
+
+class ApiValues {
+  static const String baseUrl = "http://uzbilim.uz/";
+  static const String sighUPUrl = "user/signup";
+  static const String loginUrl = "user/login";
+  static const String checkSmsUrl = "user/check-code";
+  static const String logoutUrl = "user/logout";
+  static const String changePasswordUrl = "user/change-password";
+  static const String confirmSmsUrl = "user/check-code-password";
+  static const String resetPasswordUrl = "user/reset-password";
+  static const String createGroup = "user-group/create-group";
+
+  static const String subjectUrl = "subjects/index";
+
+  static const String mainNewsAndPaginationUrl = "news/index";
+  static const String newsByIdUrl = "news/view";
+}
+
+class AppStorageConstants {
+  static const String tokenKey = "token";
+  static const String userKey = "user";
+  static const String passwordKey = "password";
 }

@@ -5,18 +5,20 @@ import 'package:gap/gap.dart';
 import '../../res/constants.dart';
 
 class CustomSimpleAppBar extends StatefulWidget {
-  const CustomSimpleAppBar({
+  CustomSimpleAppBar({
     Key? key,
     required this.titleText,
-    required this.routeText,
+    this.routeText,
     required this.style,
     required this.iconColor,
+    required this.isSimple,
   }) : super(key: key);
 
   final String titleText;
-  final String routeText;
+  String? routeText;
   final TextStyle style;
   final Color iconColor;
+  final bool isSimple;
 
   @override
   State<CustomSimpleAppBar> createState() => _CustomSimpleAppBarState();
@@ -31,10 +33,12 @@ class _CustomSimpleAppBarState extends State<CustomSimpleAppBar> {
         children: [
           GestureDetector(
             onTap: () {
-              Navigator.pop(
-                context,
-                widget.routeText,
-              );
+              widget.isSimple
+                  ? Navigator.pop(context)
+                  : Navigator.pushNamed(
+                      context,
+                      widget.routeText!,
+                    );
             },
             child: SizedBox(
               height: 24.h,

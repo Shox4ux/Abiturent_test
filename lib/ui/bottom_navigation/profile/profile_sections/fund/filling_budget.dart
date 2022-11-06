@@ -22,6 +22,7 @@ class PaymeScreen extends StatelessWidget {
               left: 20.w,
             ),
             child: CustomSimpleAppBar(
+              isSimple: true,
               titleText: "Hisobni to’ldirish",
               routeText: "profile",
               style: AppStyles.introButtonText.copyWith(

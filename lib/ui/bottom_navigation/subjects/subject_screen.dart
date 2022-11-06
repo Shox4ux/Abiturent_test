@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:test_app/ui/components/custom_dot.dart';
+import 'package:test_app/ui/components/custom_drawer.dart';
 import 'package:test_app/ui/main_page/main_page.dart';
+import 'package:test_app/ui/navigation/main_navigation.dart';
 
 import '../../../res/constants.dart';
 import '../../components/custom_appbar.dart';
@@ -13,56 +15,64 @@ class SubjectsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // final topPadding = MediaQuery.of(context).padding.top; this alternative of safeArea
-    return SafeArea(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          customAppBar(),
-          Expanded(
-              child: Container(
-            padding: EdgeInsets.only(top: 14.h),
-            decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(28.r),
-                  topRight: Radius.circular(28.r),
-                )),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  child: Text(
-                    "Tarix fani",
-                    style: AppStyles.introButtonText.copyWith(
-                      color: Colors.black,
+    final GlobalKey<ScaffoldState> _scaffKey = GlobalKey<ScaffoldState>();
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    return Scaffold(
+      backgroundColor: AppColors.mainColor,
+      key: _scaffKey,
+      drawer: CustomDrawer(mainWidth: screenWidth),
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            customAppBar(_scaffKey, context),
+            Expanded(
+                child: Container(
+              padding: EdgeInsets.only(top: 14.h),
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(28.r),
+                    topRight: Radius.circular(28.r),
+                  )),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20.w),
+                    child: Text(
+                      "Tarix fani",
+                      style: AppStyles.introButtonText.copyWith(
+                        color: Colors.black,
+                      ),
                     ),
                   ),
-                ),
-                Gap(10.h),
-                Expanded(
-                  child: ListView.builder(
-                      padding: EdgeInsets.only(
-                        bottom: 20.h,
-                        top: 10.h,
-                      ),
-                      itemCount: 10,
-                      itemBuilder: (
-                        BuildContext context,
-                        int index,
-                      ) {
-                        return subjectItem();
-                      }),
-                ),
-              ],
-            ),
-          ))
-        ],
+                  Gap(10.h),
+                  Expanded(
+                    child: ListView.builder(
+                        padding: EdgeInsets.only(
+                          bottom: 20.h,
+                          top: 10.h,
+                        ),
+                        itemCount: 10,
+                        itemBuilder: (
+                          BuildContext context,
+                          int index,
+                        ) {
+                          return subjectItem(context);
+                        }),
+                  ),
+                ],
+              ),
+            ))
+          ],
+        ),
       ),
     );
   }
 
-  Widget subjectItem() {
+  Widget subjectItem(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(bottom: 20.h, left: 20.w, right: 20.w),
       width: 333.w,
@@ -134,16 +144,21 @@ class SubjectsScreen extends StatelessWidget {
                 ],
               ),
             ),
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 11.h, horizontal: 16.w),
-              height: 32.h,
-              width: 48.w,
-              decoration: BoxDecoration(
-                color: AppColors.mainColor,
-                borderRadius: BorderRadius.circular(120.r),
-              ),
-              child: Image.asset(
-                AppIcons.arrow,
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, RouteNames.test);
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 11.h, horizontal: 16.w),
+                height: 32.h,
+                width: 48.w,
+                decoration: BoxDecoration(
+                  color: AppColors.mainColor,
+                  borderRadius: BorderRadius.circular(120.r),
+                ),
+                child: Image.asset(
+                  AppIcons.arrow,
+                ),
               ),
             )
           ],

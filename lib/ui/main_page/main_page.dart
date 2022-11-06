@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:test_app/core/block/subjecy_bloc/subject_cubit.dart';
 import 'package:test_app/res/constants.dart';
 import 'package:test_app/ui/bottom_navigation/dtm/dtm.dart';
 import 'package:test_app/ui/bottom_navigation/mistakes/mistakes_screen.dart';
@@ -16,10 +18,16 @@ class MainScreen extends StatefulWidget {
   State<MainScreen> createState() => _MainScreenState();
 }
 
+@override
+void initState() {}
+
 class _MainScreenState extends State<MainScreen> {
   int selectedIndex = 0;
+
   @override
   Widget build(BuildContext context) {
+    context.read<SubjectCubit>().getSubjects();
+    print("object_uri");
     final screens = [
       const SubjectsScreen(),
       const DtmScreen(),
@@ -27,7 +35,6 @@ class _MainScreenState extends State<MainScreen> {
       const MistakesScreen(),
       const RatingScreen(),
     ];
-
     return Scaffold(
       backgroundColor: AppColors.mainColor,
       body: screens[selectedIndex],
@@ -44,7 +51,7 @@ class _MainScreenState extends State<MainScreen> {
           elevation: 10,
           type: BottomNavigationBarType.fixed,
           selectedItemColor: AppColors.mainColor,
-          unselectedItemColor: AppColors.mainColor,
+          unselectedItemColor: AppColors.subtitleColor,
           selectedLabelStyle: AppStyles.subtitleTextStyle.copyWith(
             color: AppColors.mainColor,
             fontSize: 10.sp,

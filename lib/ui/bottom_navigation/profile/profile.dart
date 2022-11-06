@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:test_app/core/domain/user_model/user_model.dart';
 import 'package:test_app/res/constants.dart';
-import 'package:test_app/ui/bottom_navigation/profile/profile_sections/subscriptions/my_subscriptions.dart';
 
+import '../../../core/block/auth_block/auth_cubit.dart';
 import '../../../res/enum.dart';
 import '../../navigation/main_navigation.dart';
 
@@ -16,120 +18,152 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   bool isInSubs = false;
+
+  String _medalStatus(int meadalID) {
+    if (meadalID == 2) {
+      return "Oltin";
+    }
+    if (meadalID == 1) {
+      return "Kumush";
+    }
+    return "Bronza";
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: WillPopScope(
+    UserInfo user = context.read<AuthCubit>().userData!;
+
+    return Scaffold(
+      body: WillPopScope(
         onWillPop: () async {
           setState(() {
-            print("object");
             isInSubs = false;
           });
           return false;
         },
-        child: Scaffold(
-          backgroundColor: AppColors.backgroundColor,
-          body: Padding(
+        child: SafeArea(
+          child: Padding(
             padding: EdgeInsets.all(20.w),
-            child: Column(
-              children: [
-                FittedBox(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      CircleAvatar(
-                        radius: 42.w,
-                        foregroundImage: AssetImage(
-                          AppIcons.man,
-                        ),
+            child: BlocListener<AuthCubit, AuthState>(
+              listener: (context, state) {
+                if (state is LogedOut) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                        "Good luck man!",
                       ),
-                      Gap(5.w),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "ID #456",
-                            style: AppStyles.subtitleTextStyle.copyWith(
-                              fontSize: 14.sp,
-                              color: const Color(0xff0D0E0F),
-                            ),
+                    ),
+                  );
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                      RouteNames.signup, (Route<dynamic> route) => false);
+                }
+
+                if (state is AuthDenied) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(state.error),
+                    ),
+                  );
+                }
+              },
+              child: Column(
+                children: [
+                  FittedBox(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        CircleAvatar(
+                          radius: 42.w,
+                          foregroundImage: const AssetImage(
+                            AppIcons.man,
                           ),
-                          Gap(4.h),
-                          Text(
-                            "Sardor ",
-                            style: AppStyles.introButtonText.copyWith(
-                                fontSize: 24.sp,
-                                color: const Color(0xff161719)),
-                          ),
-                          Text(
-                            "Abdullayev",
-                            style: AppStyles.introButtonText.copyWith(
-                                fontSize: 24.sp,
-                                color: const Color(0xff161719)),
-                          ),
-                        ],
-                      ),
-                      Gap(48.w),
-                      Column(
-                        children: [
-                          Text(
-                            "Bronze",
-                            style: AppStyles.subtitleTextStyle,
-                          ),
-                          Gap(11.h),
-                          SizedBox(
-                            width: 48.w,
-                            height: 48.h,
-                            child: Image.asset(AppIcons.medl),
-                          )
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-                Gap(19.h),
-                Container(
-                  padding:
-                      EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.w),
-                  height: 52.h,
-                  decoration: BoxDecoration(
-                      color: AppColors.greenBackground,
-                      borderRadius: BorderRadius.circular(10.r)),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        height: 40.h,
-                        width: 52.w,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16.r),
                         ),
-                        child: Image.asset(
-                          AppIcons.greenPocket,
-                          scale: 3.h,
-                        ),
-                      ),
-                      RichText(
-                        text: TextSpan(
-                          text: "UZS",
-                          style: AppStyles.introButtonText
-                              .copyWith(color: Colors.white, fontSize: 14.sp),
+                        Gap(5.w),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            TextSpan(
-                              text: "2 200 000",
+                            Text(
+                              "ID #${user.id}",
+                              style: AppStyles.subtitleTextStyle.copyWith(
+                                fontSize: 14.sp,
+                                color: const Color(0xff0D0E0F),
+                              ),
+                            ),
+                            Gap(4.h),
+                            Text(
+                              "${user.fullname}",
                               style: AppStyles.introButtonText.copyWith(
-                                  color: Colors.white, fontSize: 28.sp),
+                                  fontSize: 24.sp,
+                                  color: const Color(0xff161719)),
                             ),
                           ],
                         ),
-                      )
-                    ],
+                        Gap(48.w),
+                        Column(
+                          children: [
+                            Text(
+                              _medalStatus(user.medalId!),
+                              style: AppStyles.subtitleTextStyle,
+                            ),
+                            Gap(11.h),
+                            SizedBox(
+                              width: 48.w,
+                              height: 48.h,
+                              child: Image.network(
+                                "${ApiValues.baseUrl}${user.medalImg!}",
+                                errorBuilder: (context, error, stackTrace) =>
+                                    Image.asset(AppIcons.medl),
+                              ),
+                            )
+                          ],
+                        )
+                      ],
+                    ),
                   ),
-                ),
-                Gap(25.h),
-                body()
-              ],
+                  Gap(19.h),
+                  Container(
+                    padding:
+                        EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.w),
+                    height: 52.h,
+                    decoration: BoxDecoration(
+                        color: AppColors.greenBackground,
+                        borderRadius: BorderRadius.circular(10.r)),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          height: 40.h,
+                          width: 52.w,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16.r),
+                          ),
+                          child: Image.asset(
+                            AppIcons.greenPocket,
+                            scale: 3.h,
+                          ),
+                        ),
+                        RichText(
+                          text: TextSpan(
+                            text: "UZS ",
+                            style: AppStyles.introButtonText
+                                .copyWith(color: Colors.white, fontSize: 14.sp),
+                            children: [
+                              TextSpan(
+                                text: "${user.balance}",
+                                style: AppStyles.introButtonText.copyWith(
+                                    color: Colors.white, fontSize: 28.sp),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  Gap(25.h),
+                  body()
+                ],
+              ),
             ),
           ),
         ),
@@ -216,14 +250,98 @@ class _ProfileScreenState extends State<ProfileScreen> {
           onTap: () {
             Navigator.pushNamed(
               context,
-              RouteNames.payme,
+              RouteNames.group,
             );
           },
           child: rowItem(AppIcons.payme, "Hisobni to’ldirish", false),
         ),
         spacer(),
         InkWell(
-          onTap: () {},
+          onTap: () {
+            showModalBottomSheet(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(
+                top: Radius.circular(
+                  16.r,
+                ),
+              )),
+              context: context,
+              builder: ((context) => Padding(
+                    padding: EdgeInsets.all(20.h),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 36.w,
+                          height: 4.h,
+                          decoration: BoxDecoration(
+                              color: const Color(0xffD3BDFF),
+                              borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(20.r),
+                                topLeft: Radius.circular(20.r),
+                              )),
+                        ),
+                        Gap(20.h),
+                        Text(
+                          "Tizimda chiqish xoxlaysizmi ?",
+                          style: AppStyles.introButtonText.copyWith(
+                            color: Colors.black,
+                          ),
+                        ),
+                        Gap(20.h),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              child: Container(
+                                height: 56.h,
+                                width: 150.w,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  color: AppColors.secondaryColor,
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(16.r),
+                                  ),
+                                ),
+                                child: Text(
+                                  "Yo'q",
+                                  style: AppStyles.introButtonText
+                                      .copyWith(color: AppColors.mainColor),
+                                ),
+                              ),
+                            ),
+                            Gap(16.w),
+                            InkWell(
+                              onTap: () async {
+                                await context.read<AuthCubit>().authLogOut();
+                              },
+                              child: Container(
+                                height: 56.h,
+                                width: 150.w,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  color: AppColors.mainColor,
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(16.r),
+                                  ),
+                                ),
+                                child: Text(
+                                  "Ha",
+                                  style: AppStyles.introButtonText
+                                      .copyWith(color: AppColors.fillingColor),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  )),
+            );
+          },
           child: rowItem(AppIcons.logout, "Tizimdan chiqish", true),
         ),
       ]),

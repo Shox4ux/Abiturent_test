@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:test_app/core/domain/news_models/main_news_model.dart';
 import 'package:test_app/res/constants.dart';
 import 'package:test_app/ui/components/custom_simple_appbar.dart';
 
-class InsideNewsScreen extends StatelessWidget {
-  const InsideNewsScreen({Key? key}) : super(key: key);
+class InsideNewsScreen extends StatefulWidget {
+  const InsideNewsScreen({
+    Key? key,
+    required this.model,
+  }) : super(key: key);
+  final MainNewsModel model;
+  @override
+  State<InsideNewsScreen> createState() => _InsideNewsScreenState();
+}
 
+class _InsideNewsScreenState extends State<InsideNewsScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -19,14 +28,20 @@ class InsideNewsScreen extends StatelessWidget {
             SizedBox(
               height: 212.h,
               width: double.maxFinite,
-              child: Image.asset(
-                AppIcons.bigNews,
-                fit: BoxFit.cover,
-              ),
+              child: widget.model.imageLink != null
+                  ? Image.network(
+                      widget.model.imageLink!,
+                      fit: BoxFit.cover,
+                    )
+                  : Image.asset(
+                      AppIcons.newsError,
+                      fit: BoxFit.cover,
+                    ),
             ),
             Positioned(
               top: 120,
               child: CustomSimpleAppBar(
+                isSimple: true,
                 titleText: "Yangiliklar",
                 routeText: "routeText",
                 style: AppStyles.introButtonText.copyWith(
@@ -74,7 +89,7 @@ class InsideNewsScreen extends StatelessWidget {
                         Gap(9.w),
                         Expanded(
                           child: Text(
-                            "Odamlar yana Oyga qaytmoqda. NASA so‘nggi 50 yildagi eng umidli  loyihani ishga tushirdi",
+                            widget.model.title ?? "",
                             style: AppStyles.subtitleTextStyle.copyWith(
                               color: AppColors.mainColor,
                               fontSize: 12.sp,
@@ -88,7 +103,7 @@ class InsideNewsScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Text(
-                          "11.09.2022 14:11",
+                          widget.model.createdText ?? "",
                           style: AppStyles.subtitleTextStyle.copyWith(
                             color: AppColors.smsVerColor,
                             fontSize: 10.sp,
@@ -111,7 +126,7 @@ class InsideNewsScreen extends StatelessWidget {
                   width: 330.w,
                   child: Expanded(
                     child: Text(
-                      AppStrings.newsString,
+                      widget.model.short ?? "",
                       textAlign: TextAlign.justify,
                       style: AppStyles.introButtonText.copyWith(
                         fontWeight: FontWeight.w300,
