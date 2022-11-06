@@ -32,7 +32,7 @@ class _SplashScreenState extends State<SplashScreen> {
     if (await _storage.isLoggedIn()) {
       Navigator.pushNamed(
         context,
-        RouteNames.signin,
+        RouteNames.main,
       );
     } else {
       Navigator.pushNamed(

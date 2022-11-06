@@ -102,19 +102,17 @@ class AuthCubit extends Cubit<AuthState> {
       final response = await _repo.logIn(realNumber, password);
       print("login end");
       print(response.data["user_info"]);
-      // await _storage.saveToken(response.data["user_auth"]);
-      // await _storage.saveUserInfo(jsonEncode(response.data["user_info"]));
-      // final user = await _storage.getUserInfo();
-
+      await _storage.saveToken(response.data["user_auth"]);
+      await _storage.saveUserInfo(jsonEncode(response.data["user_info"]));
       userData = UserInfo.fromJson(response.data["user_info"]);
       emit(UserActive(userInfo: UserInfo.fromJson(response.data["user_info"])));
       // print(user.fullname);
     } on DioError catch (e) {
-      AuthDenied(error: e.message);
+      emit(AuthDenied(error: e.message));
     } on SocketException catch (e) {
-      AuthDenied(error: e.message);
+      emit(AuthDenied(error: e.message));
     } catch (e) {
-      AuthDenied(error: e.toString());
+      emit(AuthDenied(error: e.toString()));
     }
   }
 

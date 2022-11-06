@@ -289,13 +289,8 @@ class AppIcons {
   static const String newsError = "assets/news_error.png";
 }
 
-class AuthKeys {
-  static const String changePasswordKey = "Q2fw_BnQwGm_CxuR75thtc5VTeTDCAnW";
-  static const String logoutKey = "-u1DAPOeGKL0sNDdeI-E14ifkeDv1H9A8-`sd3";
-}
-
 class ApiValues {
-  static const String baseUrl = "http://uzbilim.uz/";
+  static const String baseUrl = "http://uzbilim.uz/api/";
   static const String sighUPUrl = "user/signup";
   static const String loginUrl = "user/login";
   static const String checkSmsUrl = "user/check-code";

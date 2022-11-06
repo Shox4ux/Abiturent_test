@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             primarySwatch: Colors.blue,
           ),
-          home: const LoginScreen(),
+          home: const SplashScreen(),
           routes: navigation.routes,
           onGenerateRoute: navigation.onGenerateRoute,
         ),
