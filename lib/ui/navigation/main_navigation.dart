@@ -12,6 +12,7 @@ import 'package:test_app/ui/bottom_navigation/profile/profile_sections/fund/fill
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/news_screen/inside_news.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/news_screen/news.dart';
 import 'package:test_app/ui/intro/intro.dart';
+import 'package:test_app/ui/main_screen/main_screen.dart';
 import 'package:test_app/ui/splash/splash.dart';
 import 'package:test_app/ui/test_screens/test.dart';
 
@@ -21,13 +22,12 @@ import '../main_page/MAIN_PAGE.dart';
 class MainNavigation {
   final routes = <String, Widget Function(BuildContext)>{
     RouteNames.splash: (context) => const SplashScreen(),
-    RouteNames.main: (context) => const MainScreen(),
     RouteNames.intro: (context) => const IntroScreen(),
+    RouteNames.profile: (context) => const ProfileScreen(),
     RouteNames.signup: (context) => const SignUpScreen(),
     RouteNames.signin: (context) => const LoginScreen(),
     RouteNames.news: (context) => const NewsScreen(),
     RouteNames.payme: (context) => PaymeScreen(),
-    RouteNames.profile: (context) => const ProfileScreen(),
     RouteNames.group: (context) => const GroupScreen(),
     RouteNames.changePassword: (context) => const ResetPassWord(),
     RouteNames.wait: (context) => const WaitingScreen(),
@@ -55,6 +55,23 @@ class MainNavigation {
             builder: (context) => InsideNewsScreen(
               model: model,
             ),
+          );
+        }
+      case RouteNames.main:
+        {
+          final model = settings.arguments as UserInfo;
+          return MaterialPageRoute(
+            builder: (context) => MainScreen1(
+              userInfo: model,
+            ),
+          );
+        }
+
+      case RouteNames.profile:
+        {
+          final model = settings.arguments as UserInfo;
+          return MaterialPageRoute(
+            builder: (context) => ProfileScreen(),
           );
         }
       default:

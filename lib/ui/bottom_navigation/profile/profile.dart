@@ -9,8 +9,12 @@ import '../../../core/block/auth_block/auth_cubit.dart';
 import '../../../res/enum.dart';
 import '../../navigation/main_navigation.dart';
 
+UserInfo? user;
+
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -29,10 +33,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return "Bronza";
   }
 
+  String _medalAsset(int meadalID) {
+    if (meadalID == 2) {
+      return AppIcons.gold;
+    }
+    if (meadalID == 1) {
+      return AppIcons.silver;
+    }
+    return AppIcons.bronze;
+  }
+
   @override
   Widget build(BuildContext context) {
-    UserInfo user = context.read<AuthCubit>().userData!;
-
     return Scaffold(
       body: WillPopScope(
         onWillPop: () async {
@@ -46,6 +58,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             padding: EdgeInsets.all(20.w),
             child: BlocListener<AuthCubit, AuthState>(
               listener: (context, state) {
+                if (state is UserActive) {
+                  user = state.userInfo;
+                  print("profile");
+                }
                 if (state is LogedOut) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
@@ -66,103 +82,106 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   );
                 }
               },
-              child: Column(
-                children: [
-                  FittedBox(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              child: BlocBuilder<AuthCubit, AuthState>(
+                builder: (context, state) {
+                  if (state is UserActive) {
+                    return Column(
                       children: [
-                        CircleAvatar(
-                          radius: 42.w,
-                          foregroundImage: const AssetImage(
-                            AppIcons.man,
-                          ),
-                        ),
-                        Gap(5.w),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "ID #${user.id}",
-                              style: AppStyles.subtitleTextStyle.copyWith(
-                                fontSize: 14.sp,
-                                color: const Color(0xff0D0E0F),
-                              ),
-                            ),
-                            Gap(4.h),
-                            Text(
-                              "${user.fullname}",
-                              style: AppStyles.introButtonText.copyWith(
-                                  fontSize: 24.sp,
-                                  color: const Color(0xff161719)),
-                            ),
-                          ],
-                        ),
-                        Gap(48.w),
-                        Column(
-                          children: [
-                            Text(
-                              _medalStatus(user.medalId!),
-                              style: AppStyles.subtitleTextStyle,
-                            ),
-                            Gap(11.h),
-                            SizedBox(
-                              width: 48.w,
-                              height: 48.h,
-                              child: Image.network(
-                                "${ApiValues.baseUrl}${user.medalImg!}",
-                                errorBuilder: (context, error, stackTrace) =>
-                                    Image.asset(AppIcons.medl),
-                              ),
-                            )
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                  Gap(19.h),
-                  Container(
-                    padding:
-                        EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.w),
-                    height: 52.h,
-                    decoration: BoxDecoration(
-                        color: AppColors.greenBackground,
-                        borderRadius: BorderRadius.circular(10.r)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          height: 40.h,
-                          width: 52.w,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(16.r),
-                          ),
-                          child: Image.asset(
-                            AppIcons.greenPocket,
-                            scale: 3.h,
-                          ),
-                        ),
-                        RichText(
-                          text: TextSpan(
-                            text: "UZS ",
-                            style: AppStyles.introButtonText
-                                .copyWith(color: Colors.white, fontSize: 14.sp),
+                        FittedBox(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              TextSpan(
-                                text: "${user.balance}",
-                                style: AppStyles.introButtonText.copyWith(
-                                    color: Colors.white, fontSize: 28.sp),
+                              CircleAvatar(
+                                radius: 42.w,
+                                foregroundImage: const AssetImage(
+                                  AppIcons.man,
+                                ),
                               ),
+                              Gap(5.w),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "ID #${state.userInfo.id}",
+                                    style: AppStyles.subtitleTextStyle.copyWith(
+                                      fontSize: 14.sp,
+                                      color: const Color(0xff0D0E0F),
+                                    ),
+                                  ),
+                                  Gap(4.h),
+                                  Text(
+                                    "${state.userInfo.fullname}",
+                                    style: AppStyles.introButtonText.copyWith(
+                                        fontSize: 24.sp,
+                                        color: const Color(0xff161719)),
+                                  ),
+                                ],
+                              ),
+                              Gap(48.w),
+                              Column(
+                                children: [
+                                  Text(
+                                    _medalStatus(state.userInfo.medalId!),
+                                    style: AppStyles.subtitleTextStyle,
+                                  ),
+                                  Gap(11.h),
+                                  SizedBox(
+                                      width: 48.w,
+                                      height: 48.h,
+                                      child: Image.asset(
+                                          _medalAsset(state.userInfo.medalId!)))
+                                ],
+                              )
                             ],
                           ),
-                        )
+                        ),
+                        Gap(19.h),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 5.h, horizontal: 10.w),
+                          height: 52.h,
+                          decoration: BoxDecoration(
+                              color: AppColors.greenBackground,
+                              borderRadius: BorderRadius.circular(10.r)),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                height: 40.h,
+                                width: 52.w,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(16.r),
+                                ),
+                                child: Image.asset(
+                                  AppIcons.greenPocket,
+                                  scale: 3.h,
+                                ),
+                              ),
+                              RichText(
+                                text: TextSpan(
+                                  text: "UZS ",
+                                  style: AppStyles.introButtonText.copyWith(
+                                      color: Colors.white, fontSize: 14.sp),
+                                  children: [
+                                    TextSpan(
+                                      text: "${state.userInfo.balance}",
+                                      style: AppStyles.introButtonText.copyWith(
+                                          color: Colors.white, fontSize: 28.sp),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        Gap(25.h),
+                        body()
                       ],
-                    ),
-                  ),
-                  Gap(25.h),
-                  body()
-                ],
+                    );
+                  }
+                  return const CircularProgressIndicator();
+                },
               ),
             ),
           ),

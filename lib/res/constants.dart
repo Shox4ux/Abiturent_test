@@ -257,6 +257,10 @@ class AppIcons {
   static const String purplePocket = "assets/wallet.png";
   static const String greenPocket = "assets/green.png";
 
+  static const String bronze = "assets/bronze-medal.png";
+  static const String silver = "assets/silver-medal.png";
+  static const String gold = "assets/gold-medal.png";
+
   static const String man = "assets/man.png";
   static const String info = "assets/info.png";
   static const String arrow = "assets/arrow.png";
@@ -299,6 +303,8 @@ class ApiValues {
   static const String confirmSmsUrl = "user/check-code-password";
   static const String resetPasswordUrl = "user/reset-password";
   static const String createGroup = "user-group/create-group";
+
+  static const String ratingUrl = "user/rating";
 
   static const String subjectUrl = "subjects/index";
 

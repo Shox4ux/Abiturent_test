@@ -18,7 +18,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _textFormat = MaskTextInputFormatter(mask: '## ### ## ##');
+  // final _textFormat = MaskTextInputFormatter(mask: '## ### ## ##');
   bool isObscure = true;
   var _isAllfilled = false;
   var _phoneNumber = "";
@@ -83,7 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
                   child: TextField(
-                    inputFormatters: [_textFormat],
+                    // inputFormatters: [_textFormat],
                     maxLength: 12,
                     onChanged: (value) {
                       setState(() {

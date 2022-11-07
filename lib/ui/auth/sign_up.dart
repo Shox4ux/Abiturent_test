@@ -19,7 +19,7 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  final _textFormat = MaskTextInputFormatter(mask: '## ### ## ##');
+  // final _textFormat = MaskTextInputFormatter(mask: '## ### ## ##');
   final formKey = GlobalKey<FormState>();
   bool _isChecked = false;
   bool _isObscure = false;
@@ -120,7 +120,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
                   child: TextField(
-                    inputFormatters: [_textFormat],
+                    // inputFormatters: [_textFormat],
                     maxLength: 12,
                     onChanged: (value) {
                       setState(() {
@@ -183,65 +183,65 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 16.w,
-                  ),
-                  child: TextFormField(
-                    validator: ((value) {
-                      if (value!.isEmpty) {
-                        return "iltimos Maxfiy so’zni kiriting";
-                      } else {
-                        bool result = validatePassword(value);
-                        if (result) {
-                          return null;
-                        } else {
-                          return "Minimum 6 ta belgi";
-                        }
-                      }
-                    }),
-                    controller: _controller,
-                    keyboardType: TextInputType.number,
-                    onChanged: (value) {
-                      setState(() {
-                        _passwordC = value;
-                      });
-                    },
-                    obscureText: _isObscure,
-                    decoration: InputDecoration(
-                      counter: const SizedBox.shrink(),
-                      labelText: "Maxfiy so’z",
-                      suffixIcon: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _isObscure = !_isObscure;
-                            });
-                          },
-                          child: Icon(_isObscure
-                              ? Icons.visibility_off_outlined
-                              : Icons.visibility_outlined)),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16.h),
-                        borderSide: BorderSide(color: Colors.red, width: 2.w),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16.h),
-                        borderSide: BorderSide(
-                            color: AppColors.textFieldBorderColor, width: 2.w),
-                      ),
-                    ),
-                  ),
-                ),
-                LinearProgressIndicator(
-                  value: pass_strength,
-                  backgroundColor: Colors.grey,
-                  minHeight: 5,
-                  color: pass_strength == 1 / 2
-                      ? Colors.amber
-                      : pass_strength == 1
-                          ? Colors.blueGrey
-                          : Colors.amber,
-                ),
+                // Padding(
+                //   padding: EdgeInsets.symmetric(
+                //     horizontal: 16.w,
+                //   ),
+                //   child: TextFormField(
+                //     validator: ((value) {
+                //       if (value!.isEmpty) {
+                //         return "iltimos Maxfiy so’zni kiriting";
+                //       } else {
+                //         bool result = validatePassword(value);
+                //         if (result) {
+                //           return null;
+                //         } else {
+                //           return "Minimum 6 ta belgi";
+                //         }
+                //       }
+                //     }),
+                //     controller: _controller,
+                //     keyboardType: TextInputType.number,
+                //     onChanged: (value) {
+                //       setState(() {
+                //         _passwordC = value;
+                //       });
+                //     },
+                //     obscureText: _isObscure,
+                //     decoration: InputDecoration(
+                //       counter: const SizedBox.shrink(),
+                //       labelText: "Maxfiy so’z",
+                //       suffixIcon: GestureDetector(
+                //           onTap: () {
+                //             setState(() {
+                //               _isObscure = !_isObscure;
+                //             });
+                //           },
+                //           child: Icon(_isObscure
+                //               ? Icons.visibility_off_outlined
+                //               : Icons.visibility_outlined)),
+                //       border: OutlineInputBorder(
+                //         borderRadius: BorderRadius.circular(16.h),
+                //         borderSide: BorderSide(color: Colors.red, width: 2.w),
+                //       ),
+                //       enabledBorder: OutlineInputBorder(
+                //         borderRadius: BorderRadius.circular(16.h),
+                //         borderSide: BorderSide(
+                //             color: AppColors.textFieldBorderColor, width: 2.w),
+                //       ),
+                //     ),
+                //   ),
+                // ),
+                // LinearProgressIndicator(
+                //   value: pass_strength,
+                //   backgroundColor: Colors.grey,
+                //   minHeight: 5,
+                //   color: pass_strength == 1 / 2
+                //       ? Colors.amber
+                //       : pass_strength == 1
+                //           ? Colors.blueGrey
+                //           : Colors.amber,
+                // ),
                 // FlutterPwValidator(
                 //     width: 340.w,
                 //     height: 50.h,
@@ -341,7 +341,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             onPressed: () async {
                               context
                                   .read<AuthCubit>()
-                                  .checkFields(_fulnameC, _phoneC, _passwordC);
+                                  .authSignUp(_fulnameC, _phoneC, _passwordC);
                             },
                             child: Text(
                               AppStrings.introUpButtonText,

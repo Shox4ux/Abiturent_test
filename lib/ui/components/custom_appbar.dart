@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:test_app/ui/navigation/main_navigation.dart';
 
+import '../../core/block/auth_block/auth_cubit.dart';
+import '../../core/domain/user_model/user_model.dart';
 import '../../res/constants.dart';
 
 Widget customAppBar(GlobalKey<ScaffoldState> key, BuildContext context) {

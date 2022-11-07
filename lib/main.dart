@@ -2,13 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:test_app/core/block/auth_block/auth_cubit.dart';
+import 'package:test_app/core/block/cubit/user_cubit_cubit.dart';
 import 'package:test_app/core/block/news_bloc/cubit/news_cubit.dart';
-import 'package:test_app/core/helper/database/app_storage.dart';
-import 'package:test_app/ui/auth/forgot_password.dart';
-import 'package:test_app/ui/auth/login.dart';
-import 'package:test_app/ui/bottom_navigation/profile/profile_sections/group/group.dart';
-import 'package:test_app/ui/bottom_navigation/subjects/subject_screen.dart';
-import 'package:test_app/ui/main_page/main_page.dart';
+
 import 'package:test_app/ui/navigation/main_navigation.dart';
 import 'package:test_app/ui/splash/splash.dart';
 
@@ -16,10 +12,6 @@ import 'core/block/subjecy_bloc/subject_cubit.dart';
 
 void main() async {
   runApp(const MyApp());
-
-  final r = AppStorage();
-
-  print(await r.getToken());
 }
 
 class MyApp extends StatelessWidget {
@@ -40,6 +32,9 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => SubjectCubit(),
         ),
+        BlocProvider(
+          create: (context) => UserCubit(),
+        ),
       ],
       child: ScreenUtilInit(
         designSize: const Size(376, 812),
@@ -57,18 +52,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-//  import 'package:flutter/cupertino.dart';
-// import 'package:flutter/material.dart';
-
-// void main(List<String> args) {
-//   runApp(PyScreen());
-// }
-// class PyScreen extends StatelessWidget {
-//   const PyScreen({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp();
-//   }
-// }

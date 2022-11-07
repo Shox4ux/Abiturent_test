@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:test_app/ui/components/custom_dot.dart';
 import 'package:test_app/ui/components/custom_drawer.dart';
-import 'package:test_app/ui/main_page/main_page.dart';
 import 'package:test_app/ui/navigation/main_navigation.dart';
 
 import '../../../res/constants.dart';

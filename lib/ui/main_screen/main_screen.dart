@@ -1,32 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gap/gap.dart';
-import 'package:test_app/core/block/subjecy_bloc/subject_cubit.dart';
-import 'package:test_app/res/constants.dart';
-import 'package:test_app/ui/bottom_navigation/dtm/dtm.dart';
-import 'package:test_app/ui/bottom_navigation/mistakes/mistakes_screen.dart';
-import 'package:test_app/ui/bottom_navigation/profile/profile.dart';
-import 'package:test_app/ui/bottom_navigation/rating/rating_screen.dart';
+import 'package:test_app/core/domain/user_model/user_model.dart';
 
-import 'package:test_app/ui/bottom_navigation/subjects/subject_screen.dart';
+import '../../res/constants.dart';
+import '../bottom_navigation/dtm/dtm.dart';
+import '../bottom_navigation/mistakes/mistakes_screen.dart';
+import '../bottom_navigation/profile/profile.dart';
+import '../bottom_navigation/rating/rating_screen.dart';
+import '../bottom_navigation/subjects/subject_screen.dart';
 
-class MainScreen extends StatefulWidget {
-  const MainScreen({Key? key}) : super(key: key);
+class MainScreen1 extends StatefulWidget {
+  const MainScreen1({super.key, required this.userInfo});
+  final UserInfo userInfo;
 
   @override
-  State<MainScreen> createState() => _MainScreenState();
+  State<MainScreen1> createState() => _MainScreen1State();
 }
 
-@override
-void initState() {}
-
-class _MainScreenState extends State<MainScreen> {
+class _MainScreen1State extends State<MainScreen1> {
   int selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
-    context.read<SubjectCubit>().getSubjects();
+    // context.read<SubjectCubit>().getSubjects();
     print("object_uri");
     final screens = [
       const SubjectsScreen(),
@@ -35,6 +31,7 @@ class _MainScreenState extends State<MainScreen> {
       const MistakesScreen(),
       const RatingScreen(),
     ];
+
     return Scaffold(
       backgroundColor: AppColors.mainColor,
       body: screens[selectedIndex],
@@ -103,75 +100,6 @@ class _MainScreenState extends State<MainScreen> {
           ]),
     );
   }
-}
-
-Widget mainAppBar() {
-  return Padding(
-    padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 20.w),
-    child: Row(
-      children: [
-        Container(
-          height: 17.h,
-          width: 23.w,
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(AppIcons.menu),
-            ),
-          ),
-        ),
-        Gap(100.w),
-        Row(
-          children: [
-            Container(
-              height: 17.h,
-              width: 23.w,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(AppIcons.check),
-                ),
-              ),
-            ),
-            Gap(8.w),
-            Text(
-              "1340",
-              style: AppStyles.subtitleTextStyle
-                  .copyWith(color: const Color(0xffFCFCFC), fontSize: 24.sp),
-            )
-          ],
-        ),
-        Gap(16.w),
-        Row(
-          children: [
-            Container(
-              height: 19.h,
-              width: 19.w,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(AppIcons.clock),
-                ),
-              ),
-            ),
-            Gap(7.w),
-            Text(
-              "4",
-              style: AppStyles.subtitleTextStyle
-                  .copyWith(color: const Color(0xffFCFCFC), fontSize: 24.sp),
-            ),
-            Gap(29.w),
-            Container(
-              height: 20.h,
-              width: 25.w,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(AppIcons.group),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
-    ),
-  );
 }
 
 Widget bottomBarIcon(String iconPath) {

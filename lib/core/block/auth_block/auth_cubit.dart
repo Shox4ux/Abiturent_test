@@ -23,25 +23,19 @@ class AuthCubit extends Cubit<AuthState> {
 
   var tempId = "";
   var tempPhone = "";
-  UserInfo? userData;
-
-  void checkFields(String fullName, String phone, String password) {
-    if (password.length < 6) {
-      emit(
-        const AuthDenied(error: "Password should consist 6 or more symbols"),
-      );
-    }
-    if (phone.length < 7) {
-      emit(
-        const AuthDenied(error: "Phone number should be 7"),
-      );
-    } else {
-      authSignUp(fullName, phone, password);
-    }
-  }
+  UserInfo? _userData;
 
   Future<UserInfo> getUserData() async {
     return await _storage.getUserInfo();
+  }
+
+  Future<void> isLogged() async {
+    final t = await _storage.getUserInfo();
+    if (t.fullname != null) {
+      emit(UserActive(userInfo: t));
+    } else {
+      emit(const AuthDenied(error: "No data"));
+    }
   }
 
   Future<void> authSignUp(
@@ -104,7 +98,11 @@ class AuthCubit extends Cubit<AuthState> {
       print(response.data["user_info"]);
       await _storage.saveToken(response.data["user_auth"]);
       await _storage.saveUserInfo(jsonEncode(response.data["user_info"]));
-      userData = UserInfo.fromJson(response.data["user_info"]);
+
+      print("from storage: ${await _storage.getToken()}");
+      print("from storage: ${await _storage.getUserInfo()}");
+
+      _userData = await _storage.getUserInfo();
       emit(UserActive(userInfo: UserInfo.fromJson(response.data["user_info"])));
       // print(user.fullname);
     } on DioError catch (e) {

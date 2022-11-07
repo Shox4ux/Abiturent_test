@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:test_app/core/block/auth_block/auth_cubit.dart';
 import 'package:test_app/core/helper/database/app_storage.dart';
 import 'package:test_app/res/constants.dart';
 import 'package:test_app/ui/navigation/main_navigation.dart';
@@ -23,6 +24,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
   final _storage = AppStorage();
 
+  final _cubit = AuthCubit();
+
   startTimer() async {
     var duration = const Duration(seconds: 3);
     return Timer(duration, route);
@@ -30,9 +33,11 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void route() async {
     if (await _storage.isLoggedIn()) {
+      final t = await _storage.getUserInfo();
       Navigator.pushNamed(
         context,
         RouteNames.main,
+        arguments: t,
       );
     } else {
       Navigator.pushNamed(

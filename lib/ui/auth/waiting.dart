@@ -60,7 +60,7 @@ Widget whenReceived(BuildContext context) {
           style: AppStyles.introUpButton,
           onPressed: () {
             Navigator.of(context).pushNamedAndRemoveUntil(
-              RouteNames.main,
+              RouteNames.signin,
               (Route<dynamic> route) => false,
             );
           },

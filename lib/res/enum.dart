@@ -24,21 +24,18 @@ enum TestVertions {
   const TestVertions(this.testColor);
 }
 
-// enum Selection {
-//   selected(AppColors.greenBackground),
-//   unselected(AppColors.error);
+enum ImageEnum {
+  bronze(
+    AppIcons.bronze,
+  ),
+  silver(
+    AppIcons.silver,
+  ),
+  gold(
+    AppIcons.gold,
+  );
 
-//   final BoxDecoration decoration;
+  final String iconPath;
 
-//   const Selection(this.decoration);
-// }
-
-// enum Select {
-//   selected,
-//   unselected;
-
-// final fun ()=> Widget();
-
-
-  
-// }
+  const ImageEnum(this.iconPath);
+}
