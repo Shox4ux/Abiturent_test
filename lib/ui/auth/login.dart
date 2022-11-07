@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:test_app/ui/navigation/main_navigation.dart';
 
 import '../../core/block/auth_block/auth_cubit.dart';
@@ -17,6 +18,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final _textFormat = MaskTextInputFormatter(mask: '## ### ## ##');
   bool isObscure = true;
   var _isAllfilled = false;
   var _phoneNumber = "";
@@ -81,7 +83,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
                   child: TextField(
-                    maxLength: 9,
+                    inputFormatters: [_textFormat],
+                    maxLength: 12,
                     onChanged: (value) {
                       setState(() {
                         _phoneNumber = value;

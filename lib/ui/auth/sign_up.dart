@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:test_app/res/constants.dart';
 
 import '../../core/block/auth_block/auth_cubit.dart';
 import '../components/custom_simple_appbar.dart';
 import '../navigation/main_navigation.dart';
+import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -17,14 +19,40 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  final _textFormat = MaskTextInputFormatter(mask: '## ### ## ##');
   final formKey = GlobalKey<FormState>();
   bool _isChecked = false;
   bool _isObscure = false;
   bool _isAllFilled = false;
+  bool validatePassword(String pass) {
+    String _password = pass.trim();
+    if (_password.length < 6) {
+      setState(() {
+        pass_strength = 0;
+      });
+      return false;
+    } else if (_password.length >= 1 && _password.length < 6) {
+      setState(() {
+        pass_strength = 1 / 2;
+      });
+      return false;
+    } else if (_password.length >= 6) {
+      setState(() {
+        pass_strength = 1;
+      });
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   var _fulnameC = "";
   var _phoneC = "";
   var _passwordC = "";
+  final TextEditingController _controller = TextEditingController();
+  final TextStyle _textStyle = TextStyle();
+  final _formKey = GlobalKey<FormState>();
+  double pass_strength = 0;
 
   checkFields() {
     if (_fulnameC.isNotEmpty && _phoneC.isNotEmpty && _passwordC.length < 7) {
@@ -92,7 +120,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
                   child: TextField(
-                    maxLength: 9,
+                    inputFormatters: [_textFormat],
+                    maxLength: 12,
                     onChanged: (value) {
                       setState(() {
                         _phoneC = value;
@@ -122,6 +151,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     horizontal: 16.w,
                   ),
                   child: TextField(
+                    controller: _controller,
                     keyboardType: TextInputType.number,
                     onChanged: (value) {
                       setState(() {
@@ -153,6 +183,70 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                   ),
                 ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16.w,
+                  ),
+                  child: TextFormField(
+                    validator: ((value) {
+                      if (value!.isEmpty) {
+                        return "iltimos Maxfiy so’zni kiriting";
+                      } else {
+                        bool result = validatePassword(value);
+                        if (result) {
+                          return null;
+                        } else {
+                          return "Minimum 6 ta belgi";
+                        }
+                      }
+                    }),
+                    controller: _controller,
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      setState(() {
+                        _passwordC = value;
+                      });
+                    },
+                    obscureText: _isObscure,
+                    decoration: InputDecoration(
+                      counter: const SizedBox.shrink(),
+                      labelText: "Maxfiy so’z",
+                      suffixIcon: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _isObscure = !_isObscure;
+                            });
+                          },
+                          child: Icon(_isObscure
+                              ? Icons.visibility_off_outlined
+                              : Icons.visibility_outlined)),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16.h),
+                        borderSide: BorderSide(color: Colors.red, width: 2.w),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16.h),
+                        borderSide: BorderSide(
+                            color: AppColors.textFieldBorderColor, width: 2.w),
+                      ),
+                    ),
+                  ),
+                ),
+                LinearProgressIndicator(
+                  value: pass_strength,
+                  backgroundColor: Colors.grey,
+                  minHeight: 5,
+                  color: pass_strength == 1 / 2
+                      ? Colors.amber
+                      : pass_strength == 1
+                          ? Colors.blueGrey
+                          : Colors.amber,
+                ),
+                // FlutterPwValidator(
+                //     width: 340.w,
+                //     height: 50.h,
+                //     minLength: 6,
+                //     onSuccess: () {},
                 Gap(21.h),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20.w),

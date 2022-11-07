@@ -47,6 +47,9 @@ dependencies:
   shared_preferences: ^2.0.15
   equatable: ^2.0.5
   dio: ^4.0.6
+  intl: ^0.17.0
+  mask_text_input_formatter: ^2.4.0
+  flutter_pw_validator: ^1.4.2
 
 
   

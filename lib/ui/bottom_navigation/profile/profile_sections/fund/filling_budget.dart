@@ -5,10 +5,12 @@ import 'package:test_app/ui/components/custom_simple_appbar.dart';
 
 import '../../../../../res/constants.dart';
 import '../../../../navigation/main_navigation.dart';
+import 'package:intl/intl.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class PaymeScreen extends StatelessWidget {
-  const PaymeScreen({Key? key}) : super(key: key);
-
+  PaymeScreen({Key? key}) : super(key: key);
+  final textFormat = MaskTextInputFormatter(mask: '### ### ### ### ###');
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,13 +47,29 @@ class PaymeScreen extends StatelessWidget {
                   ),
                 ),
                 Gap(11.h),
-                Text(
-                  "100 000 UZS",
+                TextField(
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [textFormat],
+                  decoration: InputDecoration(
+                      hintText: "0.0 UZS",
+                      hintStyle: AppStyles.introButtonText.copyWith(
+                        color: AppColors.fillingColor.withOpacity(0.6),
+                        fontSize: 36.sp,
+                      ),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20.sp))),
                   style: AppStyles.introButtonText.copyWith(
                     color: AppColors.fillingColor,
                     fontSize: 36.sp,
                   ),
-                ),
+                )
+                // Text(
+                //   "100 000 UZS",
+                //   style: AppStyles.introButtonText.copyWith(
+                //     color: AppColors.fillingColor,
+                //     fontSize: 36.sp,
+                //   ),
+                // ),
               ],
             ),
           ),
@@ -193,6 +211,8 @@ Widget card2Part(BuildContext context) {
       Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.w),
         child: TextField(
+          keyboardType: TextInputType.phone,
+          inputFormatters: [MaskTextInputFormatter(mask: '+### ### ## ##')],
           decoration: InputDecoration(
             hintText: "Telefon raqami",
             border: OutlineInputBorder(
