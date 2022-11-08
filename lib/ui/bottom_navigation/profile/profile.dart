@@ -9,7 +9,7 @@ import '../../../core/block/auth_block/auth_cubit.dart';
 import '../../../res/enum.dart';
 import '../../navigation/main_navigation.dart';
 
-UserInfo? user;
+UserInfo? userInfo;
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({
@@ -57,133 +57,125 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: Padding(
             padding: EdgeInsets.all(20.w),
             child: BlocListener<AuthCubit, AuthState>(
-              listener: (context, state) {
-                if (state is UserActive) {
-                  user = state.userInfo;
-                  print("profile");
-                }
-                if (state is LogedOut) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                        "Good luck man!",
-                      ),
-                    ),
-                  );
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                      RouteNames.signup, (Route<dynamic> route) => false);
-                }
-
-                if (state is AuthDenied) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(state.error),
-                    ),
-                  );
-                }
-              },
-              child: BlocBuilder<AuthCubit, AuthState>(
-                builder: (context, state) {
+                listener: (context, state) {
                   if (state is UserActive) {
-                    return Column(
-                      children: [
-                        FittedBox(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              CircleAvatar(
-                                radius: 42.w,
-                                foregroundImage: const AssetImage(
-                                  AppIcons.man,
-                                ),
-                              ),
-                              Gap(5.w),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "ID #${state.userInfo.id}",
-                                    style: AppStyles.subtitleTextStyle.copyWith(
-                                      fontSize: 14.sp,
-                                      color: const Color(0xff0D0E0F),
-                                    ),
-                                  ),
-                                  Gap(4.h),
-                                  Text(
-                                    "${state.userInfo.fullname}",
-                                    style: AppStyles.introButtonText.copyWith(
-                                        fontSize: 24.sp,
-                                        color: const Color(0xff161719)),
-                                  ),
-                                ],
-                              ),
-                              Gap(48.w),
-                              Column(
-                                children: [
-                                  Text(
-                                    _medalStatus(state.userInfo.medalId!),
-                                    style: AppStyles.subtitleTextStyle,
-                                  ),
-                                  Gap(11.h),
-                                  SizedBox(
-                                      width: 48.w,
-                                      height: 48.h,
-                                      child: Image.asset(
-                                          _medalAsset(state.userInfo.medalId!)))
-                                ],
-                              )
-                            ],
-                          ),
+                    userInfo = state.userInfo;
+                    print("profile");
+                  }
+                  if (state is LogedOut) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          "Good luck man!",
                         ),
-                        Gap(19.h),
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 5.h, horizontal: 10.w),
-                          height: 52.h,
-                          decoration: BoxDecoration(
-                              color: AppColors.greenBackground,
-                              borderRadius: BorderRadius.circular(10.r)),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(
-                                height: 40.h,
-                                width: 52.w,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(16.r),
-                                ),
-                                child: Image.asset(
-                                  AppIcons.greenPocket,
-                                  scale: 3.h,
-                                ),
-                              ),
-                              RichText(
-                                text: TextSpan(
-                                  text: "UZS ",
-                                  style: AppStyles.introButtonText.copyWith(
-                                      color: Colors.white, fontSize: 14.sp),
-                                  children: [
-                                    TextSpan(
-                                      text: "${state.userInfo.balance}",
-                                      style: AppStyles.introButtonText.copyWith(
-                                          color: Colors.white, fontSize: 28.sp),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        Gap(25.h),
-                        body()
-                      ],
+                      ),
+                    );
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        RouteNames.signup, (Route<dynamic> route) => false);
+                  }
+
+                  if (state is AuthDenied) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(state.error),
+                      ),
                     );
                   }
-                  return const CircularProgressIndicator();
                 },
-              ),
-            ),
+                child: Column(
+                  children: [
+                    FittedBox(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          CircleAvatar(
+                            radius: 42.w,
+                            foregroundImage: const AssetImage(
+                              AppIcons.man,
+                            ),
+                          ),
+                          Gap(5.w),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "ID #${userInfo!.id}",
+                                style: AppStyles.subtitleTextStyle.copyWith(
+                                  fontSize: 14.sp,
+                                  color: const Color(0xff0D0E0F),
+                                ),
+                              ),
+                              Gap(4.h),
+                              Text(
+                                "${userInfo!.fullname}",
+                                style: AppStyles.introButtonText.copyWith(
+                                    fontSize: 24.sp,
+                                    color: const Color(0xff161719)),
+                              ),
+                            ],
+                          ),
+                          Gap(48.w),
+                          Column(
+                            children: [
+                              Text(
+                                _medalStatus(userInfo!.medalId!),
+                                style: AppStyles.subtitleTextStyle,
+                              ),
+                              Gap(11.h),
+                              SizedBox(
+                                  width: 48.w,
+                                  height: 48.h,
+                                  child: Image.asset(
+                                      _medalAsset(userInfo!.medalId!)))
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                    Gap(19.h),
+                    Container(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.w),
+                      height: 52.h,
+                      decoration: BoxDecoration(
+                          color: AppColors.greenBackground,
+                          borderRadius: BorderRadius.circular(10.r)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            height: 40.h,
+                            width: 52.w,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16.r),
+                            ),
+                            child: Image.asset(
+                              AppIcons.greenPocket,
+                              scale: 3.h,
+                            ),
+                          ),
+                          RichText(
+                            text: TextSpan(
+                              text: "UZS ",
+                              style: AppStyles.introButtonText.copyWith(
+                                  color: Colors.white, fontSize: 14.sp),
+                              children: [
+                                TextSpan(
+                                  text: "${userInfo!.balance}",
+                                  style: AppStyles.introButtonText.copyWith(
+                                      color: Colors.white, fontSize: 28.sp),
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    Gap(25.h),
+                    body()
+                  ],
+                )),
           ),
         ),
       ),

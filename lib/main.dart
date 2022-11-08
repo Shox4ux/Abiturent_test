@@ -4,6 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:test_app/core/block/auth_block/auth_cubit.dart';
 import 'package:test_app/core/block/cubit/user_cubit_cubit.dart';
 import 'package:test_app/core/block/news_bloc/cubit/news_cubit.dart';
+import 'package:test_app/ui/bottom_navigation/profile/profile_sections/fund/add_card.dart';
+import 'package:test_app/ui/bottom_navigation/profile/profile_sections/fund/filling_budget.dart';
 
 import 'package:test_app/ui/navigation/main_navigation.dart';
 import 'package:test_app/ui/splash/splash.dart';
@@ -44,7 +46,7 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             primarySwatch: Colors.blue,
           ),
-          home: const SplashScreen(),
+          home: AddCard(),
           routes: navigation.routes,
           onGenerateRoute: navigation.onGenerateRoute,
         ),

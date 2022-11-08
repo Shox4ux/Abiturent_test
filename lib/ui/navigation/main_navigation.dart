@@ -8,6 +8,7 @@ import 'package:test_app/ui/auth/sign_up.dart';
 import 'package:test_app/ui/auth/sms_verification.dart';
 import 'package:test_app/ui/auth/waiting.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile.dart';
+import 'package:test_app/ui/bottom_navigation/profile/profile_sections/fund/add_card.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/fund/filling_budget.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/news_screen/inside_news.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/news_screen/news.dart';
@@ -17,7 +18,6 @@ import 'package:test_app/ui/splash/splash.dart';
 import 'package:test_app/ui/test_screens/test.dart';
 
 import '../bottom_navigation/profile/profile_sections/group/group.dart';
-import '../main_page/MAIN_PAGE.dart';
 
 class MainNavigation {
   final routes = <String, Widget Function(BuildContext)>{
@@ -27,7 +27,7 @@ class MainNavigation {
     RouteNames.signup: (context) => const SignUpScreen(),
     RouteNames.signin: (context) => const LoginScreen(),
     RouteNames.news: (context) => const NewsScreen(),
-    RouteNames.payme: (context) => PaymeScreen(),
+    RouteNames.payme: (context) => AddCard(),
     RouteNames.group: (context) => const GroupScreen(),
     RouteNames.changePassword: (context) => const ResetPassWord(),
     RouteNames.wait: (context) => const WaitingScreen(),
