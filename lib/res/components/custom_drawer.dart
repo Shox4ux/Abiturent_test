@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,7 +8,7 @@ import 'package:test_app/core/domain/subject_models/subject_model.dart';
 import 'package:test_app/core/helper/repos/subject_repo.dart';
 import 'package:test_app/res/constants.dart';
 
-import '../../core/block/subjecy_bloc/subject_cubit.dart';
+import '../../core/block/drawer_cubit/drawer_cubit.dart';
 
 List<SubjectModel> list = [];
 final _repo = SubjectRepo();
@@ -20,21 +22,20 @@ class CustomDrawer extends StatefulWidget {
 }
 
 class _CustomDrawerState extends State<CustomDrawer> {
-  int? index = 0;
+  int _index = 0;
 
   Future<List<SubjectModel>> getSubs() async {
-    final response = await _repo.getSubjects();
-    final rowData = response.data as List;
-
-    if (response.statusCode == 200) {
+    try {
+      final response = await _repo.getSubjects();
+      final rowData = response.data as List;
+      final rowList = rowData.map((e) => SubjectModel.fromJson(e)).toList();
       list.clear();
-      for (var element in rowData) {
-        list.add(SubjectModel.fromJson(element));
-      }
+      list.addAll(rowList);
       return list;
-    } else {
-      return list;
+    } on SocketException catch (e) {
+      print(e.message);
     }
+    return list;
   }
 
   @override
@@ -66,7 +67,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
               future: getSubs(),
               builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
                 if (!snapshot.hasData) {
-                  return Text("Loading...");
+                  return const Text("Loading...");
                 }
                 return Column(
                   children: [
@@ -74,11 +75,14 @@ class _CustomDrawerState extends State<CustomDrawer> {
                       GestureDetector(
                           onTap: () {
                             setState(() {
-                              index = i;
-                              print(i);
+                              _index = i;
+                              context
+                                  .read<DrawerCubit>()
+                                  .saveSubId(list[i].id!);
+                              Navigator.pop(context);
                             });
                           },
-                          child: drawerItem(list[i].name!, index == i))
+                          child: drawerItem(list[i].name!, _index == i))
                   ],
                 );
               },
@@ -86,35 +90,41 @@ class _CustomDrawerState extends State<CustomDrawer> {
           ],
         ));
   }
+}
 
-  Widget drawerItem(String text, bool isPressed) {
-    return isPressed
-        ? Container(
-            margin: EdgeInsets.only(bottom: 10.h, right: 30.w),
-            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-            height: 40.h,
-            width: double.maxFinite,
-            decoration: const BoxDecoration(color: AppColors.mainColor),
-            child: Text(
-              text,
-              style: AppStyles.introButtonText.copyWith(
-                color: Colors.white,
-                fontSize: 18.sp,
-              ),
-            ),
-          )
-        : Container(
-            margin: EdgeInsets.only(bottom: 10.h, right: 30.w),
-            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-            height: 40.h,
-            width: double.maxFinite,
-            child: Text(
-              text,
-              style: AppStyles.introButtonText.copyWith(
-                color: Colors.black,
-                fontSize: 18.sp,
-              ),
-            ),
-          );
-  }
+Widget drawerItem(String text, bool isPressed) {
+  return isPressed ? selected(text) : unSelected(text);
+}
+
+Widget selected(String text) {
+  return Container(
+    margin: EdgeInsets.only(bottom: 10.h, right: 30.w),
+    padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+    height: 40.h,
+    width: double.maxFinite,
+    decoration: const BoxDecoration(color: AppColors.mainColor),
+    child: Text(
+      text,
+      style: AppStyles.introButtonText.copyWith(
+        color: Colors.white,
+        fontSize: 18.sp,
+      ),
+    ),
+  );
+}
+
+Widget unSelected(String text) {
+  return Container(
+    margin: EdgeInsets.only(bottom: 10.h, right: 30.w),
+    padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+    height: 40.h,
+    width: double.maxFinite,
+    child: Text(
+      text,
+      style: AppStyles.introButtonText.copyWith(
+        color: Colors.black,
+        fontSize: 18.sp,
+      ),
+    ),
+  );
 }

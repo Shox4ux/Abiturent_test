@@ -4,11 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-import 'package:test_app/ui/navigation/main_navigation.dart';
+import 'package:test_app/res/navigation/main_navigation.dart';
 
 import '../../core/block/auth_block/auth_cubit.dart';
 import '../../res/constants.dart';
-import '../components/custom_simple_appbar.dart';
+import '../../res/components/custom_simple_appbar.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);

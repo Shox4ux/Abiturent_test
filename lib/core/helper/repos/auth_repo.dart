@@ -54,7 +54,7 @@ class AuthRepository {
   }
 
   Future<Response> checkSmsCode(
-      String userId, String phone, String smsCode) async {
+      int userId, String phone, String smsCode) async {
     final Map<String, dynamic> params = {
       "user_id": userId,
       "phone": phone,
@@ -63,6 +63,20 @@ class AuthRepository {
 
     return await _dio.post(
       ApiValues.checkSmsUrl,
+      data: params,
+    );
+  }
+
+  Future<Response> checkResetPassWord(
+      int userId, String phone, String smsCode) async {
+    final Map<String, dynamic> params = {
+      "user_id": userId,
+      "phone": phone,
+      "sms_live": smsCode,
+    };
+
+    return await _dio.post(
+      ApiValues.resetPasswordUrl,
       data: params,
     );
   }
@@ -79,12 +93,10 @@ class AuthRepository {
     );
   }
 
-  Future<Response> changePassword(int userId, String authKey,
-      String oldPassword, String newPassword, String confirmPassword) async {
+  Future<Response> changePassword(
+      String phone, String newPassword, String confirmPassword) async {
     final Map<String, dynamic> params = {
-      "user_id": userId,
-      "auth_key": authKey,
-      "old_pass": oldPassword,
+      "phone": phone,
       "new_pass": newPassword,
       "confirm_pass": confirmPassword,
     };

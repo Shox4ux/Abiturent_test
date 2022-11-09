@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:test_app/core/block/auth_block/auth_cubit.dart';
+import 'package:test_app/core/block/test_block/test_cubit.dart';
+import 'package:test_app/core/block/user_block/user_cubit_cubit.dart';
 import 'package:test_app/core/helper/database/app_storage.dart';
 import 'package:test_app/res/constants.dart';
-import 'package:test_app/ui/navigation/main_navigation.dart';
+import 'package:test_app/res/navigation/main_navigation.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -19,12 +21,12 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+
     startTimer();
   }
 
   final _storage = AppStorage();
-
-  final _cubit = AuthCubit();
+  final _cubit = UserCubit();
 
   startTimer() async {
     var duration = const Duration(seconds: 3);
@@ -34,6 +36,8 @@ class _SplashScreenState extends State<SplashScreen> {
   void route() async {
     if (await _storage.isLoggedIn()) {
       final t = await _storage.getUserInfo();
+      print(t.fullname);
+
       Navigator.pushNamed(
         context,
         RouteNames.main,

@@ -4,9 +4,9 @@ import 'package:gap/gap.dart';
 
 import '../../res/constants.dart';
 import '../../res/models/test_model.dart';
-import '../components/custom_dot.dart';
-import '../components/custom_simple_appbar.dart';
-import '../navigation/main_navigation.dart';
+import '../../res/components/custom_dot.dart';
+import '../../res/components/custom_simple_appbar.dart';
+import '../../res/navigation/main_navigation.dart';
 
 class TestAnswerScreen extends StatefulWidget {
   const TestAnswerScreen({Key? key}) : super(key: key);

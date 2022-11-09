@@ -23,7 +23,10 @@ class _CustomCommonButtonState extends State<CustomCommonButton> {
     return ElevatedButton(
       style: widget.buttonStyle,
       onPressed: widget.buttonCallBack,
-      child: Text(widget.buttonText, style: widget.buttonTextStyle),
+      child: Text(
+        widget.buttonText,
+        style: widget.buttonTextStyle,
+      ),
     );
   }
 }

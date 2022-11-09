@@ -3,13 +3,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:test_app/core/domain/user_model/user_model.dart';
+import 'package:test_app/core/helper/database/app_storage.dart';
 import 'package:test_app/res/constants.dart';
+import 'package:test_app/ui/bottom_navigation/profile/profile_sections/group/group.dart';
 
 import '../../../core/block/auth_block/auth_cubit.dart';
 import '../../../res/enum.dart';
-import '../../navigation/main_navigation.dart';
+import '../../../res/navigation/main_navigation.dart';
 
 UserInfo? user;
+final _s = AppStorage();
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({
@@ -22,6 +25,15 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   bool isInSubs = false;
+
+  Future<UserInfo> getUserData() async {
+    final e = await _s.getUserInfo();
+    if (e.id != null) {
+      user = e;
+      return user!;
+    }
+    return user!;
+  }
 
   String _medalStatus(int meadalID) {
     if (meadalID == 2) {
@@ -57,83 +69,87 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: Padding(
             padding: EdgeInsets.all(20.w),
             child: BlocListener<AuthCubit, AuthState>(
-              listener: (context, state) {
-                if (state is UserActive) {
-                  user = state.userInfo;
-                  print("profile");
-                }
-                if (state is LogedOut) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                        "Good luck man!",
-                      ),
-                    ),
-                  );
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                      RouteNames.signup, (Route<dynamic> route) => false);
-                }
-
-                if (state is AuthDenied) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(state.error),
-                    ),
-                  );
-                }
-              },
-              child: BlocBuilder<AuthCubit, AuthState>(
-                builder: (context, state) {
+                listener: (context, state) {
                   if (state is UserActive) {
+                    user = state.userInfo;
+                    print("profile");
+                  }
+                  if (state is LogedOut) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          "Good luck man!",
+                        ),
+                      ),
+                    );
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        RouteNames.signup, (Route<dynamic> route) => false);
+                  }
+
+                  if (state is AuthDenied) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(state.error),
+                      ),
+                    );
+                  }
+                },
+                child: FutureBuilder(
+                  future: getUserData(),
+                  builder:
+                      (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                    if (!snapshot.hasData) {
+                      return const Center(
+                        child: Text("Loading..."),
+                      );
+                    }
                     return Column(
                       children: [
-                        FittedBox(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              CircleAvatar(
-                                radius: 42.w,
-                                foregroundImage: const AssetImage(
-                                  AppIcons.man,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            CircleAvatar(
+                              radius: 42.w,
+                              foregroundImage: const AssetImage(
+                                AppIcons.man,
+                              ),
+                            ),
+                            Gap(5.w),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "ID #${user!.id}",
+                                  style: AppStyles.subtitleTextStyle.copyWith(
+                                    fontSize: 14.sp,
+                                    color: const Color(0xff0D0E0F),
+                                  ),
                                 ),
-                              ),
-                              Gap(5.w),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "ID #${state.userInfo.id}",
-                                    style: AppStyles.subtitleTextStyle.copyWith(
-                                      fontSize: 14.sp,
-                                      color: const Color(0xff0D0E0F),
-                                    ),
-                                  ),
-                                  Gap(4.h),
-                                  Text(
-                                    "${state.userInfo.fullname}",
-                                    style: AppStyles.introButtonText.copyWith(
-                                        fontSize: 24.sp,
-                                        color: const Color(0xff161719)),
-                                  ),
-                                ],
-                              ),
-                              Gap(48.w),
-                              Column(
-                                children: [
-                                  Text(
-                                    _medalStatus(state.userInfo.medalId!),
-                                    style: AppStyles.subtitleTextStyle,
-                                  ),
-                                  Gap(11.h),
-                                  SizedBox(
-                                      width: 48.w,
-                                      height: 48.h,
-                                      child: Image.asset(
-                                          _medalAsset(state.userInfo.medalId!)))
-                                ],
-                              )
-                            ],
-                          ),
+                                Gap(4.h),
+                                Text(
+                                  "${user!.fullname}",
+                                  style: AppStyles.introButtonText.copyWith(
+                                      fontSize: 24.sp,
+                                      color: const Color(0xff161719)),
+                                ),
+                              ],
+                            ),
+                            Gap(48.w),
+                            Column(
+                              children: [
+                                Text(
+                                  _medalStatus(user!.medalId!),
+                                  style: AppStyles.subtitleTextStyle,
+                                ),
+                                Gap(11.h),
+                                SizedBox(
+                                    width: 48.w,
+                                    height: 48.h,
+                                    child: Image.asset(
+                                        _medalAsset(user!.medalId!)))
+                              ],
+                            )
+                          ],
                         ),
                         Gap(19.h),
                         Container(
@@ -165,7 +181,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       color: Colors.white, fontSize: 14.sp),
                                   children: [
                                     TextSpan(
-                                      text: "${state.userInfo.balance}",
+                                      text: "${user!.balance}",
                                       style: AppStyles.introButtonText.copyWith(
                                           color: Colors.white, fontSize: 28.sp),
                                     ),
@@ -179,11 +195,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         body()
                       ],
                     );
-                  }
-                  return const CircularProgressIndicator();
-                },
-              ),
-            ),
+                  },
+                )),
           ),
         ),
       ),
@@ -251,15 +264,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         spacer(),
         InkWell(
-          onTap: () {},
+          onTap: () {
+            Navigator.pushNamed(
+              context,
+              RouteNames.subscripts,
+            );
+          },
           child: rowItem(AppIcons.purpleDone, "Mening obunalarim", false),
         ),
         spacer(),
         InkWell(
           onTap: () {
-            Navigator.pushNamed(
+            Navigator.push(
               context,
-              RouteNames.group,
+              MaterialPageRoute(
+                  builder: (context) => GroupScreen(userId: user!.id!)),
             );
           },
           child: rowItem(AppIcons.purpleDone, "Mening guruhlarim", false),

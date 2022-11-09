@@ -21,6 +21,13 @@ class OnSubMove extends SubjectState {
   List<Object> get props => [];
 }
 
+class SubId extends SubjectState {
+  final int id;
+  const SubId(this.id);
+  @override
+  List<Object> get props => [id];
+}
+
 class OnSubError extends SubjectState {
   final String error;
   const OnSubError({required this.error});

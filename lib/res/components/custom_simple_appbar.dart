@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
-import '../../res/constants.dart';
+import '../constants.dart';
 
 class CustomSimpleAppBar extends StatefulWidget {
   CustomSimpleAppBar({

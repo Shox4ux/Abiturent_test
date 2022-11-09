@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:test_app/ui/components/custom_simple_appbar.dart';
+import 'package:test_app/res/components/custom_simple_appbar.dart';
 
 import '../../../../../res/constants.dart';
-import '../../../../navigation/main_navigation.dart';
+import '../../../../../res/navigation/main_navigation.dart';
 import 'package:intl/intl.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 

@@ -1,23 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:test_app/core/domain/news_models/main_news_model.dart';
-import 'package:test_app/core/domain/user_model/user_model.dart';
 import 'package:test_app/ui/auth/forgot_password.dart';
 import 'package:test_app/ui/auth/login.dart';
-import 'package:test_app/ui/auth/reset_password.dart';
 import 'package:test_app/ui/auth/sign_up.dart';
-import 'package:test_app/ui/auth/sms_verification.dart';
 import 'package:test_app/ui/auth/waiting.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile.dart';
-import 'package:test_app/ui/bottom_navigation/profile/profile_sections/fund/filling_budget.dart';
+import 'package:test_app/ui/bottom_navigation/profile/profile_sections/group/add_user_to_group.dart';
+import 'package:test_app/ui/bottom_navigation/profile/profile_sections/payme/payme.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/news_screen/inside_news.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/news_screen/news.dart';
+import 'package:test_app/ui/bottom_navigation/profile/profile_sections/payments/payments.dart';
+import 'package:test_app/ui/bottom_navigation/profile/profile_sections/subscriptions/subscriptions_screen.dart';
 import 'package:test_app/ui/intro/intro.dart';
 import 'package:test_app/ui/main_screen/main_screen.dart';
 import 'package:test_app/ui/splash/splash.dart';
-import 'package:test_app/ui/test_screens/test.dart';
 
-import '../bottom_navigation/profile/profile_sections/group/group.dart';
-import '../main_page/MAIN_PAGE.dart';
+import '../../ui/bottom_navigation/profile/profile_sections/group/group.dart';
 
 class MainNavigation {
   final routes = <String, Widget Function(BuildContext)>{
@@ -26,28 +24,18 @@ class MainNavigation {
     RouteNames.profile: (context) => const ProfileScreen(),
     RouteNames.signup: (context) => const SignUpScreen(),
     RouteNames.signin: (context) => const LoginScreen(),
-    RouteNames.news: (context) => const NewsScreen(),
+    RouteNames.news: (context) => NewsScreen(),
+    RouteNames.main: (context) => const MainScreen1(),
     RouteNames.payme: (context) => PaymeScreen(),
-    RouteNames.group: (context) => const GroupScreen(),
-    RouteNames.changePassword: (context) => const ResetPassWord(),
     RouteNames.wait: (context) => const WaitingScreen(),
     RouteNames.forget: (context) => const ForgotPasswordScreen(),
-    RouteNames.test: (context) => const TestScreen()
+    RouteNames.subscripts: (context) => const MySubscriptions(),
+    RouteNames.budget: (context) => const PaymentsScreen(),
+    RouteNames.addMembers: (context) => const AddUserToGroup(),
   };
 
   Route? onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
-      case RouteNames.smsVerification:
-        {
-          final route = settings.arguments as String;
-
-          return MaterialPageRoute(
-            builder: (context) => SmsVerificationScreen(
-              fromWhere: route,
-            ),
-          );
-        }
-
       case RouteNames.innerNews:
         {
           final model = settings.arguments as MainNewsModel;
@@ -57,23 +45,7 @@ class MainNavigation {
             ),
           );
         }
-      case RouteNames.main:
-        {
-          final model = settings.arguments as UserInfo;
-          return MaterialPageRoute(
-            builder: (context) => MainScreen1(
-              userInfo: model,
-            ),
-          );
-        }
 
-      case RouteNames.profile:
-        {
-          final model = settings.arguments as UserInfo;
-          return MaterialPageRoute(
-            builder: (context) => ProfileScreen(),
-          );
-        }
       default:
     }
     return null;
@@ -95,5 +67,7 @@ abstract class RouteNames {
   static const wait = "wait";
   static const forget = "forget";
   static const innerNews = "innerNews";
-  static const test = "test";
+  static const subscripts = "subscripts";
+  static const budget = "budget";
+  static const addMembers = "addMembers";
 }

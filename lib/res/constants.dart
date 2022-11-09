@@ -253,6 +253,8 @@ class AppIcons {
   static const String bilim = "assets/bilim.png";
 
   static const String mobile = "assets/mobile.png";
+  static const String noImage = "assets/no_image.png";
+  static const String delete = "assets/delete.png";
 
   static const String purplePocket = "assets/wallet.png";
   static const String greenPocket = "assets/green.png";
@@ -260,6 +262,8 @@ class AppIcons {
   static const String bronze = "assets/bronze-medal.png";
   static const String silver = "assets/silver-medal.png";
   static const String gold = "assets/gold-medal.png";
+
+  static const String drop = "assets/drop.png";
 
   static const String man = "assets/man.png";
   static const String info = "assets/info.png";
@@ -299,7 +303,7 @@ class ApiValues {
   static const String loginUrl = "user/login";
   static const String checkSmsUrl = "user/check-code";
   static const String logoutUrl = "user/logout";
-  static const String changePasswordUrl = "user/change-password";
+  static const String changePasswordUrl = "user/new-password";
   static const String confirmSmsUrl = "user/check-code-password";
   static const String resetPasswordUrl = "user/reset-password";
   static const String createGroup = "user-group/create-group";
@@ -307,9 +311,13 @@ class ApiValues {
   static const String ratingUrl = "user/rating";
 
   static const String subjectUrl = "subjects/index";
+  static const String innerTest = "test/questions";
 
   static const String mainNewsAndPaginationUrl = "news/index";
   static const String newsByIdUrl = "news/view";
+
+//Tests
+  static const String testsBySubIdAndTypeIndex = "test/index";
 }
 
 class AppStorageConstants {

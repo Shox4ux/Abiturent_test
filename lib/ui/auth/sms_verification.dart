@@ -3,21 +3,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:test_app/ui/auth/reset_password.dart';
 
-import 'package:test_app/ui/components/custom_countdown_timer.dart';
-import 'package:test_app/ui/components/custom_pinput_widget.dart';
+import 'package:test_app/res/components/custom_countdown_timer.dart';
+import 'package:test_app/res/components/custom_pinput_widget.dart';
 
 import '../../core/block/auth_block/auth_cubit.dart';
 import '../../res/constants.dart';
-import '../components/custom_simple_appbar.dart';
-import '../navigation/main_navigation.dart';
+import '../../res/components/custom_simple_appbar.dart';
+import '../../res/navigation/main_navigation.dart';
 
 class SmsVerificationScreen extends StatefulWidget {
   const SmsVerificationScreen({
     Key? key,
     required this.fromWhere,
+    required this.phone,
+    required this.id,
   }) : super(key: key);
   final String fromWhere;
+  final String phone;
+  final int id;
+
   @override
   State<SmsVerificationScreen> createState() => _SmsVerificationScreenState();
 }
@@ -32,14 +38,12 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen> {
 
   var _pinCode = "";
   final _isTime = false;
-  var _id = "";
-  var _phone = "state.phoneNumber";
+
   var _isFilled = false;
 
   void _checkFields() {
     if (_pinCode.length == 6) {
       setState(() {
-        print("phoy$_pinCode");
         _isFilled = true;
       });
     } else {
@@ -55,12 +59,25 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen> {
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is AuthGranted) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text("Good luck man!")));
-          Navigator.pushNamed(
-            context,
-            _destinationDecider(widget.fromWhere),
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Good luck man!"),
+            ),
           );
+          if (widget.fromWhere == RouteNames.forget) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => ResetPassWord(
+                        phone: "998${widget.phone}",
+                      )),
+            );
+          } else {
+            Navigator.of(context).pushNamedAndRemoveUntil(
+              RouteNames.wait,
+              (Route<dynamic> route) => false,
+            );
+          }
         }
         if (state is AuthDenied) {
           ScaffoldMessenger.of(context)
@@ -150,12 +167,19 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen> {
                             return ElevatedButton(
                               style: AppStyles.introUpButton,
                               onPressed: () {
-                                _id = context.read<AuthCubit>().tempId;
-                                _phone = context.read<AuthCubit>().tempPhone;
-
-                                context
-                                    .read<AuthCubit>()
-                                    .checkSmsCode(_id, _phone, _pinCode);
+                                if (widget.fromWhere == RouteNames.forget) {
+                                  context.read<AuthCubit>().checkResetPassword(
+                                        widget.id,
+                                        widget.phone,
+                                        _pinCode,
+                                      );
+                                } else {
+                                  context.read<AuthCubit>().checkSmsCode(
+                                        widget.id,
+                                        widget.phone,
+                                        _pinCode,
+                                      );
+                                }
                               },
                               child: Text(
                                 "Tasdiqlash",

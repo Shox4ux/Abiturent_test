@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:test_app/core/domain/news_models/main_news_model.dart';
 import 'package:test_app/res/constants.dart';
-import 'package:test_app/ui/components/custom_simple_appbar.dart';
+import 'package:test_app/res/components/custom_simple_appbar.dart';
 
 class InsideNewsScreen extends StatefulWidget {
   const InsideNewsScreen({
@@ -28,15 +28,11 @@ class _InsideNewsScreenState extends State<InsideNewsScreen> {
             SizedBox(
               height: 212.h,
               width: double.maxFinite,
-              child: widget.model.imageLink != null
-                  ? Image.network(
-                      widget.model.imageLink!,
-                      fit: BoxFit.cover,
-                    )
-                  : Image.asset(
-                      AppIcons.newsError,
-                      fit: BoxFit.cover,
-                    ),
+              //Change here after showing
+              child: Image.asset(
+                AppIcons.news,
+                fit: BoxFit.cover,
+              ),
             ),
             Positioned(
               top: 120,
@@ -45,7 +41,7 @@ class _InsideNewsScreenState extends State<InsideNewsScreen> {
                 titleText: "Yangiliklar",
                 routeText: "routeText",
                 style: AppStyles.introButtonText.copyWith(
-                  color: AppColors.fillingColor,
+                  color: Colors.white,
                 ),
                 iconColor: Colors.white,
               ),

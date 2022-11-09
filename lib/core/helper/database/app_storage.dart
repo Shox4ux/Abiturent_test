@@ -15,6 +15,11 @@ class AppStorage {
     return prefs.getString(AppStorageConstants.passwordKey);
   }
 
+  Future<void> clearPassword() async {
+    var prefs = await SharedPreferences.getInstance();
+    prefs.remove(AppStorageConstants.passwordKey);
+  }
+
   Future<void> saveUserInfo(String data) async {
     var prefs = await SharedPreferences.getInstance();
     await prefs.setString(AppStorageConstants.userKey, data);

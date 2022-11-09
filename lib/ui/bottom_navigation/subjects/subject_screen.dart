@@ -1,77 +1,167 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:test_app/ui/components/custom_dot.dart';
-import 'package:test_app/ui/components/custom_drawer.dart';
-import 'package:test_app/ui/navigation/main_navigation.dart';
+import 'package:test_app/core/domain/test_model/test_model.dart';
+import 'package:test_app/core/helper/repos/test_repo.dart';
+import 'package:test_app/res/components/custom_dot.dart';
+import 'package:test_app/res/components/custom_drawer.dart';
+import 'package:test_app/res/navigation/main_navigation.dart';
+
+import '../../../core/block/drawer_cubit/drawer_cubit.dart';
 
 import '../../../res/constants.dart';
-import '../../components/custom_appbar.dart';
+import '../../../res/components/custom_appbar.dart';
+import '../../test_screens/test.dart';
+
+TestModel? testModel;
 
 class SubjectsScreen extends StatelessWidget {
-  const SubjectsScreen({Key? key}) : super(key: key);
+  const SubjectsScreen({
+    Key? key,
+    required this.testType,
+  }) : super(key: key);
+
+  final int testType;
 
   @override
   Widget build(BuildContext context) {
-    // final topPadding = MediaQuery.of(context).padding.top; this alternative of safeArea
-    final GlobalKey<ScaffoldState> _scaffKey = GlobalKey<ScaffoldState>();
+    final repo = TestRepo();
+
+    final GlobalKey<ScaffoldState> scaffKey = GlobalKey<ScaffoldState>();
     final screenWidth = MediaQuery.of(context).size.width;
+
+    Future<TestModel> getTestModel(int subId) async {
+      final response = await repo.getTestsBySubjectId(subId, 1);
+
+      if (response.statusCode == 200) {
+        final allTestData = TestModel.fromJson(response.data);
+        testModel = allTestData;
+
+        return testModel!;
+      }
+
+      return testModel!;
+    }
 
     return Scaffold(
       backgroundColor: AppColors.mainColor,
-      key: _scaffKey,
+      key: scaffKey,
       drawer: CustomDrawer(mainWidth: screenWidth),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            customAppBar(_scaffKey, context),
+            CustomAppBar(scaffKey: scaffKey),
             Expanded(
-                child: Container(
-              padding: EdgeInsets.only(top: 14.h),
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(28.r),
-                    topRight: Radius.circular(28.r),
-                  )),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20.w),
-                    child: Text(
-                      "Tarix fani",
-                      style: AppStyles.introButtonText.copyWith(
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                  Gap(10.h),
-                  Expanded(
-                    child: ListView.builder(
-                        padding: EdgeInsets.only(
-                          bottom: 20.h,
-                          top: 10.h,
-                        ),
-                        itemCount: 10,
-                        itemBuilder: (
-                          BuildContext context,
-                          int index,
-                        ) {
-                          return subjectItem(context);
-                        }),
-                  ),
-                ],
+              child: Container(
+                width: double.maxFinite,
+                padding: EdgeInsets.only(top: 14.h),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(28.r),
+                      topRight: Radius.circular(28.r),
+                    )),
+                child: BlocBuilder<DrawerCubit, DrawerState>(
+                  builder: (context, state) {
+                    if (state is DrawerSubId) {
+                      return FutureBuilder(
+                        future: getTestModel(state.subId),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return const Center(child: Text("Loading..."));
+                          }
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                                child: Text(
+                                  testModel!.subjects!.name!,
+                                  style: AppStyles.introButtonText.copyWith(
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                              Gap(10.h),
+                              (testModel!.tests!.isEmpty)
+                                  ? const Center(
+                                      child: Text("Testlar topilmadi"))
+                                  : Expanded(
+                                      child: ListView.builder(
+                                          padding: EdgeInsets.only(
+                                            bottom: 20.h,
+                                            top: 10.h,
+                                          ),
+                                          itemCount: testModel!.tests!.length,
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            return subjectItem(
+                                              testModel!.tests![index],
+                                              context,
+                                              (index + 1),
+                                            );
+                                          }),
+                                    ),
+                            ],
+                          );
+                        },
+                      );
+                    }
+                    return FutureBuilder(
+                      future: getTestModel(1),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return const Center(child: Text("Loading..."));
+                        }
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 20.w),
+                              child: Text(
+                                testModel!.subjects!.name!,
+                                style: AppStyles.introButtonText.copyWith(
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                            Gap(10.h),
+                            (testModel!.tests!.isEmpty)
+                                ? const Center(child: Text("Testlar topilmadi"))
+                                : Expanded(
+                                    child: ListView.builder(
+                                        padding: EdgeInsets.only(
+                                          bottom: 20.h,
+                                          top: 10.h,
+                                        ),
+                                        itemCount: testModel!.tests!.length,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          return subjectItem(
+                                              testModel!.tests![index],
+                                              context,
+                                              (index + 1));
+                                        }),
+                                  ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                ),
               ),
-            ))
+            )
           ],
         ),
       ),
     );
   }
 
-  Widget subjectItem(BuildContext context) {
+  Widget subjectItem(Tests tests, BuildContext context, int testIndex) {
     return Container(
       margin: EdgeInsets.only(bottom: 20.h, left: 20.w, right: 20.w),
       width: 333.w,
@@ -104,7 +194,7 @@ class SubjectsScreen extends StatelessWidget {
             Gap(5.w),
             Expanded(
               child: Text(
-                " 1918-1939- yillarda Osiyo davlatlarining iqtisodiy va siyosiy rivojlanishi",
+                tests.title!,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: AppStyles.subtitleTextStyle.copyWith(
@@ -134,7 +224,7 @@ class SubjectsScreen extends StatelessWidget {
                   ),
                   Gap(9.w),
                   Text(
-                    "10 ta",
+                    "${tests.questionsCount}",
                     style: AppStyles.subtitleTextStyle.copyWith(
                       color: Colors.white,
                       fontSize: 12.sp,
@@ -145,7 +235,15 @@ class SubjectsScreen extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
-                Navigator.pushNamed(context, RouteNames.test);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => TestScreen(
+                            testId: tests.id!,
+                            subName: tests.subjectName!,
+                            testIndex: testIndex,
+                          )),
+                );
               },
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 11.h, horizontal: 16.w),

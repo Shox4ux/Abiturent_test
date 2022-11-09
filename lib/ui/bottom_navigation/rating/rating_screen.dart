@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -5,11 +7,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:test_app/core/domain/user_model/user_model.dart';
 import 'package:test_app/core/helper/repos/user_repo.dart';
-import 'package:test_app/ui/components/custom_drawer.dart';
+import 'package:test_app/res/components/custom_drawer.dart';
 
-import '../../../core/block/cubit/user_cubit_cubit.dart';
+import '../../../core/block/user_block/user_cubit_cubit.dart';
 import '../../../res/constants.dart';
-import '../../components/custom_appbar.dart';
+import '../../../res/components/custom_appbar.dart';
 
 List<UserInfo> list = [];
 
@@ -24,25 +26,22 @@ class _RatingScreenState extends State<RatingScreen> {
   final _repo = UserRepo();
 
   Future<List<UserInfo>> callUserRating() async {
-    final response = await _repo.getUserRatings();
-    final rowData = response.data as List;
-
-    if (response.statusCode == 200) {
+    try {
+      final response = await _repo.getUserRatings();
+      final rowData = response.data as List;
       list.clear();
       for (var element in rowData) {
         list.add(UserInfo.fromJson(element));
+        return list;
       }
-      return list;
-    } else {
-      return list;
+    } on SocketException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.message),
+        ),
+      );
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    callUserRating();
+    return list;
   }
 
   @override
@@ -56,7 +55,7 @@ class _RatingScreenState extends State<RatingScreen> {
       drawer: CustomDrawer(mainWidth: screenWidth),
       body: SafeArea(
         child: Column(children: [
-          customAppBar(scaffKey, context),
+          CustomAppBar(scaffKey: scaffKey),
           Expanded(
             child: Container(
                 width: double.maxFinite,
@@ -147,7 +146,7 @@ class _RatingScreenState extends State<RatingScreen> {
                   ),
                   child: Center(
                     child: Text(
-                      "123 ball",
+                      "${data.rating} ball",
                       style: AppStyles.subtitleTextStyle.copyWith(
                         fontSize: 14.sp,
                         color: Colors.white,

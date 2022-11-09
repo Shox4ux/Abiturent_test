@@ -10,9 +10,9 @@ import '../bottom_navigation/rating/rating_screen.dart';
 import '../bottom_navigation/subjects/subject_screen.dart';
 
 class MainScreen1 extends StatefulWidget {
-  const MainScreen1({super.key, required this.userInfo});
-  final UserInfo userInfo;
-
+  const MainScreen1({
+    super.key,
+  });
   @override
   State<MainScreen1> createState() => _MainScreen1State();
 }
@@ -25,8 +25,12 @@ class _MainScreen1State extends State<MainScreen1> {
     // context.read<SubjectCubit>().getSubjects();
     print("object_uri");
     final screens = [
-      const SubjectsScreen(),
-      const DtmScreen(),
+      SubjectsScreen(
+        testType: selectedIndex,
+      ),
+      DtmScreen(
+        testType: selectedIndex,
+      ),
       const ProfileScreen(),
       const MistakesScreen(),
       const RatingScreen(),

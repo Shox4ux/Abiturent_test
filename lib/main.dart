@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:test_app/core/block/auth_block/auth_cubit.dart';
-import 'package:test_app/core/block/cubit/user_cubit_cubit.dart';
+import 'package:test_app/core/block/group_block/group_cubit.dart';
 import 'package:test_app/core/block/news_bloc/cubit/news_cubit.dart';
 
-import 'package:test_app/ui/navigation/main_navigation.dart';
+import 'package:test_app/res/navigation/main_navigation.dart';
+
 import 'package:test_app/ui/splash/splash.dart';
 
+import 'core/block/drawer_cubit/drawer_cubit.dart';
 import 'core/block/subjecy_bloc/subject_cubit.dart';
+import 'core/block/user_block/user_cubit_cubit.dart';
 
 void main() async {
   runApp(const MyApp());
@@ -35,6 +38,12 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => UserCubit(),
         ),
+        BlocProvider(
+          create: (context) => GroupCubit(),
+        ),
+        BlocProvider(
+          create: (context) => DrawerCubit(),
+        ),
       ],
       child: ScreenUtilInit(
         designSize: const Size(376, 812),
@@ -45,6 +54,11 @@ class MyApp extends StatelessWidget {
             primarySwatch: Colors.blue,
           ),
           home: const SplashScreen(),
+          //const TestScreen(
+          //   testId: 2,
+          //   subName: "Geografiya",
+          //   testIndex: 1,
+          // ),
           routes: navigation.routes,
           onGenerateRoute: navigation.onGenerateRoute,
         ),

@@ -5,10 +5,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:test_app/res/constants.dart';
+import 'package:test_app/ui/auth/sms_verification.dart';
 
 import '../../core/block/auth_block/auth_cubit.dart';
-import '../components/custom_simple_appbar.dart';
-import '../navigation/main_navigation.dart';
+import '../../res/components/custom_simple_appbar.dart';
+import '../../res/navigation/main_navigation.dart';
 import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -321,8 +322,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                       );
 
-                      Navigator.pushNamed(context, RouteNames.smsVerification,
-                          arguments: RouteNames.signup);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SmsVerificationScreen(
+                            fromWhere: RouteNames.signup,
+                            id: state.id,
+                            phone: state.phoneNumber,
+                          ),
+                        ),
+                      );
                     }
                     if (state is AuthDenied) {
                       (ScaffoldMessenger.of(context).showSnackBar(

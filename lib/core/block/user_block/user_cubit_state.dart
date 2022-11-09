@@ -22,3 +22,13 @@ class OnError extends UserState {
   @override
   List<Object> get props => [error];
 }
+
+class UserForAppBar extends UserState {
+  final String userRating;
+  final String userRatingMonth;
+
+  const UserForAppBar(this.userRating, this.userRatingMonth);
+
+  @override
+  List<Object> get props => [userRating, userRatingMonth];
+}

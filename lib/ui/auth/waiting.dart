@@ -5,7 +5,7 @@ import 'package:gap/gap.dart';
 import 'package:test_app/res/constants.dart';
 
 import '../../core/block/auth_block/auth_cubit.dart';
-import '../navigation/main_navigation.dart';
+import '../../res/navigation/main_navigation.dart';
 
 class WaitingScreen extends StatefulWidget {
   const WaitingScreen({Key? key}) : super(key: key);

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:test_app/res/enum.dart';
-import 'package:test_app/ui/components/custom_appbar.dart';
-import 'package:test_app/ui/components/custom_dot.dart';
-import 'package:test_app/ui/components/custom_drawer.dart';
+import 'package:test_app/res/components/custom_appbar.dart';
+import 'package:test_app/res/components/custom_dot.dart';
+import 'package:test_app/res/components/custom_drawer.dart';
 
+import '../../../core/block/user_block/user_cubit_cubit.dart';
 import '../../../res/constants.dart';
 
 class MistakesScreen extends StatelessWidget {
@@ -13,16 +15,16 @@ class MistakesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<ScaffoldState> _scaffKey = GlobalKey<ScaffoldState>();
+    final GlobalKey<ScaffoldState> scaffKey = GlobalKey<ScaffoldState>();
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
       drawer: CustomDrawer(mainWidth: screenWidth),
       backgroundColor: AppColors.mainColor,
-      key: _scaffKey,
+      key: scaffKey,
       body: SafeArea(
         child: Column(children: [
-          customAppBar(_scaffKey, context),
+          CustomAppBar(scaffKey: scaffKey),
           Expanded(
             child: Container(
               padding: EdgeInsets.only(top: 20.h, left: 20.w, right: 20.w),

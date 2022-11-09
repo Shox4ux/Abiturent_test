@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:test_app/ui/navigation/main_navigation.dart';
+import 'package:test_app/ui/auth/sms_verification.dart';
+import 'package:test_app/res/navigation/main_navigation.dart';
 
 import '../../core/block/auth_block/auth_cubit.dart';
 import '../../res/constants.dart';
-import '../components/custom_simple_appbar.dart';
+import '../../res/components/custom_simple_appbar.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({Key? key}) : super(key: key);
@@ -43,11 +44,17 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             child: Form(
               child: BlocConsumer<AuthCubit, AuthState>(
                 listener: (context, state) {
-                  if (state is AuthGranted) {
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                        RouteNames.smsVerification,
-                        arguments: RouteNames.forget,
-                        (Route<dynamic> route) => false);
+                  if (state is AuthOnSMS) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SmsVerificationScreen(
+                          fromWhere: RouteNames.forget,
+                          id: state.id,
+                          phone: state.phoneNumber,
+                        ),
+                      ),
+                    );
                   }
                   if (state is AuthDenied) {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -90,6 +97,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               _phone = value;
                             });
                           },
+                          keyboardType: TextInputType.number,
                           decoration: InputDecoration(
                             labelText: "Telefon raqam",
                             prefixText: "+998 ",

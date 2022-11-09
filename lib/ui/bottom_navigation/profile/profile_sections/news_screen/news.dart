@@ -3,20 +3,35 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:test_app/core/domain/news_models/main_news_model.dart';
-import 'package:test_app/ui/components/custom_simple_appbar.dart';
-import 'package:test_app/ui/navigation/main_navigation.dart';
+import 'package:test_app/core/helper/repos/news_repo.dart';
+import 'package:test_app/res/components/custom_simple_appbar.dart';
+import 'package:test_app/res/navigation/main_navigation.dart';
 
 import '../../../../../core/block/news_bloc/cubit/news_cubit.dart';
 import '../../../../../res/constants.dart';
 
+List<MainNewsModel> list = [];
+
 class NewsScreen extends StatelessWidget {
-  const NewsScreen({Key? key}) : super(key: key);
+  NewsScreen({Key? key}) : super(key: key);
 
+  final _repo = NewsRepository();
 
+  Future<List<MainNewsModel>> getNews() async {
+    final response = await _repo.getMainNews();
+    final rowData = response.data as List;
+    print(rowData);
 
-
-
-  
+    if (response.statusCode == 200) {
+      list.clear();
+      for (var element in rowData) {
+        list.add(MainNewsModel.fromJson(element));
+      }
+      return list;
+    } else {
+      return list;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,36 +62,35 @@ class NewsScreen extends StatelessWidget {
                   topRight: Radius.circular(28.r),
                 ),
               ),
-              child: BlocBuilder<NewsCubit, NewsState>(
-                builder: (context, state) {
-                  context.read<NewsCubit>().fetchNewsData();
-
-                  if (state is OnSuccess) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: ListView.builder(
-                              padding: const EdgeInsets.only(bottom: 20),
-                              itemCount: state.list.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    Navigator.pushNamed(
-                                        context, RouteNames.innerNews,
-                                        arguments: state.list[index]);
-                                  },
-                                  child: newsItem(state.list[index]),
-                                );
-                              }),
-                        ),
-                      ],
-                    );
-                  } else if (state is OnError) {
-                    return Center(child: Text(state.errorMessage));
-                  } else {
-                    return const LinearProgressIndicator();
+              child: FutureBuilder(
+                future: getNews(),
+                builder: (
+                  BuildContext context,
+                  AsyncSnapshot<dynamic> snapshot,
+                ) {
+                  if (!snapshot.hasData) {
+                    return const Center(child: Text("Loading..."));
                   }
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: ListView.builder(
+                            padding: const EdgeInsets.only(bottom: 20),
+                            itemCount: list.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                      context, RouteNames.innerNews,
+                                      arguments: list[index]);
+                                },
+                                child: newsItem(list[index]),
+                              );
+                            }),
+                      ),
+                    ],
+                  );
                 },
               ),
             ),
@@ -104,15 +118,16 @@ Widget newsItem(MainNewsModel model) {
               ),
             ),
           ),
-          child: model.imageLink != null
-              ? Image.network(
-                  AppIcons.news,
-                  fit: BoxFit.cover,
-                )
-              : Image.asset(
-                  AppIcons.newsError,
-                  fit: BoxFit.cover,
-                ),
+          //Change here after showing
+
+          child: Image.asset(AppIcons.noImage),
+          // FadeInImage.assetNetwork(
+
+          //   placeholder: AppIcons.newsError,
+          //   image: model.imageLink!,
+          //   imageErrorBuilder: (context, error, stackTrace) =>
+          //       Image.asset(AppIcons.noImage),
+          // ),
         ),
         Gap(11.w),
         Expanded(

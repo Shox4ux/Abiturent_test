@@ -35,4 +35,8 @@ class UserCubit extends Cubit<UserState> {
       print(e);
     }
   }
+
+  Future<void> getUserDataForAppBar(String rating, String ratingMonth) async {
+    emit(UserForAppBar(rating, ratingMonth));
+  }
 }

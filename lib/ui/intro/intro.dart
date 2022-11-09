@@ -5,7 +5,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:test_app/res/constants.dart';
 import 'package:test_app/res/models/intro_data.dart';
 
-import '../navigation/main_navigation.dart';
+import '../../res/navigation/main_navigation.dart';
 
 class IntroScreen extends StatefulWidget {
   const IntroScreen({Key? key}) : super(key: key);

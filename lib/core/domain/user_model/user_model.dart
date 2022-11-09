@@ -1,7 +1,6 @@
 class UserInfo {
   int? id;
   String? username;
-  String? phone;
   String? fullname;
   String? createdAt;
   int? status;
@@ -10,15 +9,14 @@ class UserInfo {
   int? role;
   String? roleText;
   int? rating;
+  int? ratingMonth;
   String? smsLive;
   String? image;
   int? medalId;
-  String? medalImg;
 
   UserInfo(
       {this.id,
       this.username,
-      this.phone,
       this.fullname,
       this.createdAt,
       this.status,
@@ -27,15 +25,14 @@ class UserInfo {
       this.role,
       this.roleText,
       this.rating,
+      this.ratingMonth,
       this.smsLive,
       this.image,
-      this.medalId,
-      this.medalImg});
+      this.medalId});
 
   UserInfo.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     username = json['username'];
-    phone = json['phone'];
     fullname = json['fullname'];
     createdAt = json['created_at'];
     status = json['status'];
@@ -44,17 +41,16 @@ class UserInfo {
     role = json['role'];
     roleText = json['role_text'];
     rating = json['rating'];
+    ratingMonth = json['rating_month'];
     smsLive = json['sms_live'];
     image = json['image'];
     medalId = json['medal_id'];
-    medalImg = json['medal_img'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['username'] = username;
-    data['phone'] = phone;
     data['fullname'] = fullname;
     data['created_at'] = createdAt;
     data['status'] = status;
@@ -63,10 +59,10 @@ class UserInfo {
     data['role'] = role;
     data['role_text'] = roleText;
     data['rating'] = rating;
+    data['rating_month'] = ratingMonth;
     data['sms_live'] = smsLive;
     data['image'] = image;
     data['medal_id'] = medalId;
-    data['medal_img'] = medalImg;
     return data;
   }
 }
