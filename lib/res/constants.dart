@@ -266,6 +266,9 @@ class AppIcons {
   static const String drop = "assets/drop.png";
 
   static const String man = "assets/man.png";
+  static const String tab = "assets/tab.png";
+  static const String user = "assets/user.png";
+
   static const String info = "assets/info.png";
   static const String arrow = "assets/arrow.png";
   static const String down = "assets/down.png";
@@ -312,10 +315,13 @@ class ApiValues {
 
   static const String subjectUrl = "subjects/index";
   static const String innerTest = "test/questions";
+  static const String getGroupMembers = "user-group/view";
+  static const String sendTestAnswerUrl = "test/receive-answers";
+  static const String getResults = "test/result";
 
   static const String mainNewsAndPaginationUrl = "news/index";
   static const String newsByIdUrl = "news/view";
-
+  static const String getGroupByUserId = "user-group/index";
 //Tests
   static const String testsBySubIdAndTypeIndex = "test/index";
 }
