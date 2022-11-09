@@ -243,6 +243,7 @@ class SubjectsScreen extends StatelessWidget {
                       testId: tests.id!,
                       subName: tests.subjectName!,
                       testIndex: testIndex,
+                      questionCount: tests.questionsCount!,
                     ),
                   ),
                 );

@@ -184,6 +184,7 @@ class _DtmScreenState extends State<DtmScreen> {
                     testId: tests.id!,
                     subName: tests.subjectName!,
                     testIndex: testIndex,
+                    questionCount: tests.questionsCount!,
                   )),
         );
       },

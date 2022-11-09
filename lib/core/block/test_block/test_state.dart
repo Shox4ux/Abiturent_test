@@ -14,6 +14,11 @@ class OnTestProgress extends TestState {
   List<Object> get props => [];
 }
 
+class OnTestCompleted extends TestState {
+  @override
+  List<Object> get props => [];
+}
+
 class OnTestSuccess extends TestState {
   final TestModel testModel;
 

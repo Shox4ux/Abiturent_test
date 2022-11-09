@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
+import '../../core/block/test_block/test_cubit.dart';
 import '../../res/constants.dart';
 import '../../res/models/test_model.dart';
 import '../../res/components/custom_dot.dart';
@@ -9,7 +11,17 @@ import '../../res/components/custom_simple_appbar.dart';
 import '../../res/navigation/main_navigation.dart';
 
 class TestAnswerScreen extends StatefulWidget {
-  const TestAnswerScreen({Key? key}) : super(key: key);
+  const TestAnswerScreen({
+    Key? key,
+    required this.subName,
+    required this.testNumber,
+    required this.complitionTime,
+  }) : super(key: key);
+
+  final String subName;
+  final String testNumber;
+
+  final String complitionTime;
 
   @override
   State<TestAnswerScreen> createState() => TestAnswerScreenState();
@@ -27,7 +39,8 @@ class TestAnswerScreenState extends State<TestAnswerScreen> {
             padding: EdgeInsets.only(left: 20.w, bottom: 17.h),
             child: CustomSimpleAppBar(
               isSimple: true,
-              titleText: "Tarix fani: To’plam #11",
+              titleText:
+                  "${widget.subName} fani: To’plam #${widget.testNumber}",
               routeText: RouteNames.profile,
               style: AppStyles.subtitleTextStyle.copyWith(
                 fontSize: 24.sp,
@@ -47,26 +60,33 @@ class TestAnswerScreenState extends State<TestAnswerScreen> {
                   topRight: Radius.circular(28.r),
                 ),
               ),
-              child: Column(
-                children: [
-                  Gap(28.h),
-                  Text(
-                    "Tugatilgan sana: 11.02.2022 12:11",
-                    style: AppStyles.subtitleTextStyle.copyWith(
-                      fontSize: 13.sp,
-                    ),
-                  ),
-                  Gap(13.w),
-                  Expanded(
-                    child: ListView.builder(
-                        padding: const EdgeInsets.only(bottom: 20),
-                        itemCount: SubjectList.tests.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return ordinary(
-                              SubjectList.tests[index], (index + 1).toString());
-                        }),
-                  ),
-                ],
+              child: BlocBuilder<TestCubit, TestState>(
+                builder: (context, state) {
+                  if (state is OnTestCompleted) {
+                    return Column(
+                      children: [
+                        Gap(28.h),
+                        Text(
+                          "Tugatilgan sana: ${widget.complitionTime}",
+                          style: AppStyles.subtitleTextStyle.copyWith(
+                            fontSize: 13.sp,
+                          ),
+                        ),
+                        Gap(13.w),
+                        Expanded(
+                          child: ListView.builder(
+                              padding: const EdgeInsets.only(bottom: 20),
+                              itemCount: SubjectList.tests.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return ordinary(SubjectList.tests[index],
+                                    (index + 1).toString());
+                              }),
+                        ),
+                      ],
+                    );
+                  }
+                  return const Center(child: Text("Kuting...."));
+                },
               ),
             ),
           ),

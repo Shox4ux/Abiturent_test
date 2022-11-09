@@ -14,6 +14,7 @@ import 'package:test_app/ui/bottom_navigation/profile/profile_sections/subscript
 import 'package:test_app/ui/intro/intro.dart';
 import 'package:test_app/ui/main_screen/main_screen.dart';
 import 'package:test_app/ui/splash/splash.dart';
+import 'package:test_app/ui/test_screens/test_answers.dart';
 
 import '../../ui/bottom_navigation/profile/profile_sections/group/group.dart';
 
@@ -70,4 +71,5 @@ abstract class RouteNames {
   static const subscripts = "subscripts";
   static const budget = "budget";
   static const addMembers = "addMembers";
+  static const testEnd = "testEnd";
 }

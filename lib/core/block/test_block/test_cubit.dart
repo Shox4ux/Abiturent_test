@@ -6,6 +6,7 @@ import 'package:equatable/equatable.dart';
 import 'package:test_app/core/block/auth_block/auth_cubit.dart';
 import 'package:test_app/core/domain/test_model/test_inner_model.dart';
 import 'package:test_app/core/domain/test_model/test_model.dart';
+import 'package:test_app/core/domain/test_model/test_result_model.dart';
 import 'package:test_app/core/helper/database/app_storage.dart';
 import 'package:test_app/core/helper/repos/test_repo.dart';
 
@@ -34,7 +35,7 @@ class TestCubit extends Cubit<TestState> {
     final u = await _storage.getUserInfo();
 
     try {
-      final response = await _repo.getTestById(testId, u.id!);
+      final response = await _repo.getTestById(u.id!, testId);
       final test = InnerTestModel.fromJson(response.data);
       emit(OnTestInnerSuccess(test));
     } on DioError catch (e) {
@@ -54,6 +55,32 @@ class TestCubit extends Cubit<TestState> {
       final response = await _repo.sendTestAnswer(questionId, answerId, u.id!);
       final test = InnerTestModel.fromJson(response.data);
       emit(OnTestInnerSuccess(test));
+    } on DioError catch (e) {
+      emit(OnTestError(e.message));
+    } on SocketException catch (e) {
+      emit(OnTestError(e.message));
+    } catch (e) {
+      emit(OnTestError(e.toString()));
+    }
+  }
+
+  Future<void> getResults(int testListId) async {
+    emit(OnTestProgress());
+    final u = await _storage.getUserInfo();
+
+    try {
+      final response = await _repo.getResults(u.id!, testListId);
+
+      final rowTestList = response.data["test_questions"] as List;
+      final rowResultList = response.data["test_result"] as List;
+
+      final testList =
+          rowTestList.map((e) => InnerTestModel.fromJson(e)).toList();
+
+      final resultList =
+          rowResultList.map((e) => TestResult.fromJson(e)).toList();
+
+      // emit(OnTestInnerSuccess(test));
     } on DioError catch (e) {
       emit(OnTestError(e.message));
     } on SocketException catch (e) {

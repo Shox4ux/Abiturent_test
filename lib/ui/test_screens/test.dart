@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:intl/intl.dart';
 import 'package:test_app/core/domain/test_model/test_inner_model.dart';
 import 'package:test_app/res/constants.dart';
 import 'package:test_app/res/components/custom_dot.dart';
+import 'package:test_app/ui/test_screens/test_answers.dart';
 
 import '../../core/block/test_block/test_cubit.dart';
 import '../../core/helper/repos/test_repo.dart';
@@ -12,17 +14,18 @@ import '../../res/components/custom_simple_appbar.dart';
 import '../../res/navigation/main_navigation.dart';
 
 class TestScreen extends StatefulWidget {
-  const TestScreen(
-      {Key? key,
-      required this.testId,
-      required this.subName,
-      required this.testIndex})
-      : super(key: key);
+  const TestScreen({
+    Key? key,
+    required this.testId,
+    required this.subName,
+    required this.testIndex,
+    required this.questionCount,
+  }) : super(key: key);
 
   final int testId;
   final String subName;
   final int testIndex;
-
+  final int questionCount;
   @override
   State<TestScreen> createState() => _TestScreenState();
 }
@@ -86,7 +89,22 @@ class _TestScreenState extends State<TestScreen> {
                   ),
                 ),
                 child: BlocConsumer<TestCubit, TestState>(
-                  listener: (context, state) {},
+                  listener: (context, state) {
+                    if (state is OnTestCompleted) {
+                      final complitionTime =
+                          DateFormat('yyyy.MM.dd kk:mm').format(DateTime.now());
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TestAnswerScreen(
+                            subName: widget.subName,
+                            testNumber: widget.questionCount.toString(),
+                            complitionTime: complitionTime,
+                          ),
+                        ),
+                      );
+                    }
+                  },
                   builder: (context, state) {
                     if (state is OnTestInnerSuccess) {
                       return Column(
@@ -160,10 +178,18 @@ class _TestScreenState extends State<TestScreen> {
                               setState(() {
                                 _questionNumber = _questionNumber + 1;
                               });
-                              context.read<TestCubit>().sendTestAnswer(
-                                  state.innerTest.id!,
-                                  state.innerTest
-                                      .answers![_selectedAnswerIndex!].id!);
+
+                              if (widget.questionCount == _questionNumber) {
+                                context
+                                    .read<TestCubit>()
+                                    .getResults(state.innerTest.testListId!);
+                              } else {
+                                context.read<TestCubit>().sendTestAnswer(
+                                    state.innerTest.id!,
+                                    state.innerTest
+                                        .answers![_selectedAnswerIndex!].id!);
+                              }
+
                               _selectedAnswerIndex = null;
                             },
                             child: Text(

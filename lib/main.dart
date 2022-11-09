@@ -12,6 +12,8 @@ import 'package:test_app/ui/bottom_navigation/profile/profile_sections/group/add
 import 'package:test_app/ui/main_screen/main_screen.dart';
 
 import 'package:test_app/ui/splash/splash.dart';
+import 'package:test_app/ui/test_screens/test.dart';
+import 'package:test_app/ui/test_screens/test_answers.dart';
 
 import 'core/block/drawer_cubit/drawer_cubit.dart';
 import 'core/block/subjecy_bloc/subject_cubit.dart';
@@ -61,11 +63,6 @@ class MyApp extends StatelessWidget {
             primarySwatch: Colors.blue,
           ),
           home: const MainScreen1(),
-          //const TestScreen(
-          //   testId: 2,
-          //   subName: "Geografiya",
-          //   testIndex: 1,
-          // ),
           routes: navigation.routes,
           onGenerateRoute: navigation.onGenerateRoute,
         ),

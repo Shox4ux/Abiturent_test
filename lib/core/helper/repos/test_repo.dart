@@ -25,7 +25,10 @@ class TestRepo {
     int testId,
     int userId,
   ) async {
-    final Map<String, dynamic> params = {"user_id": userId, "id": testId};
+    final Map<String, dynamic> params = {
+      "id": testId,
+      "user_id": userId,
+    };
 
     return await _dio.post(ApiValues.innerTest, queryParameters: params);
   }
