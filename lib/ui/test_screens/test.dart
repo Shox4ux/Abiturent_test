@@ -160,6 +160,10 @@ class _TestScreenState extends State<TestScreen> {
                               setState(() {
                                 _questionNumber = _questionNumber + 1;
                               });
+                              context.read<TestCubit>().sendTestAnswer(
+                                  state.innerTest.id!,
+                                  state.innerTest
+                                      .answers![_selectedAnswerIndex!].id!);
                               _selectedAnswerIndex = null;
                             },
                             child: Text(

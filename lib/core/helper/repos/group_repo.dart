@@ -46,4 +46,18 @@ class GroupRepo {
       queryParameters: params,
     );
   }
+
+  Future<Response> getGroup(int userId) async {
+    final Map<String, dynamic> params = {
+      "user_id": userId,
+    };
+    return await _dio.get(ApiValues.getGroupByUserId, queryParameters: params);
+  }
+
+  Future<Response> getGroupMembers(int groupId) async {
+    final Map<String, dynamic> params = {
+      "group_id": groupId,
+    };
+    return await _dio.get(ApiValues.getGroupMembers, queryParameters: params);
+  }
 }

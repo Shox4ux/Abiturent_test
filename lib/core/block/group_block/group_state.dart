@@ -19,6 +19,15 @@ class OnSuccess extends GroupState {
   List<Object> get props => [];
 }
 
+class OnGroupsReceived extends GroupState {
+  final List<GroupModel> groupList;
+
+  const OnGroupsReceived(this.groupList);
+
+  @override
+  List<Object> get props => [groupList];
+}
+
 class OnError extends GroupState {
   final String error;
 
@@ -26,4 +35,11 @@ class OnError extends GroupState {
 
   @override
   List<Object> get props => [error];
+}
+
+class OnGroupMembersReceived extends GroupState {
+  final List<GroupMemberModel> membersList;
+  const OnGroupMembersReceived(this.membersList);
+  @override
+  List<Object> get props => [membersList];
 }

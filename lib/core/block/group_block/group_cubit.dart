@@ -1,6 +1,13 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
+import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/animation.dart';
+import 'package:test_app/core/domain/group_model/group_member_model.dart';
+import 'package:test_app/core/domain/group_model/group_model.dart';
 import 'package:test_app/core/domain/subject_models/subject_model.dart';
+import 'package:test_app/core/helper/database/app_storage.dart';
 import 'package:test_app/core/helper/repos/group_repo.dart';
 
 part 'group_state.dart';
@@ -9,6 +16,7 @@ class GroupCubit extends Cubit<GroupState> {
   GroupCubit() : super(GroupInitial());
 
   final _repo = GroupRepo();
+  final _storage = AppStorage();
 
   Future<void> creatGroup(int userId, String subName,
       List<SubjectModel> subList, String groupTitle) async {
@@ -47,4 +55,30 @@ class GroupCubit extends Cubit<GroupState> {
       emit(OnError(e.toString()));
     }
   }
+
+  Future<void> getGroupsByUserId() async {
+    final u = await _storage.getUserInfo();
+
+    var userId = u.id!;
+
+    emit(OnProgress());
+
+    try {
+      final response = await _repo.getGroup(userId);
+
+      final rowData = response.data as List;
+
+      final rowList = rowData.map((e) => GroupModel.fromJson(e)).toList();
+
+      emit(OnGroupsReceived(rowList));
+    } on DioError catch (e) {
+      emit(OnError(e.message));
+    } on SocketException catch (e) {
+      emit(const OnError("Tarmog'da nosozlik"));
+    } catch (e) {
+      emit(const OnError("Tizimda nosozlik"));
+    }
+  }
+
+  Future<void> getGroupMembers() async {}
 }

@@ -102,149 +102,137 @@ class _GroupScreenState extends State<GroupScreen> {
                       topRight: Radius.circular(28.r),
                     ),
                   ),
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: FutureBuilder(
-                          future: getSubsTitle(),
-                          builder: (context, snapshot) {
-                            if (!snapshot.hasData) {
-                              return const Center(
-                                child: Text("Loading..."),
-                              );
-                            }
-                            return ListView.builder(
+                  child: BlocBuilder<GroupCubit, GroupState>(
+                    builder: (context, state) {
+                      if (state is OnGroupsReceived) {
+                        return Column(
+                          children: [
+                            Expanded(
+                              child: ListView.builder(
                                 padding: const EdgeInsets.only(bottom: 20),
-                                itemCount: 1,
+                                itemCount: state.groupList.length,
                                 itemBuilder: (BuildContext context, int index) {
                                   return groupItem();
-                                });
-                          },
-                        ),
-                      ),
-                      Gap(10.h),
-                      ElevatedButton(
-                        style: AppStyles.introUpButton,
-                        onPressed: () {
-                          showBottomSheet(context, dropValue!);
-                        },
-                        child: Text(
-                          "Yangi guruh yaratish",
-                          style: AppStyles.introButtonText
-                              .copyWith(color: const Color(0xffFCFCFC)),
-                        ),
-                      ),
-                      Gap(10.h),
-                    ],
+                                },
+                              ),
+                            ),
+                            Gap(10.h),
+                            ElevatedButton(
+                              style: AppStyles.introUpButton,
+                              onPressed: () {
+                                showModalBottomSheet(
+                                  isScrollControlled: true,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(
+                                      16.r,
+                                    ),
+                                  )),
+                                  context: context,
+                                  builder: ((context) => Padding(
+                                        padding: EdgeInsets.only(
+                                            top: 20.h,
+                                            left: 20.w,
+                                            right: 20.w,
+                                            bottom: MediaQuery.of(context)
+                                                .viewInsets
+                                                .bottom),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Gap(16.h),
+                                            TextField(
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  groupName = value;
+                                                });
+                                              },
+                                              decoration: InputDecoration(
+                                                counter:
+                                                    const SizedBox.shrink(),
+                                                labelText: "Guruh nomi",
+                                                border: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          16.h),
+                                                  borderSide: BorderSide(
+                                                      color: Colors.red,
+                                                      width: 2.w),
+                                                ),
+                                                enabledBorder:
+                                                    OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          16.h),
+                                                  borderSide: BorderSide(
+                                                      color: AppColors
+                                                          .textFieldBorderColor,
+                                                      width: 2.w),
+                                                ),
+                                              ),
+                                            ),
+                                            Gap(16.h),
+                                            BlocBuilder<GroupCubit, GroupState>(
+                                              builder: (context, state) {
+                                                if (state is OnProgress) {
+                                                  return const CircularProgressIndicator(
+                                                    color: AppColors.mainColor,
+                                                  );
+                                                }
+                                                return ElevatedButton(
+                                                  onPressed: () async {
+                                                    // context
+                                                    //     .read<GroupCubit>()
+                                                    //     .creatGroup(
+                                                    //         widget.userId,
+                                                    //         dropValue!,
+                                                    //         subList,
+                                                    //         groupTitle);
+
+                                                    Navigator.pushNamed(
+                                                      context,
+                                                      RouteNames.addMembers,
+                                                    );
+                                                  },
+                                                  style:
+                                                      AppStyles.introUpButton,
+                                                  child: Text(
+                                                    "Yaratish",
+                                                    style: AppStyles
+                                                        .introButtonText
+                                                        .copyWith(
+                                                            color: const Color(
+                                                                0xffFCFCFC)),
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                            Gap(16.h),
+                                          ],
+                                        ),
+                                      )),
+                                );
+                                ;
+                              },
+                              child: Text(
+                                "Yangi guruh yaratish",
+                                style: AppStyles.introButtonText
+                                    .copyWith(color: const Color(0xffFCFCFC)),
+                              ),
+                            ),
+                            Gap(10.h),
+                          ],
+                        );
+                      }
+                      return const Center(
+                        child: Text("Loading..."),
+                      );
+                    },
                   )),
             ),
           ]),
         ),
       ),
-    );
-  }
-
-  Future<dynamic> showBottomSheet(BuildContext context, String newVal) {
-    return showModalBottomSheet(
-      isScrollControlled: true,
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-        top: Radius.circular(
-          16.r,
-        ),
-      )),
-      context: context,
-      builder: ((context) => Padding(
-            padding: EdgeInsets.only(
-                top: 20.h,
-                left: 20.w,
-                right: 20.w,
-                bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Gap(16.h),
-                Container(
-                  padding: EdgeInsets.all(8.h),
-                  child: DropdownButton(
-                    value: dropValue,
-                    isExpanded: true,
-                    hint: const Text("Fanni tanlang"),
-
-                    icon: const Icon(Icons.keyboard_arrow_down),
-
-                    // Array list of items
-                    items: subNameList.map((String items) {
-                      return DropdownMenuItem(
-                        value: newVal,
-                        child: Text(items),
-                      );
-                    }).toList(),
-                    // After selecting the desired option,it will
-                    // change button value to selected value
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        dropValue = newValue!;
-                      });
-                    },
-                  ),
-                ),
-                TextField(
-                  onChanged: (value) {
-                    setState(() {
-                      groupName = value;
-                    });
-                  },
-                  decoration: InputDecoration(
-                    counter: const SizedBox.shrink(),
-                    labelText: "Guruh nomi",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16.h),
-                      borderSide: BorderSide(color: Colors.red, width: 2.w),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16.h),
-                      borderSide: BorderSide(
-                          color: AppColors.textFieldBorderColor, width: 2.w),
-                    ),
-                  ),
-                ),
-                Gap(16.h),
-                BlocBuilder<GroupCubit, GroupState>(
-                  builder: (context, state) {
-                    if (state is OnProgress) {
-                      return const CircularProgressIndicator(
-                        color: AppColors.mainColor,
-                      );
-                    }
-                    return ElevatedButton(
-                      onPressed: () async {
-                        // context
-                        //     .read<GroupCubit>()
-                        //     .creatGroup(
-                        //         widget.userId,
-                        //         dropValue!,
-                        //         subList,
-                        //         groupTitle);
-
-                        Navigator.pushNamed(
-                          context,
-                          RouteNames.addMembers,
-                        );
-                      },
-                      style: AppStyles.introUpButton,
-                      child: Text(
-                        "Yaratish",
-                        style: AppStyles.introButtonText
-                            .copyWith(color: const Color(0xffFCFCFC)),
-                      ),
-                    );
-                  },
-                ),
-                Gap(16.h),
-              ],
-            ),
-          )),
     );
   }
 }

@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:test_app/core/domain/group_model/group_member_model.dart';
 
+import '../../../../../core/block/group_block/group_cubit.dart';
 import '../../../../../core/domain/user_model/user_model.dart';
 import '../../../../../core/helper/repos/user_repo.dart';
 import '../../../../../res/constants.dart';
 import '../../../../../res/components/custom_simple_appbar.dart';
 import '../../../../../res/navigation/main_navigation.dart';
-
-List<UserInfo> list = [];
 
 class AddUserToGroup extends StatefulWidget {
   const AddUserToGroup({super.key});
@@ -19,21 +20,6 @@ class AddUserToGroup extends StatefulWidget {
 
 class _AddUserToGroupState extends State<AddUserToGroup> {
   final _repo = UserRepo();
-
-  Future<List<UserInfo>> getGroupMembers() async {
-    final response = await _repo.getUserRatings();
-    final rowData = response.data as List;
-
-    if (response.statusCode == 200) {
-      list.clear();
-      for (var element in rowData) {
-        list.add(UserInfo.fromJson(element));
-      }
-      return list;
-    } else {
-      return list;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,28 +51,181 @@ class _AddUserToGroupState extends State<AddUserToGroup> {
                     topRight: Radius.circular(28.r),
                   ),
                 ),
-                child: FutureBuilder(
-                  future: getGroupMembers(),
-                  builder:
-                      (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                    if (!snapshot.hasData) {
-                      return Center(child: Text("Loading..."));
+                child: BlocConsumer<GroupCubit, GroupState>(
+                  listener: (context, state) {
+                    // TODO: implement listener
+                  },
+                  builder: (context, state) {
+                    if (state is OnGroupMembersReceived) {
+                      return Column(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(
+                                left: 20.w, right: 20.w, top: 20.h),
+                            child: Row(
+                              children: [
+                                Row(
+                                  children: [
+                                    Image.asset(
+                                      AppIcons.tab,
+                                      scale: 2,
+                                    ),
+                                    Gap(15.w),
+                                    Text("ishtirokchi",
+                                        style: AppStyles.subtitleTextStyle
+                                            .copyWith(color: Colors.black))
+                                  ],
+                                ),
+                                Gap(20.w),
+                                Row(
+                                  children: [
+                                    Image.asset(
+                                      AppIcons.user,
+                                      scale: 2,
+                                    ),
+                                    Gap(15.w),
+                                    Text("ishtirokchi",
+                                        style: AppStyles.subtitleTextStyle
+                                            .copyWith(color: Colors.black))
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            child: ListView.builder(
+                                padding: EdgeInsets.only(
+                                  bottom: 20.h,
+                                  top: 30.h,
+                                  left: 20.w,
+                                  right: 10.w,
+                                ),
+                                itemCount: state.membersList.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return ratingItem(
+                                      "${index + 1}", state.membersList[index]);
+                                }),
+                          ),
+                          ElevatedButton(
+                            style: AppStyles.introUpButton,
+                            onPressed: () {
+                              showModalBottomSheet(
+                                isScrollControlled: true,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(
+                                    16.r,
+                                  ),
+                                )),
+                                context: context,
+                                builder: ((context) => Padding(
+                                      padding: EdgeInsets.only(
+                                          top: 20.h,
+                                          left: 20.w,
+                                          right: 20.w,
+                                          bottom: MediaQuery.of(context)
+                                              .viewInsets
+                                              .bottom),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Gap(16.h),
+                                          TextField(
+                                            maxLength: 6,
+                                            onChanged: (value) {},
+                                            keyboardType: TextInputType.number,
+                                            decoration: InputDecoration(
+                                              counter: const SizedBox.shrink(),
+                                              labelText:
+                                                  "Ishtirokchi ID raqami",
+                                              border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(16.h),
+                                                borderSide: BorderSide(
+                                                    color: Colors.red,
+                                                    width: 2.w),
+                                              ),
+                                              enabledBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(16.h),
+                                                borderSide: BorderSide(
+                                                    color: AppColors
+                                                        .textFieldBorderColor,
+                                                    width: 2.w),
+                                              ),
+                                            ),
+                                          ),
+                                          Gap(16.h),
+                                          ElevatedButton(
+                                            onPressed: () {},
+                                            style: AppStyles.introUpButton,
+                                            child: Text(
+                                              "Ishtirokchi qo’shish",
+                                              style: AppStyles.introButtonText
+                                                  .copyWith(
+                                                      color: const Color(
+                                                          0xffFCFCFC)),
+                                            ),
+                                          ),
+                                          Gap(16.h),
+                                        ],
+                                      ),
+                                    )),
+                              );
+                            },
+                            child: Text(
+                              "Ishtirokchi qo’shish",
+                              style: AppStyles.introButtonText
+                                  .copyWith(color: const Color(0xffFCFCFC)),
+                            ),
+                          ),
+                          Gap(10.h),
+                        ],
+                      );
+                    }
+
+                    if (state is OnProgress) {
+                      return const Center(
+                        child: Text("Kuting..."),
+                      );
                     }
                     return Column(
                       children: [
-                        Expanded(
-                          child: ListView.builder(
-                              padding: EdgeInsets.only(
-                                bottom: 20.h,
-                                top: 30.h,
-                                left: 20.w,
-                                right: 10.w,
+                        Padding(
+                          padding: EdgeInsets.only(
+                              left: 20.w, right: 20.w, top: 20.h),
+                          child: Row(
+                            children: [
+                              Row(
+                                children: [
+                                  Image.asset(
+                                    AppIcons.tab,
+                                    scale: 2,
+                                  ),
+                                  Gap(15.w),
+                                  Text("Tarix fani",
+                                      style: AppStyles.subtitleTextStyle
+                                          .copyWith(color: Colors.black))
+                                ],
                               ),
-                              itemCount: list.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return ratingItem("${index + 1}", list[index]);
-                              }),
+                              Gap(20.w),
+                              Row(
+                                children: [
+                                  Image.asset(
+                                    AppIcons.user,
+                                    scale: 2,
+                                  ),
+                                  Gap(15.w),
+                                  Text("ishtirokchi",
+                                      style: AppStyles.subtitleTextStyle
+                                          .copyWith(color: Colors.black))
+                                ],
+                              )
+                            ],
+                          ),
                         ),
+                        const Expanded(
+                            child: Center(child: Text('Ishtirokchilar yo'))),
                         ElevatedButton(
                           style: AppStyles.introUpButton,
                           onPressed: () {
@@ -171,7 +310,7 @@ class _AddUserToGroupState extends State<AddUserToGroup> {
   }
 }
 
-Widget ratingItem(String index, UserInfo data) {
+Widget ratingItem(String index, GroupMemberModel data) {
   return Container(
     margin: EdgeInsets.only(bottom: 10.h),
     child: Row(
@@ -215,7 +354,7 @@ Widget ratingItem(String index, UserInfo data) {
                 ),
                 child: Center(
                   child: Text(
-                    "123 ball",
+                    "${data.rating} ball",
                     style: AppStyles.subtitleTextStyle.copyWith(
                       fontSize: 14.sp,
                       color: Colors.white,

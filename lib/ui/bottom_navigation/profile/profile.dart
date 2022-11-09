@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:test_app/core/block/group_block/group_cubit.dart';
 import 'package:test_app/core/domain/user_model/user_model.dart';
 import 'package:test_app/core/helper/database/app_storage.dart';
 import 'package:test_app/res/constants.dart';
@@ -280,6 +281,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               MaterialPageRoute(
                   builder: (context) => GroupScreen(userId: user!.id!)),
             );
+
+            context.read<GroupCubit>().getGroupsByUserId();
           },
           child: rowItem(AppIcons.purpleDone, "Mening guruhlarim", false),
         ),
