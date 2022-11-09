@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:test_app/core/domain/test_model/test_inner_model.dart';
 import 'package:test_app/res/constants.dart';
-import 'package:test_app/res/models/test_model.dart';
 import 'package:test_app/res/components/custom_dot.dart';
 
+import '../../core/block/test_block/test_cubit.dart';
 import '../../core/helper/repos/test_repo.dart';
 import '../../res/components/custom_simple_appbar.dart';
 import '../../res/navigation/main_navigation.dart';
@@ -84,98 +85,95 @@ class _TestScreenState extends State<TestScreen> {
                     topRight: Radius.circular(28.r),
                   ),
                 ),
-                child: FutureBuilder(
-                  future: getInnerTestModel(widget.testId),
-                  builder:
-                      (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                    if (!snapshot.hasData) {
-                      return const Center(
-                        child: Text("Loading..."),
-                      );
-                    }
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Gap(28.h),
-                        Container(
-                          height: 33.h,
-                          width: 116.w,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(32.r),
-                            border: Border.all(
-                              width: 1,
-                              color: AppColors.textFieldBorderColor,
+                child: BlocConsumer<TestCubit, TestState>(
+                  listener: (context, state) {},
+                  builder: (context, state) {
+                    if (state is OnTestInnerSuccess) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Gap(28.h),
+                          Container(
+                            height: 33.h,
+                            width: 116.w,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(32.r),
+                              border: Border.all(
+                                width: 1,
+                                color: AppColors.textFieldBorderColor,
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                CustomDot(
+                                  hight: 14.h,
+                                  width: 14.w,
+                                  color: AppColors.mainColor,
+                                ),
+                                Gap(7.w),
+                                Text(
+                                  "$_questionNumber.Savol",
+                                  style: AppStyles.subtitleTextStyle.copyWith(
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                          Gap(8.h),
+                          Padding(
+                            padding: EdgeInsets.only(left: 10.w),
+                            child: Text(
+                              state.innerTest.content!,
+                              style: AppStyles.subtitleTextStyle.copyWith(
+                                fontSize: 18.sp,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          Gap(57.h),
+                          Column(
                             children: [
-                              CustomDot(
-                                hight: 14.h,
-                                width: 14.w,
-                                color: AppColors.mainColor,
-                              ),
-                              Gap(7.w),
-                              Text(
-                                "$_questionNumber.Savol",
-                                style: AppStyles.subtitleTextStyle.copyWith(
-                                  color: Colors.black,
+                              for (var i = 0;
+                                  i < state.innerTest.answers!.length;
+                                  i++)
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      if (_selectedAnswerIndex == i) {
+                                        _selectedAnswerIndex = null;
+                                      } else {
+                                        _selectedAnswerIndex = i;
+                                      }
+                                    });
+                                  },
+                                  child: testItem(state.innerTest.answers![i],
+                                      (i == _selectedAnswerIndex)),
                                 ),
-                              ),
                             ],
                           ),
-                        ),
-                        Gap(8.h),
-                        Padding(
-                          padding: EdgeInsets.only(left: 10.w),
-                          child: Text(
-                            testList[forIndex].content!,
-                            style: AppStyles.subtitleTextStyle.copyWith(
-                              fontSize: 18.sp,
-                              color: Colors.black,
+                          Gap(168.h),
+                          ElevatedButton(
+                            style: AppStyles.introUpButton,
+                            onPressed: () {
+                              setState(() {
+                                _questionNumber = _questionNumber + 1;
+                              });
+                              _selectedAnswerIndex = null;
+                            },
+                            child: Text(
+                              "Keyingi savol",
+                              style: AppStyles.introButtonText
+                                  .copyWith(color: const Color(0xffFCFCFC)),
                             ),
                           ),
-                        ),
-                        Gap(57.h),
-                        Column(
-                          children: [
-                            for (var i = 0;
-                                i < testList[forIndex].answers!.length;
-                                i++)
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    if (_selectedAnswerIndex == i) {
-                                      _selectedAnswerIndex = null;
-                                    } else {
-                                      _selectedAnswerIndex = i;
-                                    }
-                                  });
-                                },
-                                child: testItem(testList[forIndex].answers![i],
-                                    (i == _selectedAnswerIndex)),
-                              ),
-                          ],
-                        ),
-                        Gap(168.h),
-                        ElevatedButton(
-                          style: AppStyles.introUpButton,
-                          onPressed: () {
-                            setState(() {
-                              if (forIndex < testList.length - 1) {
-                                forIndex++;
-                                _questionNumber = _questionNumber + 1;
-                              }
-                            });
-                            _selectedAnswerIndex = null;
-                          },
-                          child: Text(
-                            "Keyingi savol",
-                            style: AppStyles.introButtonText
-                                .copyWith(color: const Color(0xffFCFCFC)),
-                          ),
-                        ),
-                      ],
+                        ],
+                      );
+                    }
+
+                    return const Center(
+                      child: Text("Loading..."),
                     );
                   },
                 ),

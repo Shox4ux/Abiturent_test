@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:test_app/core/block/test_block/test_cubit.dart';
 import 'package:test_app/core/domain/test_model/test_model.dart';
 import 'package:test_app/core/helper/repos/test_repo.dart';
 import 'package:test_app/res/components/custom_dot.dart';
@@ -238,12 +239,15 @@ class SubjectsScreen extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => TestScreen(
-                            testId: tests.id!,
-                            subName: tests.subjectName!,
-                            testIndex: testIndex,
-                          )),
+                    builder: (context) => TestScreen(
+                      testId: tests.id!,
+                      subName: tests.subjectName!,
+                      testIndex: testIndex,
+                    ),
+                  ),
                 );
+
+                context.read<TestCubit>().getTestById(tests.id!);
               },
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 11.h, horizontal: 16.w),

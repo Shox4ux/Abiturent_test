@@ -22,6 +22,14 @@ class OnTestSuccess extends TestState {
   List<Object> get props => [testModel];
 }
 
+class OnTestInnerSuccess extends TestState {
+  final InnerTestModel innerTest;
+
+  const OnTestInnerSuccess(this.innerTest);
+  @override
+  List<Object> get props => [innerTest];
+}
+
 class OnTestError extends TestState {
   final String error;
 

@@ -20,4 +20,13 @@ class TestRepo {
 
     return await _dio.get(ApiValues.innerTest, queryParameters: params);
   }
+
+  Future<Response> getTestById(
+    int testId,
+    int userId,
+  ) async {
+    final Map<String, dynamic> params = {"user_id": userId, "id": testId};
+
+    return await _dio.get(ApiValues.innerTest, queryParameters: params);
+  }
 }
