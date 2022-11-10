@@ -106,6 +106,12 @@ class _TestScreenState extends State<TestScreen> {
                     }
                   },
                   builder: (context, state) {
+                    if (state is OnTestError) {
+                      return Center(
+                        child: Text(state.error),
+                      );
+                    }
+
                     if (state is OnTestInnerSuccess) {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -131,7 +137,7 @@ class _TestScreenState extends State<TestScreen> {
                                 ),
                                 Gap(7.w),
                                 Text(
-                                  "$_questionNumber.Savol",
+                                  "${state.innerTest.prior}.Savol",
                                   style: AppStyles.subtitleTextStyle.copyWith(
                                     color: Colors.black,
                                   ),
@@ -172,32 +178,44 @@ class _TestScreenState extends State<TestScreen> {
                             ],
                           ),
                           Gap(168.h),
-                          ElevatedButton(
-                            style: AppStyles.introUpButton,
-                            onPressed: () {
-                              setState(() {
-                                _questionNumber = _questionNumber + 1;
-                              });
+                          _selectedAnswerIndex != null
+                              ? ElevatedButton(
+                                  style: AppStyles.introUpButton,
+                                  onPressed: () {
+                                    setState(() {
+                                      _questionNumber = _questionNumber + 1;
+                                    });
 
-                              if (widget.questionCount == _questionNumber) {
-                                context
-                                    .read<TestCubit>()
-                                    .getResults(state.innerTest.testListId!);
-                              } else {
-                                context.read<TestCubit>().sendTestAnswer(
-                                    state.innerTest.id!,
-                                    state.innerTest
-                                        .answers![_selectedAnswerIndex!].id!);
-                              }
+                                    if (widget.questionCount ==
+                                        state.innerTest.prior) {
+                                      context.read<TestCubit>().getResults(
+                                          state.innerTest.testListId!);
+                                    } else {
+                                      context.read<TestCubit>().sendTestAnswer(
+                                          state.innerTest.id!,
+                                          state
+                                              .innerTest
+                                              .answers![_selectedAnswerIndex!]
+                                              .id!);
+                                    }
 
-                              _selectedAnswerIndex = null;
-                            },
-                            child: Text(
-                              "Keyingi savol",
-                              style: AppStyles.introButtonText
-                                  .copyWith(color: const Color(0xffFCFCFC)),
-                            ),
-                          ),
+                                    _selectedAnswerIndex = null;
+                                  },
+                                  child: Text(
+                                    "Keyingi savol",
+                                    style: AppStyles.introButtonText.copyWith(
+                                        color: const Color(0xffFCFCFC)),
+                                  ),
+                                )
+                              : ElevatedButton(
+                                  style: AppStyles.disabledButton,
+                                  onPressed: null,
+                                  child: Text(
+                                    "Keyingi savol",
+                                    style: AppStyles.introButtonText.copyWith(
+                                        color: const Color(0xffFCFCFC)),
+                                  ),
+                                ),
                         ],
                       );
                     }
@@ -218,9 +236,8 @@ class _TestScreenState extends State<TestScreen> {
   Widget testItem(Answers model, bool isPressed) {
     return isPressed
         ? Container(
-            height: 50.h,
             width: 321.w,
-            padding: EdgeInsets.only(left: 20.w),
+            padding: EdgeInsets.all(10.h),
             alignment: Alignment.centerLeft,
             margin: EdgeInsets.only(bottom: 8.h),
             decoration: BoxDecoration(
@@ -236,13 +253,11 @@ class _TestScreenState extends State<TestScreen> {
                   ),
                 ),
                 Gap(10.w),
-                Expanded(
-                  child: Text(
-                    model.content!,
-                    style: AppStyles.subtitleTextStyle.copyWith(
-                      color: Colors.white,
-                      fontSize: 13.sp,
-                    ),
+                Text(
+                  model.content!,
+                  style: AppStyles.subtitleTextStyle.copyWith(
+                    color: Colors.white,
+                    fontSize: 13.sp,
                   ),
                 ),
               ],
@@ -251,11 +266,10 @@ class _TestScreenState extends State<TestScreen> {
         : ordinary(model);
   }
 
-  Container ordinary(Answers model) {
+  Widget ordinary(Answers model) {
     return Container(
-      height: 50.h,
       width: 321.w,
-      padding: EdgeInsets.only(left: 20.w),
+      padding: EdgeInsets.all(10.h),
       alignment: Alignment.centerLeft,
       margin: EdgeInsets.only(bottom: 8.h),
       decoration: BoxDecoration(

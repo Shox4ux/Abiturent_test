@@ -210,7 +210,7 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen> {
   void launch() {
     Navigator.pushNamed(
       context,
-      RouteNames.main,
+      RouteNames.forget,
     );
   }
 }

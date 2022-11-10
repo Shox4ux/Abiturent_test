@@ -20,9 +20,9 @@ final _repo = SubjectRepo();
 final groupsList = [];
 
 class GroupScreen extends StatefulWidget {
-  const GroupScreen({Key? key, required this.userId}) : super(key: key);
-
-  final int userId;
+  const GroupScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<GroupScreen> createState() => _GroupScreenState();

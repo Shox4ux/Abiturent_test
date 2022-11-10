@@ -1,48 +1,61 @@
 class TestResult {
-  int? id;
-  int? userId;
-  String? created;
-  int? subjectId;
-  int? testListId;
-  int? testQuestionId;
-  int? testAnswerId;
-  int? correctAnswerId;
-  int? isCorrect;
+  int? questionId;
+  String? questionContent;
+  List<AnswersDetail>? answersDetail;
 
-  TestResult(
-      {this.id,
-      this.userId,
-      this.created,
-      this.subjectId,
-      this.testListId,
-      this.testQuestionId,
-      this.testAnswerId,
-      this.correctAnswerId,
-      this.isCorrect});
+  TestResult({this.questionId, this.questionContent, this.answersDetail});
 
   TestResult.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    userId = json['user_id'];
-    created = json['created'];
-    subjectId = json['subject_id'];
-    testListId = json['test_list_id'];
-    testQuestionId = json['test_question_id'];
-    testAnswerId = json['test_answer_id'];
-    correctAnswerId = json['correct_answer_id'];
-    isCorrect = json['is_correct'];
+    questionId = json['question_id'];
+    questionContent = json['question_content'];
+    if (json['answers_detail'] != null) {
+      answersDetail = <AnswersDetail>[];
+      json['answers_detail'].forEach((v) {
+        answersDetail!.add(AnswersDetail.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['user_id'] = userId;
-    data['created'] = created;
-    data['subject_id'] = subjectId;
-    data['test_list_id'] = testListId;
-    data['test_question_id'] = testQuestionId;
-    data['test_answer_id'] = testAnswerId;
-    data['correct_answer_id'] = correctAnswerId;
+    data['question_id'] = questionId;
+    data['question_content'] = questionContent;
+    if (answersDetail != null) {
+      data['answers_detail'] = answersDetail!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class AnswersDetail {
+  int? answerId;
+  String? content;
+  int? selectedAnswer;
+  int? isCorrect;
+  int? correctAnswer;
+
+  AnswersDetail(
+      {this.answerId,
+      this.content,
+      this.selectedAnswer,
+      this.isCorrect,
+      this.correctAnswer});
+
+  AnswersDetail.fromJson(Map<String, dynamic> json) {
+    answerId = json['answer_id'];
+    content = json['content'];
+    selectedAnswer = json['selected_answer'];
+    isCorrect = json['is_correct'];
+    correctAnswer = json['correct_answer'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['answer_id'] = answerId;
+    data['content'] = content;
+    data['selected_answer'] = selectedAnswer;
     data['is_correct'] = isCorrect;
+    data['correct_answer'] = correctAnswer;
     return data;
   }
 }

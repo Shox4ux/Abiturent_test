@@ -32,6 +32,7 @@ class MainNavigation {
     RouteNames.forget: (context) => const ForgotPasswordScreen(),
     RouteNames.subscripts: (context) => const MySubscriptions(),
     RouteNames.budget: (context) => const PaymentsScreen(),
+    RouteNames.group: (context) => const GroupScreen(),
     RouteNames.addMembers: (context) => const AddUserToGroup(),
   };
 

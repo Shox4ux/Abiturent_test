@@ -5,6 +5,7 @@ import 'package:test_app/core/block/auth_block/auth_cubit.dart';
 import 'package:test_app/core/block/group_block/group_cubit.dart';
 import 'package:test_app/core/block/news_bloc/cubit/news_cubit.dart';
 import 'package:test_app/core/block/test_block/test_cubit.dart';
+import 'package:test_app/core/helper/repos/test_repo.dart';
 
 import 'package:test_app/res/navigation/main_navigation.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile.dart';

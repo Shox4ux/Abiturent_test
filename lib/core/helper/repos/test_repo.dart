@@ -26,11 +26,11 @@ class TestRepo {
     int userId,
   ) async {
     final Map<String, dynamic> params = {
-      "id": testId,
-      "user_id": userId,
+      "test_id": 2,
+      "user_id": 118,
     };
 
-    return await _dio.post(ApiValues.innerTest, queryParameters: params);
+    return await _dio.post(ApiValues.innerTest, data: params);
   }
 
   Future<Response> sendTestAnswer(
@@ -41,8 +41,7 @@ class TestRepo {
       "user_id": userId,
     };
 
-    return await _dio.post(ApiValues.sendTestAnswerUrl,
-        queryParameters: params);
+    return await _dio.post(ApiValues.sendTestAnswerUrl, data: params);
   }
 
   Future<Response> getResults(int userId, int testListId) async {
@@ -51,6 +50,6 @@ class TestRepo {
       "test_list_id": testListId,
     };
 
-    return await _dio.post(ApiValues.getResults, queryParameters: params);
+    return await _dio.post(ApiValues.getResults, data: params);
   }
 }

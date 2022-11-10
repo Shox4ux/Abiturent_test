@@ -35,11 +35,12 @@ class TestCubit extends Cubit<TestState> {
     final u = await _storage.getUserInfo();
 
     try {
-      final response = await _repo.getTestById(u.id!, testId);
+      final response = await _repo.getTestById(testId, u.id!);
+
       final test = InnerTestModel.fromJson(response.data);
       emit(OnTestInnerSuccess(test));
     } on DioError catch (e) {
-      emit(OnTestError(e.message));
+      emit(OnTestError(e.response!.data["message"]));
     } on SocketException catch (e) {
       emit(OnTestError(e.message));
     } catch (e) {
@@ -53,7 +54,7 @@ class TestCubit extends Cubit<TestState> {
 
     try {
       final response = await _repo.sendTestAnswer(questionId, answerId, u.id!);
-      final test = InnerTestModel.fromJson(response.data);
+      final test = InnerTestModel.fromJson(response.data["next_question"]);
       emit(OnTestInnerSuccess(test));
     } on DioError catch (e) {
       emit(OnTestError(e.message));

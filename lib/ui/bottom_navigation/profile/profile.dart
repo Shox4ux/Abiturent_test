@@ -276,10 +276,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         spacer(),
         InkWell(
           onTap: () {
-            Navigator.push(
+            Navigator.pushNamed(
               context,
-              MaterialPageRoute(
-                  builder: (context) => GroupScreen(userId: user!.id!)),
+              RouteNames.group,
             );
 
             context.read<GroupCubit>().getGroupsByUserId();

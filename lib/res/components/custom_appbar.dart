@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:test_app/res/navigation/main_navigation.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/group/group.dart';
 
+import '../../core/block/drawer_cubit/drawer_cubit.dart';
 import '../../core/domain/user_model/user_model.dart';
 import '../../core/helper/database/app_storage.dart';
 import '../constants.dart';
@@ -18,6 +19,8 @@ class CustomAppBar extends StatefulWidget {
   @override
   State<CustomAppBar> createState() => _CustomAppBarState();
 }
+
+final _cubit = DrawerCubit();
 
 class _CustomAppBarState extends State<CustomAppBar> {
   Future<UserInfo> getUserData() async {
@@ -55,7 +58,9 @@ Widget customAppBar(
     child: Row(
       children: [
         InkWell(
-          onTap: () => scafKey.currentState?.openDrawer(),
+          onTap: () {
+            scafKey.currentState?.openDrawer();
+          },
           child: Container(
             height: 17.h,
             width: 23.w,
@@ -106,14 +111,7 @@ Widget customAppBar(
             ),
             Gap(29.w),
             InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => GroupScreen(userId: user!.id!),
-                  ),
-                );
-              },
+              onTap: () {},
               child: Container(
                 height: 20.h,
                 width: 25.w,
