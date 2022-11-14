@@ -83,6 +83,7 @@ class _PinPutWidgetState extends State<PinPutWidget> {
             SizedBox(
               height: 0,
               child: TextField(
+                autofocus: true,
                 focusNode: focusNode,
                 maxLength: null,
                 minLines: null,

@@ -6,6 +6,8 @@ import 'package:test_app/core/block/group_block/group_cubit.dart';
 import 'package:test_app/core/block/news_bloc/cubit/news_cubit.dart';
 import 'package:test_app/core/block/test_block/test_cubit.dart';
 import 'package:test_app/res/navigation/main_navigation.dart';
+import 'package:test_app/ui/auth/forgot_password.dart';
+import 'package:test_app/ui/auth/reset_password.dart';
 import 'package:test_app/ui/splash/splash.dart';
 import 'core/block/drawer_cubit/drawer_cubit.dart';
 import 'core/block/subjecy_bloc/subject_cubit.dart';
@@ -58,7 +60,7 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             primarySwatch: Colors.blue,
           ),
-          home: const SplashScreen(),
+          home: ForgotPasswordScreen(),
           routes: navigation.routes,
           onGenerateRoute: navigation.onGenerateRoute,
         ),

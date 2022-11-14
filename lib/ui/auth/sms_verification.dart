@@ -65,7 +65,7 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen>
   }
 
   Timer? countdownTimer;
-  Duration myDuration = const Duration(minutes: 3);
+  Duration myDuration = const Duration(seconds: 3);
 
   @override
   void initState() {
@@ -203,7 +203,9 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen>
                   _isTime
                       ? InkWell(
                           onTap: () {
-                            resetTimer();
+                            setState(
+                                () => myDuration = const Duration(minutes: 3));
+
                             context
                                 .read<AuthCubit>()
                                 .forgotPassword(widget.phone);
