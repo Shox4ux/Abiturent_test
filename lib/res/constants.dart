@@ -238,6 +238,7 @@ class SubjectList {
 class AppIcons {
   static const String subFilled = "assets/sub_filled.png";
   static const String sub = "assets/sub.png";
+  static const String sim = "assets/sim.png";
 
   static const String medlFilled = "assets/medl_filled.png";
   static const String medl = "assets/medl.png";
@@ -250,6 +251,8 @@ class AppIcons {
 
   static const String dtmFilled = "assets/dtm_filled.png";
   static const String dtm = "assets/dtm.png";
+  static const String warning = "assets/warning.png";
+
   static const String bilim = "assets/bilim.png";
 
   static const String mobile = "assets/mobile.png";
@@ -268,6 +271,7 @@ class AppIcons {
   static const String man = "assets/man.png";
   static const String tab = "assets/tab.png";
   static const String user = "assets/user.png";
+  static const String borrow = "assets/borrow.png";
 
   static const String info = "assets/info.png";
   static const String arrow = "assets/arrow.png";
@@ -300,6 +304,14 @@ class AppIcons {
   static const String newsError = "assets/news_error.png";
 }
 
+class WarningValues {
+  static const String smsDone = "smsDone";
+  static const String subFirstDone = "subFirstDone";
+  static const String subSecondDone = "subSecondDone";
+  static const String fillBudget = "fillBudget";
+  static const String warning = "warning";
+}
+
 class ApiValues {
   static const String baseUrl = "http://uzbilim.uz/api/";
   static const String sighUPUrl = "user/signup";
@@ -313,12 +325,23 @@ class ApiValues {
 
   static const String ratingUrl = "user/rating";
 
-  static const String subjectUrl = "subjects/index";
+  static const String addCardUrl = "card/add-card";
+  static const String amountUrl = "card/payment";
+  static const String getCardsUrl = "card/index";
+  static const String getErrorListUrl = "test/show-mistakes";
+
+  static const String getScripts = "subjects/index";
+  static const String getPreview = "subjects/view";
+  static const String makeScript = "user/make-subscription";
+
+  static const String getHistoryUrl = "user/payment-history";
+
+  static const String subjectUrl = "subjects/show-subject";
   static const String innerTest = "test/questions";
   static const String getGroupMembers = "user-group/view";
   static const String sendTestAnswerUrl = "test/receive-answers";
   static const String getResults = "test/result";
-
+  static const String getUserProfile = "user/profile";
   static const String mainNewsAndPaginationUrl = "news/index";
   static const String newsByIdUrl = "news/view";
   static const String getGroupByUserId = "user-group/index";
