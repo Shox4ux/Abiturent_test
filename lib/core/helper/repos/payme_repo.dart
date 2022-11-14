@@ -44,12 +44,9 @@ class PaymentRepo {
 
   Future<Response> getPaymentHistory(int userId) async {
     final Map<String, dynamic> params = {
-      "user_id": userId,
+      "id": userId,
     };
 
-    return await _dio.post(
-      ApiValues.amountUrl,
-      data: params,
-    );
+    return await _dio.get(ApiValues.getHistoryUrl, queryParameters: params);
   }
 }

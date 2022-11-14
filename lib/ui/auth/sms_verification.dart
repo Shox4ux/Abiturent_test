@@ -89,7 +89,7 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen>
   // Step 5
   void resetTimer() {
     stopTimer();
-    setState(() => myDuration = const Duration(minutes: 3));
+    setState(() => myDuration = const Duration(seconds: 3));
   }
 
   // Step 6
@@ -205,6 +205,7 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen>
                           onTap: () {
                             setState(
                                 () => myDuration = const Duration(minutes: 3));
+                            startTimer();
 
                             context
                                 .read<AuthCubit>()

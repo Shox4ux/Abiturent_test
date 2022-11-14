@@ -4,10 +4,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:test_app/core/block/auth_block/auth_cubit.dart';
 import 'package:test_app/core/block/group_block/group_cubit.dart';
 import 'package:test_app/core/block/news_bloc/cubit/news_cubit.dart';
+import 'package:test_app/core/block/payment_cubit/payment_cubit.dart';
 import 'package:test_app/core/block/test_block/test_cubit.dart';
 import 'package:test_app/res/navigation/main_navigation.dart';
 import 'package:test_app/ui/auth/forgot_password.dart';
 import 'package:test_app/ui/auth/reset_password.dart';
+import 'package:test_app/ui/bottom_navigation/profile/profile.dart';
 import 'package:test_app/ui/splash/splash.dart';
 import 'core/block/drawer_cubit/drawer_cubit.dart';
 import 'core/block/subjecy_bloc/subject_cubit.dart';
@@ -51,6 +53,9 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => SubscriptionCubit(),
         ),
+        BlocProvider(
+          create: (context) => PaymentCubit(),
+        ),
       ],
       child: ScreenUtilInit(
         designSize: const Size(376, 812),
@@ -60,7 +65,7 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             primarySwatch: Colors.blue,
           ),
-          home: ForgotPasswordScreen(),
+          home: const SplashScreen(),
           routes: navigation.routes,
           onGenerateRoute: navigation.onGenerateRoute,
         ),

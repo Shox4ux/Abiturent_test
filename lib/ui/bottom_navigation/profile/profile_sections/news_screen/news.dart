@@ -111,6 +111,7 @@ Widget newsItem(MainNewsModel model) {
           height: 77.h,
           width: 74.w,
           margin: EdgeInsets.only(bottom: 10.h),
+          clipBehavior: Clip.hardEdge,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(
               Radius.circular(

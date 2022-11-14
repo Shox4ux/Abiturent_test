@@ -3,9 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:test_app/core/block/group_block/group_cubit.dart';
+import 'package:test_app/core/block/payment_cubit/payment_cubit.dart';
 import 'package:test_app/core/block/subjecy_bloc/subject_cubit.dart';
 import 'package:test_app/core/block/subscription_block/subscription_cubit.dart';
 import 'package:test_app/core/block/test_block/test_cubit.dart';
+import 'package:test_app/core/domain/p_h_model/payment_history_model.dart';
 import 'package:test_app/core/domain/user_model/user_model.dart';
 import 'package:test_app/core/helper/database/app_storage.dart';
 import 'package:test_app/res/constants.dart';
@@ -199,7 +201,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget body() {
-    return isInSubs ? subs() : menu();
+    return isInSubs ? subs() : menu(context);
   }
 
   Widget subs() {
@@ -231,13 +233,45 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           Gap(9.h),
           Expanded(
-            child: ListView.separated(
-              padding: EdgeInsets.only(bottom: 20.h),
-              itemCount: 10,
-              itemBuilder: (BuildContext context, int index) {
-                return subcriptionsItem();
+            child: BlocBuilder<PaymentCubit, PaymentState>(
+              builder: (context, state) {
+                if (state is OnPayHistoryError) {
+                  return Center(
+                    child: Text(state.error),
+                  );
+                }
+                if (state is OnPayHistoryProgress) {
+                  return const Center(
+                    child:
+                        CircularProgressIndicator(color: AppColors.mainColor),
+                  );
+                }
+
+                if (state is OnPayHistoryReceived) {
+                  return ListView.separated(
+                    padding: EdgeInsets.only(bottom: 20.h, top: 10.h),
+                    itemCount: state.list.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      if (state.list[index].type == 2) {
+                        return Padding(
+                            padding: EdgeInsets.only(bottom: 5.h),
+                            child: bonusHistoryItem(state.list[index]));
+                      }
+                      if (state.list[index].type == 1) {
+                        return Padding(
+                            padding: EdgeInsets.only(bottom: 5.h),
+                            child: outHistoryItem(state.list[index]));
+                      }
+                      return Padding(
+                          padding: EdgeInsets.only(bottom: 5.h),
+                          child: inHistoryItem(state.list[index]));
+                    },
+                    separatorBuilder: (context, index) => SizedBox(height: 6.h),
+                  );
+                }
+
+                return const Center(child: Text("Hozircha bu oyna bo'sh"));
               },
-              separatorBuilder: (context, index) => SizedBox(height: 6.h),
             ),
           ),
         ],
@@ -245,7 +279,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget menu() {
+  Widget menu(BuildContext context) {
     return Container(
       height: 410.h,
       width: 331.w,
@@ -255,11 +289,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       child: Column(children: [
         InkWell(
-          onTap: () {
+          onTap: () async {
             setState(() {
-              print("object true");
               isInSubs = true;
             });
+
+            context.read<PaymentCubit>().getPaymentHistory();
           },
           child: rowItem(AppIcons.purplePocket, "Mening hisoblarim", false),
         ),
@@ -444,7 +479,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
-Widget subcriptionsItem() {
+Widget inHistoryItem(PaymentHistory item) {
   return AspectRatio(
     aspectRatio: 331 / 55,
     child: Container(
@@ -452,6 +487,13 @@ Widget subcriptionsItem() {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10.r),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.grey,
+            blurRadius: 5.0,
+            offset: Offset(0, 5),
+          ),
+        ],
       ),
       child: Row(
         children: [
@@ -471,15 +513,156 @@ Widget subcriptionsItem() {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        "11.01.2022",
+                        item.createdDate!,
                         style: TextStyle(
                             fontWeight: FontWeight.w200,
                             fontSize: 10.sp,
                             color: const Color(0xff161719)),
                       ),
-                      // Gap(80.w),
                       Text(
-                        "+2 200 000 UZS",
+                        "+${item.amount} UZS",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w200,
+                          fontSize: 14.sp,
+                          color: const Color(0xff161719),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Gap(4.h),
+                Expanded(
+                  child: Text(
+                    item.content!,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w200,
+                      fontSize: 14.sp,
+                      color: const Color(0xff161719),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
+    ),
+  );
+}
+
+Widget outHistoryItem(PaymentHistory item) {
+  return AspectRatio(
+    aspectRatio: 331 / 55,
+    child: Container(
+      padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 11.w),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10.r),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.grey,
+            blurRadius: 5.0,
+            offset: Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          SizedBox(
+            height: 24.h,
+            width: 24.w,
+            child: Image.asset(Subscriptions.red.iconPath),
+          ),
+          Gap(11.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        item.createdDate!,
+                        style: TextStyle(
+                            fontWeight: FontWeight.w200,
+                            fontSize: 10.sp,
+                            color: const Color(0xff161719)),
+                      ),
+                      Text(
+                        "-${item.amount} UZS",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w200,
+                          fontSize: 14.sp,
+                          color: const Color(0xff161719),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Gap(4.h),
+                Expanded(
+                  child: Text(
+                    item.content!,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w200,
+                      fontSize: 14.sp,
+                      color: const Color(0xff161719),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
+    ),
+  );
+}
+
+Widget bonusHistoryItem(PaymentHistory item) {
+  return AspectRatio(
+    aspectRatio: 331 / 55,
+    child: Container(
+      padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 11.w),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10.r),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.grey,
+            blurRadius: 3.0,
+            offset: Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          SizedBox(
+            height: 24.h,
+            width: 24.w,
+            child: Image.asset(Subscriptions.purple.iconPath),
+          ),
+          Gap(11.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        item.createdDate!,
+                        style: TextStyle(
+                            fontWeight: FontWeight.w200,
+                            fontSize: 10.sp,
+                            color: const Color(0xff161719)),
+                      ),
+                      Text(
+                        "${item.amount} UZS",
                         style: TextStyle(
                           fontWeight: FontWeight.w200,
                           fontSize: 14.sp,

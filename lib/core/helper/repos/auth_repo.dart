@@ -40,17 +40,12 @@ class AuthRepository {
     );
   }
 
-  Future<Response> resetPassword(
-    String phone,
-  ) async {
+  Future<Response> resetPassword(String phone) async {
     final Map<String, String> params = {
       "phone": phone,
     };
 
-    return await _dio.post(
-      ApiValues.resetPasswordUrl,
-      data: params,
-    );
+    return await _dio.post(ApiValues.resetPasswordUrl, data: params);
   }
 
   Future<Response> checkSmsCode(
@@ -61,10 +56,7 @@ class AuthRepository {
       "sms_live": smsCode,
     };
 
-    return await _dio.post(
-      ApiValues.checkSmsUrl,
-      data: params,
-    );
+    return await _dio.post(ApiValues.checkSmsUrl, data: params);
   }
 
   Future<Response> checkResetPassWord(
@@ -74,11 +66,7 @@ class AuthRepository {
       "phone": phone,
       "sms_live": smsCode,
     };
-
-    return await _dio.post(
-      ApiValues.resetPasswordUrl,
-      data: params,
-    );
+    return await _dio.post(ApiValues.resetPasswordUrl, data: params);
   }
 
   Future<Response> logOut(int userId, String authKey) async {
@@ -87,10 +75,7 @@ class AuthRepository {
       "auth_key": authKey,
     };
 
-    return await _dio.post(
-      ApiValues.logoutUrl,
-      data: params,
-    );
+    return await _dio.post(ApiValues.logoutUrl, data: params);
   }
 
   Future<Response> changePassword(

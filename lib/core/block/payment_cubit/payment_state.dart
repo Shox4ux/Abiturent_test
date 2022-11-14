@@ -9,20 +9,39 @@ abstract class PaymentState extends Equatable {
 
 class PaymentInitial extends PaymentState {}
 
-class OnHistoryProgress extends PaymentState {}
+class OnCardProgress extends PaymentState {}
 
-class OnHistorySuccess extends PaymentState {
-  final List<PaymentHistory> historyList;
+class OnCardAdded extends PaymentState {}
 
-  const OnHistorySuccess(this.historyList);
+class OnPaymentSent extends PaymentState {}
+
+class OnCardsReceived extends PaymentState {
+  final List<CardModel> cardList;
+  const OnCardsReceived(this.cardList);
   @override
-  List<Object> get props => [historyList];
+  List<Object> get props => [cardList];
 }
 
-class OnHistoryError extends PaymentState {
+class OnCardError extends PaymentState {
   final String error;
+  const OnCardError(this.error);
+  @override
+  List<Object> get props => [error];
+}
 
-  const OnHistoryError(this.error);
+class OnPayHistoryProgress extends PaymentState {}
+
+class OnPayHistoryReceived extends PaymentState {
+  final List<PaymentHistory> list;
+  const OnPayHistoryReceived(this.list);
+
+  @override
+  List<Object> get props => [list];
+}
+
+class OnPayHistoryError extends PaymentState {
+  final String error;
+  const OnPayHistoryError(this.error);
 
   @override
   List<Object> get props => [error];

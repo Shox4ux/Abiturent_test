@@ -169,11 +169,12 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> forgotPassword(String phone) async {
     final realPhone = "998$phone";
+
+    final u = await _storage.getUserId();
     emit(OnProgress());
     try {
-      final u = await _repo.resetPassword(realPhone);
-      var tempId = u.data['id'];
-      emit(AuthOnSMS(id: tempId!, phoneNumber: phone));
+      await _repo.resetPassword(realPhone);
+      emit(AuthOnSMS(id: u, phoneNumber: phone));
     } on DioError catch (e) {
       emit(AuthDenied(error: e.response?.data["message"] ?? ""));
     } on SocketException catch (e) {
