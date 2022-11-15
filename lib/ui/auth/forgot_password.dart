@@ -117,7 +117,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   _isAllFilled
                       ? BlocBuilder<AuthCubit, AuthState>(
                           builder: (context, state) {
-                            if (state is OnProgress) {
+                            if (state is OnAuthProgress) {
                               return const CircularProgressIndicator(
                                   color: AppColors.mainColor);
                             }

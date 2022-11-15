@@ -11,7 +11,7 @@ class AuthInitial extends AuthState {}
 
 class OnSmsTimeOut extends AuthState {}
 
-class OnProgress extends AuthState {}
+class OnAuthProgress extends AuthState {}
 
 class OnAuthTime extends AuthState {}
 

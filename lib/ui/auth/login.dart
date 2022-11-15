@@ -48,9 +48,11 @@ class _LoginScreenState extends State<LoginScreen> {
       listener: (context, state) {
         if (state is UserActive) {
           print("from login: ${state.userInfo.fullname}");
-
           ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("Successfully logged in!")));
+            const SnackBar(
+              content: Text("Muvaffaqiyatli ro'yxattan o'tildi"),
+            ),
+          );
           Navigator.of(context).pushNamedAndRemoveUntil(
             RouteNames.main,
             (Route<dynamic> route) => false,
@@ -149,7 +151,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 _isAllfilled
                     ? BlocBuilder<AuthCubit, AuthState>(
                         builder: (context, state) {
-                          if (state is OnProgress) {
+                          if (state is OnAuthProgress) {
                             return const CircularProgressIndicator(
                               color: AppColors.mainColor,
                             );

@@ -79,122 +79,146 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: WillPopScope(
-        onWillPop: () async {
-          setState(() {
-            isInSubs = false;
-          });
-          return false;
-        },
-        child: SafeArea(
-          child: Padding(
-              padding: EdgeInsets.all(20.w),
-              child: FutureBuilder(
-                future: getUserData(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return const Center(
-                      child: Text("Kuting..."),
-                    );
-                  }
-                  return Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          CircleAvatar(
-                            radius: 48.w,
-                            foregroundImage: const AssetImage(
-                              AppIcons.man,
-                            ),
-                          ),
-                          Gap(10.w),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
+    return BlocListener<AuthCubit, AuthState>(
+      listener: (context, state) {
+        if (state is LogedOut) {
+          Navigator.pushNamedAndRemoveUntil(
+              context, RouteNames.signup, (route) => false);
+        }
+      },
+      child: Scaffold(
+        body: WillPopScope(
+          onWillPop: () async {
+            setState(() {
+              isInSubs = false;
+            });
+            return false;
+          },
+          child: SafeArea(
+            child: Padding(
+                padding: EdgeInsets.all(20.w),
+                child: FutureBuilder(
+                  future: getUserData(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return const Center(
+                        child: Text("Kuting..."),
+                      );
+                    }
+                    return BlocBuilder<AuthCubit, AuthState>(
+                      builder: (context, state) {
+                        if (state is OnAuthProgress) {
+                          return const Center(
+                            child: CircularProgressIndicator(
+                                color: AppColors.mainColor),
+                          );
+                        }
+                        return Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                Text(
-                                  "ID #${user!.id}",
-                                  style: AppStyles.subtitleTextStyle.copyWith(
-                                    fontSize: 14.sp,
-                                    color: const Color(0xff0D0E0F),
+                                CircleAvatar(
+                                  radius: 48.w,
+                                  foregroundImage: const AssetImage(
+                                    AppIcons.man,
                                   ),
                                 ),
-                                Text(
-                                  "${user!.fullname}",
-                                  overflow: TextOverflow.visible,
-                                  style: AppStyles.introButtonText.copyWith(
-                                      fontSize: 24.sp,
-                                      color: const Color(0xff161719)),
+                                Gap(10.w),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                        "ID #${user!.id}",
+                                        style: AppStyles.subtitleTextStyle
+                                            .copyWith(
+                                          fontSize: 14.sp,
+                                          color: const Color(0xff0D0E0F),
+                                        ),
+                                      ),
+                                      Text(
+                                        "${user!.fullname}",
+                                        overflow: TextOverflow.visible,
+                                        style: AppStyles.introButtonText
+                                            .copyWith(
+                                                fontSize: 24.sp,
+                                                color: const Color(0xff161719)),
+                                      ),
+                                    ],
+                                  ),
                                 ),
+                                Gap(48.w),
+                                Column(
+                                  children: [
+                                    Text(
+                                      _medalStatus(user!.medalId!),
+                                      style: AppStyles.subtitleTextStyle,
+                                    ),
+                                    Gap(11.h),
+                                    SizedBox(
+                                        width: 48.w,
+                                        height: 48.h,
+                                        child: Image.asset(
+                                            _medalAsset(user!.medalId!)))
+                                  ],
+                                )
                               ],
                             ),
-                          ),
-                          Gap(48.w),
-                          Column(
-                            children: [
-                              Text(
-                                _medalStatus(user!.medalId!),
-                                style: AppStyles.subtitleTextStyle,
-                              ),
-                              Gap(11.h),
-                              SizedBox(
-                                  width: 48.w,
-                                  height: 48.h,
-                                  child:
-                                      Image.asset(_medalAsset(user!.medalId!)))
-                            ],
-                          )
-                        ],
-                      ),
-                      Gap(19.h),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                            vertical: 5.h, horizontal: 10.w),
-                        height: 52.h,
-                        decoration: BoxDecoration(
-                            color: AppColors.greenBackground,
-                            borderRadius: BorderRadius.circular(10.r)),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
+                            Gap(19.h),
                             Container(
-                              height: 40.h,
-                              width: 52.w,
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 5.h, horizontal: 10.w),
+                              height: 52.h,
                               decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(16.r),
-                              ),
-                              child: Image.asset(
-                                AppIcons.greenPocket,
-                                scale: 3.h,
-                              ),
-                            ),
-                            RichText(
-                              text: TextSpan(
-                                text: "UZS ",
-                                style: AppStyles.introButtonText.copyWith(
-                                    color: Colors.white, fontSize: 14.sp),
+                                  color: AppColors.greenBackground,
+                                  borderRadius: BorderRadius.circular(10.r)),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  TextSpan(
-                                    text: "${user!.balance}",
-                                    style: AppStyles.introButtonText.copyWith(
-                                        color: Colors.white, fontSize: 28.sp),
+                                  Container(
+                                    height: 40.h,
+                                    width: 52.w,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(16.r),
+                                    ),
+                                    child: Image.asset(
+                                      AppIcons.greenPocket,
+                                      scale: 3.h,
+                                    ),
                                   ),
+                                  RichText(
+                                    text: TextSpan(
+                                      text: "UZS ",
+                                      style: AppStyles.introButtonText.copyWith(
+                                          color: Colors.white, fontSize: 14.sp),
+                                      children: [
+                                        TextSpan(
+                                          text: "${user!.balance}",
+                                          style: AppStyles.introButtonText
+                                              .copyWith(
+                                                  color: Colors.white,
+                                                  fontSize: 28.sp),
+                                        ),
+                                      ],
+                                    ),
+                                  )
                                 ],
                               ),
-                            )
+                            ),
+                            Gap(25.h),
+                            body()
                           ],
-                        ),
-                      ),
-                      Gap(25.h),
-                      body()
-                    ],
-                  );
-                },
-              )),
+                        );
+                      },
+                    );
+                  },
+                )),
+          ),
         ),
       ),
     );

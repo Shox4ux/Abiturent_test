@@ -85,7 +85,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text(
-                        "Successfully registered",
+                        "Muvaffaqiyatli ro'yxattan o'tildi",
                       ),
                     ),
                   );
@@ -285,7 +285,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   _isChecked
                       ? BlocBuilder<AuthCubit, AuthState>(
                           builder: (context, state) {
-                            if (state is OnProgress) {
+                            if (state is OnAuthProgress) {
                               return const CircularProgressIndicator(
                                 color: AppColors.mainColor,
                               );

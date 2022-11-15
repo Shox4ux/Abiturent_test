@@ -46,9 +46,7 @@ class _ResetPassWordState extends State<ResetPassWord> {
         if (state is AuthGranted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text(
-                "Successfully registered",
-              ),
+              content: Text("Muvaffaqiyatli ro'yxattan o'tildi"),
             ),
           );
 
@@ -146,7 +144,7 @@ class _ResetPassWordState extends State<ResetPassWord> {
                   _isAllFilled
                       ? BlocBuilder<AuthCubit, AuthState>(
                           builder: (context, state) {
-                            if (state is OnProgress) {
+                            if (state is OnAuthProgress) {
                               return const CircularProgressIndicator(
                                 color: AppColors.mainColor,
                               );

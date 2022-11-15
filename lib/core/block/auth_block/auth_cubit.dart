@@ -39,7 +39,7 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> authSignUp(
       String fullName, String phone, String password) async {
     final realNumber = "998$phone";
-    emit(OnProgress());
+    emit(OnAuthProgress());
 
     try {
       final response = await _repo.sighUp(fullName, realNumber, password);
@@ -73,7 +73,7 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> authLogin(String phone, String password) async {
     final realNumber = "998$phone";
-    emit(OnProgress());
+    emit(OnAuthProgress());
     print("login");
 
     try {
@@ -106,7 +106,7 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void> checkSmsCode(int userId, String phone, String smsCode) async {
-    emit(OnProgress());
+    emit(OnAuthProgress());
 
     try {
       final response = await _repo.checkSmsCode(userId, phone, smsCode);
@@ -129,7 +129,7 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> checkResetPassword(
       int userId, String phone, String smsCode) async {
     var realNum = "998$phone";
-    emit(OnProgress());
+    emit(OnAuthProgress());
 
     try {
       final response = await _repo.checkResetPassWord(userId, realNum, smsCode);
@@ -147,6 +147,7 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void> authLogOut() async {
+    emit(OnAuthProgress());
     var user = await _storage.getUserInfo();
     var authKey = await _storage.getToken();
 
@@ -171,7 +172,7 @@ class AuthCubit extends Cubit<AuthState> {
     final realPhone = "998$phone";
 
     final u = await _storage.getUserId();
-    emit(OnProgress());
+    emit(OnAuthProgress());
     try {
       await _repo.resetPassword(realPhone);
       emit(AuthOnSMS(id: u, phoneNumber: phone));
@@ -189,7 +190,7 @@ class AuthCubit extends Cubit<AuthState> {
     String newPassword,
     String confirmPassword,
   ) async {
-    emit(OnProgress());
+    emit(OnAuthProgress());
     try {
       await _repo.changePassword(
         phone,

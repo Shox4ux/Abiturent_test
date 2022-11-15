@@ -65,7 +65,7 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen>
   }
 
   Timer? countdownTimer;
-  Duration myDuration = const Duration(seconds: 3);
+  Duration myDuration = const Duration(minutes: 3);
 
   @override
   void initState() {
@@ -89,7 +89,7 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen>
   // Step 5
   void resetTimer() {
     stopTimer();
-    setState(() => myDuration = const Duration(seconds: 3));
+    setState(() => myDuration = const Duration(minutes: 3));
   }
 
   // Step 6
@@ -119,11 +119,11 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen>
           startTimer();
         }
         if (state is AuthGranted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Ro'yxattan o'tti Muvaffaqiyatli !"),
-            ),
-          );
+          // ScaffoldMessenger.of(context).showSnackBar(
+          //   const SnackBar(
+          //     content: Text("Muvaffaqiyatli ro'yxattan o'tildi"),
+          //   ),
+          // );
           if (widget.fromWhere == RouteNames.forget) {
             Navigator.push(
               context,
@@ -204,7 +204,8 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen>
                       ? InkWell(
                           onTap: () {
                             setState(
-                                () => myDuration = const Duration(minutes: 3));
+                              () => myDuration = const Duration(minutes: 3),
+                            );
                             startTimer();
 
                             context
@@ -228,7 +229,7 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen>
                   _isFilled
                       ? BlocBuilder<AuthCubit, AuthState>(
                           builder: (context, state) {
-                            if (state is OnProgress) {
+                            if (state is OnAuthProgress) {
                               return const Center(
                                 child: CircularProgressIndicator(
                                   color: AppColors.mainColor,
