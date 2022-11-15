@@ -132,7 +132,6 @@ class MistakesScreen extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(14.h),
             width: 336.w,
-            height: 148.h,
             decoration: BoxDecoration(
               border: Border.all(
                 color: AppColors.mainColor,

@@ -112,72 +112,75 @@ class _TestScreenState extends State<TestScreen> {
                     if (state is OnTestInnerSuccess) {
                       return Column(
                         mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Column(children: [
-                            Gap(28.h),
-                            Container(
-                              height: 33.h,
-                              width: 116.w,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(32.r),
-                                border: Border.all(
-                                  width: 1,
-                                  color: AppColors.textFieldBorderColor,
-                                ),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  CustomDot(
-                                    hight: 14.h,
-                                    width: 14.w,
-                                    color: AppColors.mainColor,
+                          Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Gap(28.h),
+                                Container(
+                                  padding: EdgeInsets.all(6.h),
+                                  width: 116.w,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(32.r),
+                                    border: Border.all(
+                                      width: 1,
+                                      color: AppColors.textFieldBorderColor,
+                                    ),
                                   ),
-                                  Gap(7.w),
-                                  Text(
-                                    "${state.innerTest.prior}.Savol",
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      CustomDot(
+                                        hight: 14.h,
+                                        width: 14.w,
+                                        color: AppColors.mainColor,
+                                      ),
+                                      Gap(7.w),
+                                      Text(
+                                        "${state.innerTest.prior}.Savol",
+                                        style: AppStyles.subtitleTextStyle
+                                            .copyWith(
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Gap(8.h),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 10.w),
+                                  child: Text(
+                                    state.innerTest.content!,
                                     style: AppStyles.subtitleTextStyle.copyWith(
+                                      fontSize: 15.sp,
                                       color: Colors.black,
                                     ),
                                   ),
-                                ],
-                              ),
-                            ),
-                            Gap(8.h),
-                            Padding(
-                              padding: EdgeInsets.only(left: 10.w),
-                              child: Text(
-                                state.innerTest.content!,
-                                style: AppStyles.subtitleTextStyle.copyWith(
-                                  fontSize: 18.sp,
-                                  color: Colors.black,
                                 ),
-                              ),
-                            ),
-                            Gap(57.h),
-                            Column(
-                              children: [
-                                for (var i = 0;
-                                    i < state.innerTest.answers!.length;
-                                    i++)
-                                  GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        if (_selectedAnswerIndex == i) {
-                                          _selectedAnswerIndex = null;
-                                        } else {
-                                          _selectedAnswerIndex = i;
-                                        }
-                                      });
-                                    },
-                                    child: testItem(state.innerTest.answers![i],
-                                        (i == _selectedAnswerIndex)),
-                                  ),
-                              ],
-                            ),
-                          ]),
+                                Gap(50.h),
+                                Column(
+                                  children: [
+                                    for (var i = 0;
+                                        i < state.innerTest.answers!.length;
+                                        i++)
+                                      GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            if (_selectedAnswerIndex == i) {
+                                              _selectedAnswerIndex = null;
+                                            } else {
+                                              _selectedAnswerIndex = i;
+                                            }
+                                          });
+                                        },
+                                        child: testItem(
+                                            state.innerTest.answers![i],
+                                            (i == _selectedAnswerIndex)),
+                                      ),
+                                  ],
+                                ),
+                              ]),
                           _selectedAnswerIndex != null
                               ? ElevatedButton(
                                   style: AppStyles.introUpButton,

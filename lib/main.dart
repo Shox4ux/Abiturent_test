@@ -8,6 +8,7 @@ import 'package:test_app/core/block/payment_cubit/payment_cubit.dart';
 import 'package:test_app/core/block/test_block/test_cubit.dart';
 import 'package:test_app/res/navigation/main_navigation.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/payme/payme.dart';
+import 'package:test_app/ui/splash/splash.dart';
 import 'core/block/drawer_cubit/drawer_cubit.dart';
 import 'core/block/subjecy_bloc/subject_cubit.dart';
 import 'core/block/subscription_block/subscription_cubit.dart';
@@ -62,7 +63,7 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             primarySwatch: Colors.blue,
           ),
-          home: const AddCard(),
+          home: const SplashScreen(),
           routes: navigation.routes,
           onGenerateRoute: navigation.onGenerateRoute,
         ),
