@@ -10,6 +10,7 @@ import '../../../../../res/constants.dart';
 import '../../../../../res/components/custom_simple_appbar.dart';
 import '../../../../../res/navigation/main_navigation.dart';
 import '../../../../../res/components/waiting.dart';
+import '../../../../functions/number_formatter.dart';
 
 class MySubscriptions extends StatefulWidget {
   const MySubscriptions({super.key});
@@ -145,7 +146,7 @@ Widget unSubedItem(SubscriptionModel scriptItem, BuildContext context) {
                       ),
                       Gap(10.w),
                       Text(
-                        "${scriptItem.subjectPrice} UZS",
+                        "${numberFormatter(scriptItem.subjectPrice)} UZS",
                         style: AppStyles.introButtonText.copyWith(
                           fontSize: 14.sp,
                           color: Colors.red,

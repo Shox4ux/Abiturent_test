@@ -68,7 +68,7 @@ class AppStyles {
 class AppStrings {
   static const String firstHeadIntro = "Test markazi";
   static const String secondHeadIntro = "Turli xil fanlar";
-  static const String thirdHeadIntro = "O’z ustada ishlash";
+  static const String thirdHeadIntro = "O’z ustida ishlash";
 
   static const String introUpButtonText = "Ro’yhatdan o’tish";
 

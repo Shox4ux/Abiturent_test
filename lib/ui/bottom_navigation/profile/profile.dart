@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
@@ -12,6 +13,7 @@ import 'package:test_app/core/domain/user_model/user_model.dart';
 import 'package:test_app/core/helper/database/app_storage.dart';
 import 'package:test_app/res/constants.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/group/group.dart';
+import 'package:test_app/ui/functions/number_formatter.dart';
 
 import '../../../core/block/auth_block/auth_cubit.dart';
 import '../../../core/block/user_block/user_cubit_cubit.dart';
@@ -198,7 +200,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           color: Colors.white, fontSize: 14.sp),
                                       children: [
                                         TextSpan(
-                                          text: "${user!.balance}",
+                                          text: numberFormatter(user!.balance),
                                           style: AppStyles.introButtonText
                                               .copyWith(
                                                   color: Colors.white,
@@ -362,13 +364,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         spacer(),
         InkWell(
           onTap: () {
-            Navigator.pushAndRemoveUntil<void>(
-              context,
-              MaterialPageRoute<void>(
-                  builder: (BuildContext context) =>
-                      const WaitingScreen(status: WarningValues.warning)),
-              (Route<dynamic> route) => false,
-            );
+            Navigator.pushNamed(context, RouteNames.payme);
           },
           child: rowItem(AppIcons.payme, "Hisobni to’ldirish", false),
         ),
@@ -433,6 +429,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             Gap(16.w),
                             InkWell(
                               onTap: () async {
+                                Navigator.pop(context);
                                 await context.read<AuthCubit>().authLogOut();
                               },
                               child: Container(
@@ -544,7 +541,7 @@ Widget inHistoryItem(PaymentHistory item) {
                             color: const Color(0xff161719)),
                       ),
                       Text(
-                        "+${item.amount} UZS",
+                        "+${numberFormatter(item.amount)} UZS",
                         style: TextStyle(
                           fontWeight: FontWeight.w200,
                           fontSize: 14.sp,
@@ -615,7 +612,7 @@ Widget outHistoryItem(PaymentHistory item) {
                             color: const Color(0xff161719)),
                       ),
                       Text(
-                        "-${item.amount} UZS",
+                        "-${numberFormatter(item.amount)} UZS",
                         style: TextStyle(
                           fontWeight: FontWeight.w200,
                           fontSize: 14.sp,
@@ -686,7 +683,7 @@ Widget bonusHistoryItem(PaymentHistory item) {
                             color: const Color(0xff161719)),
                       ),
                       Text(
-                        "${item.amount} UZS",
+                        "${numberFormatter(item.amount)} UZS",
                         style: TextStyle(
                           fontWeight: FontWeight.w200,
                           fontSize: 14.sp,

@@ -26,7 +26,7 @@ class MainNavigation {
     RouteNames.signin: (context) => const LoginScreen(),
     RouteNames.news: (context) => NewsScreen(),
     RouteNames.main: (context) => const MainScreen1(),
-    RouteNames.payme: (context) => PaymeScreen(),
+    RouteNames.payme: (context) => const AddCard(),
     RouteNames.forget: (context) => const ForgotPasswordScreen(),
     RouteNames.subscripts: (context) => const MySubscriptions(),
     RouteNames.budget: (context) => const PaymentsScreen(),

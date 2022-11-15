@@ -113,69 +113,71 @@ class _TestScreenState extends State<TestScreen> {
                       return Column(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Gap(28.h),
-                          Container(
-                            height: 33.h,
-                            width: 116.w,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(32.r),
-                              border: Border.all(
-                                width: 1,
-                                color: AppColors.textFieldBorderColor,
+                          Column(children: [
+                            Gap(28.h),
+                            Container(
+                              height: 33.h,
+                              width: 116.w,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(32.r),
+                                border: Border.all(
+                                  width: 1,
+                                  color: AppColors.textFieldBorderColor,
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  CustomDot(
+                                    hight: 14.h,
+                                    width: 14.w,
+                                    color: AppColors.mainColor,
+                                  ),
+                                  Gap(7.w),
+                                  Text(
+                                    "${state.innerTest.prior}.Savol",
+                                    style: AppStyles.subtitleTextStyle.copyWith(
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                            Gap(8.h),
+                            Padding(
+                              padding: EdgeInsets.only(left: 10.w),
+                              child: Text(
+                                state.innerTest.content!,
+                                style: AppStyles.subtitleTextStyle.copyWith(
+                                  fontSize: 18.sp,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                            Gap(57.h),
+                            Column(
                               children: [
-                                CustomDot(
-                                  hight: 14.h,
-                                  width: 14.w,
-                                  color: AppColors.mainColor,
-                                ),
-                                Gap(7.w),
-                                Text(
-                                  "${state.innerTest.prior}.Savol",
-                                  style: AppStyles.subtitleTextStyle.copyWith(
-                                    color: Colors.black,
+                                for (var i = 0;
+                                    i < state.innerTest.answers!.length;
+                                    i++)
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        if (_selectedAnswerIndex == i) {
+                                          _selectedAnswerIndex = null;
+                                        } else {
+                                          _selectedAnswerIndex = i;
+                                        }
+                                      });
+                                    },
+                                    child: testItem(state.innerTest.answers![i],
+                                        (i == _selectedAnswerIndex)),
                                   ),
-                                ),
                               ],
                             ),
-                          ),
-                          Gap(8.h),
-                          Padding(
-                            padding: EdgeInsets.only(left: 10.w),
-                            child: Text(
-                              state.innerTest.content!,
-                              style: AppStyles.subtitleTextStyle.copyWith(
-                                fontSize: 18.sp,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                          Gap(57.h),
-                          Column(
-                            children: [
-                              for (var i = 0;
-                                  i < state.innerTest.answers!.length;
-                                  i++)
-                                GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      if (_selectedAnswerIndex == i) {
-                                        _selectedAnswerIndex = null;
-                                      } else {
-                                        _selectedAnswerIndex = i;
-                                      }
-                                    });
-                                  },
-                                  child: testItem(state.innerTest.answers![i],
-                                      (i == _selectedAnswerIndex)),
-                                ),
-                            ],
-                          ),
-                          Gap(150.h),
+                          ]),
                           _selectedAnswerIndex != null
                               ? ElevatedButton(
                                   style: AppStyles.introUpButton,
