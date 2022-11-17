@@ -50,15 +50,16 @@ class SubscriptionCubit extends Cubit<SubscriptionState> {
     }
   }
 
-  Future<void> makeScript(ScriptPreview preview) async {
+  Future<void> makeScript(int subId) async {
     emit(OnScriptProgress());
     final u = await _storage.getUserInfo();
     final k = await _storage.getToken();
 
     try {
-      final response =
-          await _repo.makeScript(u.id!, k!, preview.subjectData!.id!);
-      emit(OnScriptDone(preview));
+      final response = await _repo.makeScript(u.id!, k!, subId);
+
+      final preview = ScriptPreview.fromJson(response.data);
+      emit(OnScriptMade(preview));
     } on DioError catch (e) {
       emit(OnScriptError(e.response!.data["message"]));
     } on SocketException catch (e) {

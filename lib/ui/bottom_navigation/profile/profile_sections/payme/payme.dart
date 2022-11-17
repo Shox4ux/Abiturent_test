@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:test_app/res/navigation/main_navigation.dart';
 
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/payme/filling_budget.dart';
 
@@ -35,9 +36,9 @@ class _AddCardState extends State<AddCard> {
               left: 20.w,
             ),
             child: CustomSimpleAppBar(
-              isSimple: true,
+              isSimple: false,
               titleText: "Yangi Hisob Yaratish",
-              routeText: "profile",
+              routeText: RouteNames.main,
               style: AppStyles.introButtonText.copyWith(
                 fontSize: 24.sp,
                 color: Colors.white,

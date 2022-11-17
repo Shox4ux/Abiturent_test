@@ -85,7 +85,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       listener: (context, state) {
         if (state is LogedOut) {
           Navigator.pushNamedAndRemoveUntil(
-              context, RouteNames.signup, (route) => false);
+              context, RouteNames.signin, (route) => false);
         }
       },
       child: Scaffold(
@@ -352,8 +352,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Navigator.push<void>(
               context,
               MaterialPageRoute<void>(
-                  builder: (BuildContext context) =>
-                      const WaitingScreen(status: WarningValues.warning)),
+                  builder: (BuildContext context) => const WaitingScreen(
+                        status: WarningValues.warning,
+                        errorText: "",
+                        buttonText: "",
+                      )),
             );
 
             context.read<GroupCubit>().getGroupsByUserId();

@@ -2,20 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:intl/intl.dart';
 import 'package:test_app/core/block/test_block/test_cubit.dart';
 import 'package:test_app/res/constants.dart';
-
-import '../../core/block/auth_block/auth_cubit.dart';
+import 'package:test_app/ui/functions/number_formatter.dart';
 import '../../core/block/subscription_block/subscription_cubit.dart';
 import 'custom_simple_appbar.dart';
 import '../navigation/main_navigation.dart';
-import '../../ui/test_screens/test_answers.dart';
 
 class WaitingScreen extends StatefulWidget {
-  const WaitingScreen({Key? key, required this.status}) : super(key: key);
+  const WaitingScreen({
+    Key? key,
+    required this.status,
+    required this.errorText,
+    required this.buttonText,
+  }) : super(key: key);
 
   final String status;
+  final String errorText;
+  final String buttonText;
 
   @override
   State<WaitingScreen> createState() => _WaitingScreenState();
@@ -28,6 +32,23 @@ class _WaitingScreenState extends State<WaitingScreen> {
       return Scaffold(
         body: SafeArea(
           child: whenPreview(context),
+        ),
+      );
+    }
+
+    if (widget.status == WarningValues.hisobError) {
+      return Scaffold(
+        body: SafeArea(
+          child: whenError(
+              context, widget.errorText, widget.buttonText, widget.status),
+        ),
+      );
+    }
+    if (widget.status == WarningValues.obunaError) {
+      return Scaffold(
+        body: SafeArea(
+          child: whenError(
+              context, widget.errorText, widget.buttonText, widget.status),
         ),
       );
     }
@@ -63,7 +84,32 @@ class _WaitingScreenState extends State<WaitingScreen> {
 }
 
 Widget whenPreview(BuildContext context) {
-  return BlocBuilder<SubscriptionCubit, SubscriptionState>(
+  return BlocConsumer<SubscriptionCubit, SubscriptionState>(
+    listener: (context, state) {
+      if (state is OnScriptError) {
+        Navigator.push(
+          context,
+          MaterialPageRoute<void>(
+              builder: (BuildContext context) => WaitingScreen(
+                    status: WarningValues.hisobError,
+                    errorText: state.error,
+                    buttonText: "Hisobni to'ldirish",
+                  )),
+        );
+      }
+      if (state is OnScriptMade) {
+        Navigator.pushAndRemoveUntil<void>(
+          context,
+          MaterialPageRoute<void>(
+              builder: (BuildContext context) => const WaitingScreen(
+                    status: WarningValues.subSecondDone,
+                    errorText: "",
+                    buttonText: "",
+                  )),
+          (Route<dynamic> route) => false,
+        );
+      }
+    },
     builder: (context, state) {
       if (state is OnSubscriptionPreview) {
         return Column(
@@ -71,12 +117,17 @@ Widget whenPreview(BuildContext context) {
           children: [
             Column(
               children: [
-                CustomSimpleAppBar(
-                  titleText: "Obuna bo'lish",
-                  style:
-                      AppStyles.introButtonText.copyWith(color: Colors.black),
-                  iconColor: Colors.black,
-                  isSimple: true,
+                Row(
+                  children: [
+                    Gap(20.h),
+                    CustomSimpleAppBar(
+                      titleText: "Obuna bo'lish",
+                      style: AppStyles.introButtonText
+                          .copyWith(color: Colors.black),
+                      iconColor: Colors.black,
+                      isSimple: true,
+                    ),
+                  ],
                 ),
                 Gap(66.h),
                 Text("${state.preview.subjectData!.name} fani",
@@ -95,7 +146,8 @@ Widget whenPreview(BuildContext context) {
                 Gap(5.h),
                 RichText(
                   text: TextSpan(
-                    text: '${state.preview.subjectData!.price} ',
+                    text:
+                        '${numberFormatter(state.preview.subjectData!.price)} ',
                     style: AppStyles.introButtonText
                         .copyWith(color: Colors.black, fontSize: 48.sp),
                     children: <TextSpan>[
@@ -163,27 +215,33 @@ Widget whenPreview(BuildContext context) {
                 )
               ],
             ),
-            Padding(
-              padding: EdgeInsets.only(bottom: 24.h),
-              child: ElevatedButton(
-                style: AppStyles.introUpButton,
-                onPressed: () {
-                  Navigator.pushAndRemoveUntil<void>(
-                    context,
-                    MaterialPageRoute<void>(
-                        builder: (BuildContext context) => const WaitingScreen(
-                            status: WarningValues.subSecondDone)),
-                    (Route<dynamic> route) => false,
+            BlocBuilder<SubscriptionCubit, SubscriptionState>(
+              builder: (context, state) {
+                if (state is OnSubscriptionPreview) {
+                  return Padding(
+                    padding: EdgeInsets.only(bottom: 24.h),
+                    child: ElevatedButton(
+                      style: AppStyles.introUpButton,
+                      onPressed: () {
+                        context
+                            .read<SubscriptionCubit>()
+                            .makeScript(state.preview.subjectData!.id!);
+                      },
+                      child: Text(
+                        "Obuna bo’lish",
+                        style: AppStyles.introButtonText
+                            .copyWith(color: const Color(0xffFCFCFC)),
+                      ),
+                    ),
                   );
+                }
 
-                  context.read<SubscriptionCubit>().makeScript(state.preview);
-                },
-                child: Text(
-                  "Obuna bo’lish",
-                  style: AppStyles.introButtonText
-                      .copyWith(color: const Color(0xffFCFCFC)),
-                ),
-              ),
+                return const Center(
+                  child: CircularProgressIndicator(
+                    color: AppColors.mainColor,
+                  ),
+                );
+              },
             ),
           ],
         );
@@ -217,7 +275,7 @@ Widget whenScriptEnd(BuildContext context) {
           child: Text(state.error),
         );
       }
-      if (state is OnScriptDone) {
+      if (state is OnScriptMade) {
         return Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -388,50 +446,77 @@ Widget whenWaiting(BuildContext context) {
   );
 }
 
-Widget whenError(BuildContext context) {
+Widget whenError(
+    BuildContext context, String errorText, String buttonText, String status) {
   return Column(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
-      Gap(76.h),
-      Container(
-        margin: EdgeInsets.symmetric(horizontal: 32.w),
-        width: 180.w,
-        height: 180.h,
-        child: Image.asset(
-          AppIcons.errorImg,
-        ),
-      ),
-      Gap(18.h),
-      Text("Tizimga xatoli yuz berdi!",
-          style: AppStyles.smsVerBigTextStyle.copyWith(
-            fontSize: 24.sp,
-            fontWeight: FontWeight.w600,
-          )),
-      Gap(30.h),
-      Padding(
-        padding: EdgeInsets.symmetric(horizontal: 30.w),
-        child: Text(
-          "Voluptatibus harum, aspernatur illum! Ipsum occaecat, sequi rerum vulputate purus. Erat aptent, accusamus consequat fugiat, ante quae, alias. Commodo vestibulum.",
-          textAlign: TextAlign.center,
-          style: AppStyles.smsVerBigTextStyle.copyWith(
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w500,
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Row(
+            children: [
+              Gap(20.h),
+              CustomSimpleAppBar(
+                titleText: "Orqaga qaytish",
+                style: AppStyles.introButtonText.copyWith(color: Colors.black),
+                iconColor: Colors.black,
+                isSimple: false,
+                routeText: RouteNames.main,
+              ),
+            ],
           ),
+          Gap(76.h),
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 32.w),
+            width: 180.w,
+            height: 180.h,
+            child: Image.asset(
+              AppIcons.errorImg,
+            ),
+          ),
+          Gap(18.h),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            child: Text(
+              errorText,
+              textAlign: TextAlign.center,
+              style: AppStyles.smsVerBigTextStyle.copyWith(
+                fontSize: 24.sp,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+      ElevatedButton(
+        style: AppStyles.introUpButton,
+        onPressed: () {
+          if (status == WarningValues.hisobError) {
+            Navigator.of(context).pushNamed(
+              RouteNames.payme,
+            );
+            return;
+          }
+
+          if (status == WarningValues.hisobError) {
+            Navigator.of(context).pushNamed(
+              RouteNames.subscripts,
+            );
+            return;
+          }
+
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            RouteNames.signin,
+            (Route<dynamic> route) => false,
+          );
+        },
+        child: Text(
+          buttonText,
+          style: AppStyles.introButtonText
+              .copyWith(color: const Color(0xffFCFCFC)),
         ),
       ),
-      Gap(255.h),
-      ElevatedButton(
-          style: AppStyles.introUpButton,
-          onPressed: () {
-            Navigator.of(context).pushNamedAndRemoveUntil(
-              RouteNames.signin,
-              (Route<dynamic> route) => false,
-            );
-          },
-          child: Text(
-            "Bosh sahifaga o’tish",
-            style: AppStyles.introButtonText
-                .copyWith(color: const Color(0xffFCFCFC)),
-          )),
     ],
   );
 }

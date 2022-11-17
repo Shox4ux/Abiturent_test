@@ -136,8 +136,11 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen>
             Navigator.pushAndRemoveUntil<void>(
               context,
               MaterialPageRoute<void>(
-                  builder: (BuildContext context) =>
-                      const WaitingScreen(status: WarningValues.smsDone)),
+                  builder: (BuildContext context) => const WaitingScreen(
+                        status: WarningValues.smsDone,
+                        errorText: "",
+                        buttonText: "",
+                      )),
               (Route<dynamic> route) => false,
             );
           }

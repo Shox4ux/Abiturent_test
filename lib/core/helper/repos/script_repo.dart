@@ -29,6 +29,6 @@ class ScriptRepo {
       "subject_id": subId,
     };
 
-    return await _dio.post(ApiValues.getPreview, data: params);
+    return await _dio.post(ApiValues.makeScript, data: params);
   }
 }

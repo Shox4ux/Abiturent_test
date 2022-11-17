@@ -131,8 +131,11 @@ class _CustomAppBarState extends State<CustomAppBar> {
               Navigator.pushAndRemoveUntil<void>(
                 context,
                 MaterialPageRoute<void>(
-                    builder: (BuildContext context) =>
-                        const WaitingScreen(status: WarningValues.warning)),
+                    builder: (BuildContext context) => const WaitingScreen(
+                          status: WarningValues.warning,
+                          errorText: "",
+                          buttonText: "",
+                        )),
                 (Route<dynamic> route) => false,
               );
               // Navigator.pushNamed(context, RouteNames.group);

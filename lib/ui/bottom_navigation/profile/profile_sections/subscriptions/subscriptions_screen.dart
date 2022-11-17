@@ -164,7 +164,10 @@ Widget unSubedItem(SubscriptionModel scriptItem, BuildContext context) {
                 context,
                 MaterialPageRoute<void>(
                     builder: (BuildContext context) => const WaitingScreen(
-                        status: WarningValues.subFirstDone)),
+                          status: WarningValues.subFirstDone,
+                          errorText: "",
+                          buttonText: "",
+                        )),
                 (Route<dynamic> route) => false,
               );
               context

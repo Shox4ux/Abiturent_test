@@ -310,6 +310,10 @@ class WarningValues {
   static const String subSecondDone = "subSecondDone";
   static const String fillBudget = "fillBudget";
   static const String warning = "warning";
+  static const String hisobError = "hisobError";
+  static const String internetError = "internetError";
+  static const String authError = "authError";
+  static const String obunaError = "authError";
 }
 
 class ApiValues {
@@ -332,7 +336,7 @@ class ApiValues {
 
   static const String getScripts = "subjects/index";
   static const String getPreview = "subjects/view";
-  static const String makeScript = "user/make-subscription";
+  static const String makeScript = "subjects/make-subscription";
 
   static const String getHistoryUrl = "user/payment-history";
 

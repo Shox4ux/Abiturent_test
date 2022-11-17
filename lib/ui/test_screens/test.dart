@@ -102,6 +102,18 @@ class _TestScreenState extends State<TestScreen> {
                                 )),
                       );
                     }
+                    if (state is OnTestError) {
+                      Navigator.pushAndRemoveUntil<void>(
+                        context,
+                        MaterialPageRoute<void>(
+                            builder: (BuildContext context) => WaitingScreen(
+                                  status: WarningValues.obunaError,
+                                  errorText: state.error,
+                                  buttonText: "Obunalar oynasiga o'tish",
+                                )),
+                        (Route<dynamic> route) => false,
+                      );
+                    }
                   },
                   builder: (context, state) {
                     if (state is OnTestError) {
