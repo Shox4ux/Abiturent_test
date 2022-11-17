@@ -15,7 +15,7 @@ class GroupRepo {
     };
     return await _dio.post(
       ApiValues.createGroup,
-      queryParameters: params,
+      data: params,
     );
   }
 

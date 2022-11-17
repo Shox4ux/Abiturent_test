@@ -349,16 +349,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         spacer(),
         InkWell(
           onTap: () {
-            Navigator.push<void>(
-              context,
-              MaterialPageRoute<void>(
-                  builder: (BuildContext context) => const WaitingScreen(
-                        status: WarningValues.warning,
-                        errorText: "",
-                        buttonText: "",
-                      )),
-            );
-
+            Navigator.pushNamed(context, RouteNames.group);
             context.read<GroupCubit>().getGroupsByUserId();
           },
           child: rowItem(AppIcons.purpleDone, "Mening guruhlarim", false),

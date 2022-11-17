@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/animation.dart';
+import 'package:test_app/core/domain/group_model/group_item.dart';
 import 'package:test_app/core/domain/group_model/group_member_model.dart';
 import 'package:test_app/core/domain/group_model/group_model.dart';
 import 'package:test_app/core/domain/subject_models/subject_model.dart';
@@ -18,18 +19,21 @@ class GroupCubit extends Cubit<GroupState> {
   final _repo = GroupRepo();
   final _storage = AppStorage();
 
-  Future<void> creatGroup(int userId, String subName,
-      List<SubjectModel> subList, String groupTitle) async {
+  Future<void> creatGroup(
+      String subName, List<SubjectModel> subList, String groupTitle) async {
     int? subjectId;
+    emit(OnProgress());
 
     for (var y in subList) {
       if (y.name! == subName) {
         subjectId = y.id!;
       }
     }
-    emit(OnProgress());
+
+    final u = await _storage.getUserInfo();
+
     try {
-      final response = await _repo.createGroup(userId, subjectId!, groupTitle);
+      final response = await _repo.createGroup(u.id!, subjectId!, groupTitle);
       emit(OnSuccess());
     } catch (e) {
       emit(OnError(e.toString()));
@@ -65,23 +69,18 @@ class GroupCubit extends Cubit<GroupState> {
   }
 
   Future<void> getGroupsByUserId() async {
-    final u = await _storage.getUserInfo();
-
-    var userId = u.id!;
-
     emit(OnProgress());
-
+    final u = await _storage.getUserInfo();
+    var userId = u.id!;
     try {
       final response = await _repo.getGroup(userId);
-
       final rowData = response.data as List;
-
-      final rowList = rowData.map((e) => GroupModel.fromJson(e)).toList();
+      final rowList = rowData.map((e) => GroupItem.fromJson(e)).toList();
 
       emit(OnGroupsReceived(rowList));
     } on DioError catch (e) {
       emit(OnError(e.response!.data["message"]));
-    } on SocketException catch (e) {
+    } on SocketException {
       emit(const OnError("Tarmoqda nosozlik"));
     } catch (e) {
       emit(const OnError("Tizimda nosozlik"));

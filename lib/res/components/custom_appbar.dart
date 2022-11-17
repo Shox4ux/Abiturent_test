@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:test_app/res/navigation/main_navigation.dart';
 
-import '../../core/block/drawer_cubit/drawer_cubit.dart';
+import '../../core/block/group_block/group_cubit.dart';
 import '../../core/domain/user_model/user_model.dart';
 import '../../core/helper/database/app_storage.dart';
 import '../../core/helper/repos/user_repo.dart';
-import 'waiting.dart';
 import '../constants.dart';
 
 UserInfo? user;
@@ -21,7 +21,6 @@ class CustomAppBar extends StatefulWidget {
   State<CustomAppBar> createState() => _CustomAppBarState();
 }
 
-final _cubit = DrawerCubit();
 final _repo = UserRepo();
 
 class _CustomAppBarState extends State<CustomAppBar> {
@@ -71,84 +70,68 @@ class _CustomAppBarState extends State<CustomAppBar> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          InkWell(
-            onTap: () {
+          IconButton(
+            onPressed: () {
               scafKey.currentState?.openDrawer();
             },
-            child: Container(
-              height: 17.h,
-              width: 23.w,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(AppIcons.menu),
-                ),
-              ),
+            icon: Image.asset(
+              AppIcons.menu,
+              scale: 3,
             ),
           ),
-          Gap(100.w),
           Row(
             children: [
-              Container(
-                height: 17.h,
-                width: 23.w,
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage(AppIcons.check),
+              Row(
+                children: [
+                  Container(
+                    height: 17.h,
+                    width: 23.w,
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage(AppIcons.check),
+                      ),
+                    ),
                   ),
-                ),
+                  Gap(8.w),
+                  Text(
+                    rating!,
+                    style: AppStyles.subtitleTextStyle.copyWith(
+                        color: const Color(0xffFCFCFC), fontSize: 24.sp),
+                  ),
+                ],
               ),
-              Gap(8.w),
-              Text(
-                rating!,
-                style: AppStyles.subtitleTextStyle
-                    .copyWith(color: const Color(0xffFCFCFC), fontSize: 24.sp),
+              Gap(20.w),
+              Row(
+                children: [
+                  Container(
+                    height: 19.h,
+                    width: 19.w,
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage(AppIcons.clock),
+                      ),
+                    ),
+                  ),
+                  Gap(7.w),
+                  Text(
+                    ratingMonth!,
+                    style: AppStyles.subtitleTextStyle.copyWith(
+                        color: const Color(0xffFCFCFC), fontSize: 24.sp),
+                  ),
+                ],
+              ),
+              IconButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, RouteNames.group);
+                  context.read<GroupCubit>().getGroupsByUserId();
+                },
+                icon: Image.asset(
+                  AppIcons.group,
+                  height: 20.h,
+                  width: 25.w,
+                ),
               ),
             ],
-          ),
-          Gap(16.w),
-          Row(
-            children: [
-              Container(
-                height: 19.h,
-                width: 19.w,
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage(AppIcons.clock),
-                  ),
-                ),
-              ),
-              Gap(7.w),
-              Text(
-                ratingMonth!,
-                style: AppStyles.subtitleTextStyle
-                    .copyWith(color: const Color(0xffFCFCFC), fontSize: 24.sp),
-              ),
-            ],
-          ),
-          Gap(29.w),
-          InkWell(
-            onTap: () {
-              Navigator.pushAndRemoveUntil<void>(
-                context,
-                MaterialPageRoute<void>(
-                    builder: (BuildContext context) => const WaitingScreen(
-                          status: WarningValues.warning,
-                          errorText: "",
-                          buttonText: "",
-                        )),
-                (Route<dynamic> route) => false,
-              );
-              // Navigator.pushNamed(context, RouteNames.group);
-            },
-            child: Container(
-              height: 20.h,
-              width: 25.w,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(AppIcons.group),
-                ),
-              ),
-            ),
           ),
         ],
       ),

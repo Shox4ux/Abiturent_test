@@ -31,8 +31,8 @@ class _CustomSimpleAppBarState extends State<CustomSimpleAppBar> {
       padding: EdgeInsets.only(top: 20.h),
       child: Row(
         children: [
-          GestureDetector(
-            onTap: () {
+          IconButton(
+            onPressed: () {
               widget.isSimple
                   ? Navigator.pop(context)
                   : Navigator.pushNamed(
@@ -40,16 +40,26 @@ class _CustomSimpleAppBarState extends State<CustomSimpleAppBar> {
                       widget.routeText!,
                     );
             },
-            child: SizedBox(
+            icon: Image.asset(
+              AppIcons.arrowBack,
+              color: widget.iconColor,
               height: 24.h,
               width: 24.w,
-              child: Image.asset(
-                AppIcons.arrowBack,
-                color: widget.iconColor,
-              ),
             ),
           ),
-          Gap(12.w),
+          // GestureDetector(
+          //   onTap: () {
+
+          //   },
+          //   child: SizedBox(
+
+          //     child: Image.asset(
+          //       AppIcons.arrowBack,
+          //       color: widget.iconColor,
+          //     ),
+          //   ),
+          // ),
+          Gap(10.w),
           Text(
             widget.titleText,
             style: widget.style,

@@ -1,4 +1,72 @@
 class GroupModel {
+  int? status;
+  String? message;
+  Group? group;
+
+  GroupModel({this.status, this.message, this.group});
+
+  GroupModel.fromJson(Map<String, dynamic> json) {
+    status = json['status'];
+    message = json['message'];
+    group = json['group'] != null ? Group.fromJson(json['group']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['status'] = status;
+    data['message'] = message;
+    if (group != null) {
+      data['group'] = group!.toJson();
+    }
+    return data;
+  }
+}
+
+class Group {
+  int? id;
+  String? groupCreated;
+  String? subjectTitle;
+  String? groupTitle;
+  int? membersCount;
+  List<MembersArray>? membersArray;
+
+  Group(
+      {this.id,
+      this.groupCreated,
+      this.subjectTitle,
+      this.groupTitle,
+      this.membersCount,
+      this.membersArray});
+
+  Group.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    groupCreated = json['group_created'];
+    subjectTitle = json['subject_title'];
+    groupTitle = json['group_title'];
+    membersCount = json['members_count'];
+    if (json['members_array'] != null) {
+      membersArray = <MembersArray>[];
+      json['members_array'].forEach((v) {
+        membersArray!.add(MembersArray.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['group_created'] = groupCreated;
+    data['subject_title'] = subjectTitle;
+    data['group_title'] = groupTitle;
+    data['members_count'] = membersCount;
+    if (membersArray != null) {
+      data['members_array'] = membersArray!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class MembersArray {
   int? id;
   int? userId;
   String? fullname;
@@ -8,7 +76,7 @@ class GroupModel {
   String? groupTitle;
   String? subjectTitle;
 
-  GroupModel(
+  MembersArray(
       {this.id,
       this.userId,
       this.fullname,
@@ -18,7 +86,7 @@ class GroupModel {
       this.groupTitle,
       this.subjectTitle});
 
-  GroupModel.fromJson(Map<String, dynamic> json) {
+  MembersArray.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     userId = json['user_id'];
     fullname = json['fullname'];

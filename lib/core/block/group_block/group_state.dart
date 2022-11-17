@@ -20,7 +20,7 @@ class OnSuccess extends GroupState {
 }
 
 class OnGroupsReceived extends GroupState {
-  final List<GroupModel> groupList;
+  final List<GroupItem> groupList;
 
   const OnGroupsReceived(this.groupList);
 
