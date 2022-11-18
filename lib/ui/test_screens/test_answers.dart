@@ -96,7 +96,7 @@ class TestAnswerScreenState extends State<TestAnswerScreen> {
                         ],
                       );
                     }
-                    return const Center(child: Text("Kuting...."));
+                    return const Center(child: Text("Iltimos kuting...."));
                   },
                 ),
               ),

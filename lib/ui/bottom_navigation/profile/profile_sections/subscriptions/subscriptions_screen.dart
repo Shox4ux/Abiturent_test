@@ -10,7 +10,7 @@ import '../../../../../res/constants.dart';
 import '../../../../../res/components/custom_simple_appbar.dart';
 import '../../../../../res/navigation/main_navigation.dart';
 import '../../../../../res/components/waiting.dart';
-import '../../../../functions/number_formatter.dart';
+import '../../../../../res/functions/number_formatter.dart';
 
 class MySubscriptions extends StatefulWidget {
   const MySubscriptions({super.key});
@@ -53,7 +53,7 @@ class _MySubscriptionsState extends State<MySubscriptions> {
                 child: BlocBuilder<SubscriptionCubit, SubscriptionState>(
                   builder: (context, state) {
                     if (state is OnScriptProgress) {
-                      return const Center(child: Text("Kuting..."));
+                      return const Center(child: Text("Iltimos kuting..."));
                     }
                     if (state is OnScriptError) {
                       return Center(child: Text(state.error));

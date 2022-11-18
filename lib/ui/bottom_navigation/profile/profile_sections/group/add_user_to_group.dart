@@ -186,7 +186,7 @@ class _AddUserToGroupState extends State<AddUserToGroup> {
 
                     if (state is OnProgress) {
                       return const Center(
-                        child: Text("Kuting..."),
+                        child: Text("Iltimos kuting..."),
                       );
                     }
                     return Column(

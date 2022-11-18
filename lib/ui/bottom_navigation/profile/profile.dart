@@ -13,7 +13,7 @@ import 'package:test_app/core/domain/user_model/user_model.dart';
 import 'package:test_app/core/helper/database/app_storage.dart';
 import 'package:test_app/res/constants.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/group/group.dart';
-import 'package:test_app/ui/functions/number_formatter.dart';
+import 'package:test_app/res/functions/number_formatter.dart';
 
 import '../../../core/block/auth_block/auth_cubit.dart';
 import '../../../core/block/user_block/user_cubit_cubit.dart';
@@ -104,7 +104,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
                       return const Center(
-                        child: Text("Kuting..."),
+                        child: Text("Iltimos kuting..."),
                       );
                     }
                     return BlocBuilder<AuthCubit, AuthState>(

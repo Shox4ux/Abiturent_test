@@ -72,7 +72,7 @@ class MistakesScreen extends StatelessWidget {
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
                         return const Center(
-                          child: Text("Kuting..."),
+                          child: Text("Iltimos kuting..."),
                         );
                       } else {
                         return Expanded(
