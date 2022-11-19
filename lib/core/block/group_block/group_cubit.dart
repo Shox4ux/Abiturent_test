@@ -29,22 +29,27 @@ class GroupCubit extends Cubit<GroupState> {
         subjectId = y.id!;
       }
     }
-
     final u = await _storage.getUserInfo();
 
     try {
       final response = await _repo.createGroup(u.id!, subjectId!, groupTitle);
-      emit(OnSuccess());
+
+      final rowData = GroupModel.fromJson(response.data);
+      emit(OnGroupAdded(rowData, u.id!));
     } catch (e) {
       emit(OnError(e.toString()));
     }
   }
 
-  void addMember(int memberId, int groupId) async {
+  Future<void> addMember(String memberId, int groupId) async {
     emit(OnProgress());
+    final u = await _storage.getUserInfo();
+
     try {
       final response = await _repo.addGroupMember(memberId, groupId);
-      emit(OnSuccess());
+      final rowData = GroupModel.fromJson(response.data);
+
+      emit(OnGroupAdded(rowData, u.id!));
     } on DioError catch (e) {
       emit(OnError(e.response!.data["message"]));
     } on SocketException catch (e) {
@@ -54,14 +59,17 @@ class GroupCubit extends Cubit<GroupState> {
     }
   }
 
-  void deleteMember(int userId, int memberId) async {
+  Future<void> deleteMember(int userId, int memberId) async {
     emit(OnProgress());
+    final u = await _storage.getUserInfo();
+
     try {
       final response = await _repo.deleteGroupMember(userId, memberId);
-      emit(OnSuccess());
+      final rowData = GroupModel.fromJson(response.data);
+      emit(OnGroupAdded(rowData, u.id!));
     } on DioError catch (e) {
       emit(OnError(e.response!.data["message"]));
-    } on SocketException catch (e) {
+    } on SocketException {
       emit(const OnError("Tarmoqda nosozlik"));
     } catch (e) {
       emit(const OnError("Tizimda nosozlik"));
@@ -87,5 +95,20 @@ class GroupCubit extends Cubit<GroupState> {
     }
   }
 
-  Future<void> getGroupMembers() async {}
+  Future<void> getGroupMembers(int groupId) async {
+    emit(OnProgress());
+    final u = await _storage.getUserInfo();
+    try {
+      final response = await _repo.getGroupMembers(groupId);
+      final rowData = Group.fromJson(response.data);
+
+      emit(OnGroupTapped(rowData, u.id!));
+    } on DioError catch (e) {
+      emit(OnError(e.response!.data["message"]));
+    } on SocketException {
+      emit(const OnError("Tarmoqda nosozlik"));
+    } catch (e) {
+      emit(const OnError("Tizimda nosozlik"));
+    }
+  }
 }

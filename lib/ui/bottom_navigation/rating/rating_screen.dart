@@ -119,21 +119,24 @@ class _RatingScreenState extends State<RatingScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "# ${data.id.toString()}",
-                      style: AppStyles.subtitleTextStyle.copyWith(
-                        fontSize: 13.sp,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "# ${data.id.toString()}",
+                        style: AppStyles.subtitleTextStyle.copyWith(
+                          fontSize: 13.sp,
+                        ),
                       ),
-                    ),
-                    Text(
-                      data.fullname!,
-                      style: AppStyles.subtitleTextStyle
-                          .copyWith(color: AppColors.smsVerColor),
-                    ),
-                  ],
+                      Text(
+                        data.fullname!,
+                        maxLines: 2,
+                        style: AppStyles.subtitleTextStyle
+                            .copyWith(color: AppColors.smsVerColor),
+                      ),
+                    ],
+                  ),
                 ),
                 Container(
                   height: 37.h,

@@ -71,6 +71,12 @@ class _GroupScreenState extends State<GroupScreen> {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text(state.error)));
         }
+
+        if (state is OnGroupTapped) {
+          Navigator.of(context).pushNamed(
+            RouteNames.addMembers,
+          );
+        }
       },
       child: Scaffold(
         backgroundColor: AppColors.mainColor,
@@ -118,7 +124,14 @@ class _GroupScreenState extends State<GroupScreen> {
                                 padding: const EdgeInsets.only(bottom: 20),
                                 itemCount: state.groupList.length,
                                 itemBuilder: (BuildContext context, int index) {
-                                  return groupItem(state.groupList[index]);
+                                  return InkWell(
+                                      onTap: () {
+                                        context
+                                            .read<GroupCubit>()
+                                            .getGroupMembers(
+                                                state.groupList[index].id!);
+                                      },
+                                      child: groupItem(state.groupList[index]));
                                 },
                               ),
                             ),
@@ -222,7 +235,6 @@ class _GroupScreenState extends State<GroupScreen> {
                                               ElevatedButton(
                                                 onPressed: () {
                                                   Navigator.pop(context);
-
                                                   context
                                                       .read<GroupCubit>()
                                                       .creatGroup(
@@ -246,7 +258,6 @@ class _GroupScreenState extends State<GroupScreen> {
                                         );
                                       })),
                                 );
-                                ;
                               },
                               child: Text(
                                 "Yangi guruh yaratish",
@@ -324,7 +335,7 @@ Widget groupItem(GroupItem item) {
                       color: AppColors.smsVerColor,
                     ),
                   ),
-                  Gap(20.w),
+                  Gap(10.w),
                   Text(
                     "${item.memberCount} ishtirokchi",
                     style: AppStyles.subtitleTextStyle.copyWith(

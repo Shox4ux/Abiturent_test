@@ -9,14 +9,28 @@ abstract class GroupState extends Equatable {
 
 class GroupInitial extends GroupState {}
 
+class OnGroupTapped extends GroupState {
+  final Group group;
+  final int userId;
+  const OnGroupTapped(this.group, this.userId);
+  @override
+  List<Object> get props => [group];
+}
+
 class OnProgress extends GroupState {
   @override
   List<Object> get props => [];
 }
 
-class OnSuccess extends GroupState {
+class OnSuccess extends GroupState {}
+
+class OnGroupAdded extends GroupState {
+  final GroupModel model;
+  final int userId;
+
+  const OnGroupAdded(this.model, this.userId);
   @override
-  List<Object> get props => [];
+  List<Object> get props => [model];
 }
 
 class OnGroupsReceived extends GroupState {

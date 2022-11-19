@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
+import 'package:test_app/core/domain/subscription_model/made_script.dart';
 import 'package:test_app/core/domain/subscription_model/script_preview.dart';
 import 'package:test_app/core/domain/subscription_model/subscription_model.dart';
 import 'package:test_app/core/helper/database/app_storage.dart';
@@ -58,8 +59,8 @@ class SubscriptionCubit extends Cubit<SubscriptionState> {
     try {
       final response = await _repo.makeScript(u.id!, k!, subId);
 
-      final preview = ScriptPreview.fromJson(response.data);
-      emit(OnScriptMade(preview));
+      final rowData = MadeScript.fromJson(response.data);
+      emit(OnScriptMade(rowData));
     } on DioError catch (e) {
       emit(OnScriptError(e.response!.data["message"]));
     } on SocketException catch (e) {

@@ -12,6 +12,7 @@ import '../../../core/block/test_block/test_cubit.dart';
 import '../../../core/domain/test_model/test_model.dart';
 import '../../../core/helper/repos/test_repo.dart';
 import '../../../res/navigation/main_navigation.dart';
+import '../../../res/painter.dart';
 
 TestModel? testModel;
 
@@ -99,7 +100,8 @@ class _DtmScreenState extends State<DtmScreen> {
                               Expanded(
                                 child: GridView.builder(
                                   gridDelegate:
-                                      const SliverGridDelegateWithFixedCrossAxisCount(
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                          childAspectRatio: 157 / 169,
                                           crossAxisCount: 2),
                                   itemCount: testModel!.tests!.length,
                                   itemBuilder:
@@ -149,7 +151,7 @@ class _DtmScreenState extends State<DtmScreen> {
                                 : Expanded(
                                     child: GridView.builder(
                                       gridDelegate:
-                                          const SliverGridDelegateWithFixedCrossAxisCount(
+                                          SliverGridDelegateWithFixedCrossAxisCount(
                                               crossAxisCount: 2),
                                       itemCount: testModel!.tests!.length,
                                       itemBuilder:
@@ -195,9 +197,9 @@ class _DtmScreenState extends State<DtmScreen> {
           Stack(
             children: [
               Container(
-                padding: EdgeInsets.all(9.h),
-                height: 132.h,
+                height: 150.h,
                 width: 132.w,
+                padding: EdgeInsets.all(9.h),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(120.r),
@@ -208,8 +210,6 @@ class _DtmScreenState extends State<DtmScreen> {
                 ),
                 child: Container(
                   padding: EdgeInsets.all(16.h),
-                  height: 113.h,
-                  width: 113.w,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     color: AppColors.mainColor,
@@ -221,28 +221,36 @@ class _DtmScreenState extends State<DtmScreen> {
                   ),
                 ),
               ),
-              Positioned(
-                top: 90.h,
-                right: 0.w,
-                child: Container(
-                  height: 42.h,
-                  width: 42.w,
-                  decoration: BoxDecoration(
-                    color: AppColors.subtitleColor,
-                    borderRadius: BorderRadius.circular(120.r),
-                  ),
-                  child: Center(
-                    child: Text(
-                      "${tests.questionsCount}",
-                      style: AppStyles.subtitleTextStyle.copyWith(
-                        fontSize: 12.sp,
-                        color: Colors.white,
-                      ),
-                    ),
+              Container(
+                height: 130.h,
+                width: 130.w,
+                child: PaintIndecator(
+                  percent: 50,
+                  widthLine: 5,
+                ),
+              ),
+            ],
+          ),
+          Positioned(
+            top: 90.h,
+            right: 0.w,
+            child: Container(
+              height: 42.h,
+              width: 42.w,
+              decoration: BoxDecoration(
+                color: AppColors.subtitleColor,
+                borderRadius: BorderRadius.circular(120.r),
+              ),
+              child: Center(
+                child: Text(
+                  "${tests.questionsCount}",
+                  style: AppStyles.subtitleTextStyle.copyWith(
+                    fontSize: 12.sp,
+                    color: Colors.white,
                   ),
                 ),
-              )
-            ],
+              ),
+            ),
           ),
           Gap(10.h),
           Text(

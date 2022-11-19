@@ -12,10 +12,10 @@ class SubscriptionInitial extends SubscriptionState {}
 class OnScriptProgress extends SubscriptionState {}
 
 class OnScriptMade extends SubscriptionState {
-  final ScriptPreview preview;
-  const OnScriptMade(this.preview);
+  final MadeScript madeScript;
+  const OnScriptMade(this.madeScript);
   @override
-  List<Object> get props => [preview];
+  List<Object> get props => [madeScript];
 }
 
 class OnReceivedScript extends SubscriptionState {

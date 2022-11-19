@@ -254,6 +254,7 @@ class AppIcons {
   static const String warning = "assets/warning.png";
 
   static const String bilim = "assets/bilim.png";
+  static const String testFilled = "assets/testFilled.png";
 
   static const String mobile = "assets/mobile.png";
   static const String noImage = "assets/no_image.png";
@@ -326,6 +327,8 @@ class ApiValues {
   static const String confirmSmsUrl = "user/check-code-password";
   static const String resetPasswordUrl = "user/reset-password";
   static const String createGroup = "user-group/create-group";
+  static const String addMember = "user-group/add-member";
+  static const String deleteMember = "user-group/delete-members";
 
   static const String ratingUrl = "user/rating";
 

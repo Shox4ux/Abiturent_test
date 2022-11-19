@@ -38,7 +38,7 @@ class _InsideNewsScreenState extends State<InsideNewsScreen> {
               ),
             ),
             Positioned(
-              top: 180,
+              top: 170,
               child: CustomSimpleAppBar(
                 isSimple: true,
                 titleText: "Yangiliklar",
@@ -53,8 +53,8 @@ class _InsideNewsScreenState extends State<InsideNewsScreen> {
               top: 240,
               child: Container(
                 padding: EdgeInsets.only(
-                  left: 11.w,
-                  right: 11.w,
+                  left: 20.w,
+                  right: 20.w,
                   top: 17.h,
                   bottom: 7.h,
                 ),

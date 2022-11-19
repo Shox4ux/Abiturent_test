@@ -22,72 +22,90 @@ class MySubscriptions extends StatefulWidget {
 class _MySubscriptionsState extends State<MySubscriptions> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.mainColor,
-      body: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.only(left: 20.w),
-              child: CustomSimpleAppBar(
-                isSimple: true,
-                titleText: "Mening obunalarim",
-                iconColor: Colors.white,
-                routeText: RouteNames.main,
-                style: AppStyles.subtitleTextStyle.copyWith(
-                  color: Colors.white,
-                  fontSize: 24.sp,
-                ),
-              ),
-            ),
-            Gap(17.h),
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(28.r),
-                    topRight: Radius.circular(28.r),
+    return BlocListener<SubscriptionCubit, SubscriptionState>(
+      listener: (context, state) {
+        if (state is OnSubscriptionPreview) {
+          Navigator.pushAndRemoveUntil<void>(
+            context,
+            MaterialPageRoute<void>(
+                builder: (BuildContext context) => const WaitingScreen(
+                      status: WarningValues.subFirstDone,
+                      errorText: "",
+                      buttonText: "",
+                    )),
+            (Route<dynamic> route) => false,
+          );
+        }
+      },
+      child: Scaffold(
+        backgroundColor: AppColors.mainColor,
+        body: SafeArea(
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.only(left: 20.w),
+                child: CustomSimpleAppBar(
+                  isSimple: true,
+                  titleText: "Mening obunalarim",
+                  iconColor: Colors.white,
+                  routeText: RouteNames.main,
+                  style: AppStyles.subtitleTextStyle.copyWith(
+                    color: Colors.white,
+                    fontSize: 24.sp,
                   ),
                 ),
-                child: BlocBuilder<SubscriptionCubit, SubscriptionState>(
-                  builder: (context, state) {
-                    if (state is OnScriptProgress) {
-                      return const Center(child: Text("Iltimos kuting..."));
-                    }
-                    if (state is OnScriptError) {
-                      return Center(child: Text(state.error));
-                    }
-                    if (state is OnReceivedScript) {
-                      return Column(
-                        children: [
-                          Expanded(
-                            child: ListView.builder(
-                                padding: EdgeInsets.only(
-                                  bottom: 20.h,
-                                  top: 30.h,
-                                ),
-                                itemCount: state.scriptList.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  if (state
-                                          .scriptList[index].subscriptionData ==
-                                      null) {
-                                    return unSubedItem(
-                                        state.scriptList[index], context);
-                                  }
-                                  return subedItem(state.scriptList[index]);
-                                }),
-                          ),
-                        ],
-                      );
-                    }
+              ),
+              Gap(17.h),
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(28.r),
+                      topRight: Radius.circular(28.r),
+                    ),
+                  ),
+                  child: BlocBuilder<SubscriptionCubit, SubscriptionState>(
+                    builder: (context, state) {
+                      if (state is OnScriptProgress) {
+                        return const Center(child: Text("Iltimos kuting..."));
+                      }
+                      if (state is OnScriptError) {
+                        return Center(child: Text(state.error));
+                      }
+                      if (state is OnReceivedScript) {
+                        return Column(
+                          children: [
+                            Expanded(
+                              child: ListView.builder(
+                                  padding: EdgeInsets.only(
+                                    bottom: 20.h,
+                                    top: 30.h,
+                                  ),
+                                  itemCount: state.scriptList.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    if (state.scriptList[index]
+                                            .subscriptionData ==
+                                        null) {
+                                      return unSubedItem(
+                                          state.scriptList[index], context);
+                                    }
+                                    return subedItem(state.scriptList[index]);
+                                  }),
+                            ),
+                          ],
+                        );
+                      }
 
-                    return const Center(child: Text("Hozircha obunalar yo'q"));
-                  },
+                      return const Center(
+                          child: Text("Hozircha obunalar yo'q"));
+                    },
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -160,16 +178,6 @@ Widget unSubedItem(SubscriptionModel scriptItem, BuildContext context) {
           ),
           InkWell(
             onTap: () {
-              Navigator.pushAndRemoveUntil<void>(
-                context,
-                MaterialPageRoute<void>(
-                    builder: (BuildContext context) => const WaitingScreen(
-                          status: WarningValues.subFirstDone,
-                          errorText: "",
-                          buttonText: "",
-                        )),
-                (Route<dynamic> route) => false,
-              );
               context
                   .read<SubscriptionCubit>()
                   .getPreview(scriptItem.subjectId!);

@@ -43,12 +43,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final e = await _s.getUserInfo();
     if (e.id != null) {
       final rowData = await _repo.getUserProfile(e.id!);
-
       if (rowData.statusCode == 200) {
         final y = UserInfo.fromJson(rowData.data);
-
         user = y;
-
         return user!;
       }
       return user!;

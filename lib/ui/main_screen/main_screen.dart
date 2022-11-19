@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:test_app/core/block/test_block/test_cubit.dart';
-import 'package:test_app/core/block/user_block/user_cubit_cubit.dart';
-import 'package:test_app/core/domain/user_model/user_model.dart';
+import '../../core/block/drawer_cubit/drawer_cubit.dart';
 import '../../res/constants.dart';
 import '../bottom_navigation/dtm/dtm.dart';
 import '../bottom_navigation/mistakes/mistakes_screen.dart';
@@ -21,6 +20,12 @@ class MainScreen1 extends StatefulWidget {
 class _MainScreen1State extends State<MainScreen1> {
   int selectedIndex = 2;
   final _cubit = TestCubit();
+  final _cubit1 = DrawerCubit();
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,12 +79,12 @@ class _MainScreen1State extends State<MainScreen1> {
           items: [
             BottomNavigationBarItem(
                 icon: bottomBarIcon(
-                  AppIcons.sub,
+                  AppIcons.testFilled,
                 ),
                 activeIcon: bottomBarIcon(
-                  AppIcons.subFilled,
+                  AppIcons.testFilled,
                 ),
-                label: "Fanlar"),
+                label: "Testlar"),
             BottomNavigationBarItem(
                 icon: bottomBarIcon(
                   AppIcons.dtm,
@@ -95,7 +100,7 @@ class _MainScreen1State extends State<MainScreen1> {
                 activeIcon: bottomBarIcon(
                   AppIcons.profileFilled,
                 ),
-                label: "Profile"),
+                label: "Profil"),
             BottomNavigationBarItem(
                 icon: bottomBarIcon(
                   AppIcons.mistakes,

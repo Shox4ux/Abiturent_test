@@ -297,7 +297,7 @@ Widget whenScriptEnd(BuildContext context) {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20.w),
                   child: Text(
-                      "${state.preview.subjectData!.name} fani obuna muvaffaqiyatli bo’ldi",
+                      "${state.madeScript.subjectText} fani obuna muvaffaqiyatli bo’ldi",
                       overflow: TextOverflow.visible,
                       maxLines: 2,
                       textAlign: TextAlign.center,
@@ -336,7 +336,7 @@ Widget whenScriptEnd(BuildContext context) {
                             ),
                           ),
                           Text(
-                            "${state.preview.startDay} - ${state.preview.endDay}",
+                            "${state.madeScript.startDay} - ${state.madeScript.endDay}",
                             style: AppStyles.introButtonText.copyWith(
                               color: Colors.white,
                             ),
