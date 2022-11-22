@@ -32,40 +32,37 @@ class CustomSimpleAppBar extends StatefulWidget {
 class _CustomSimpleAppBarState extends State<CustomSimpleAppBar> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(top: 20.h),
-      child: Row(
-        children: [
-          IconButton(
-            onPressed: () {
-              if (widget.isSimple && widget.isImportant != null) {
-                context.read<GroupCubit>().getGroupsByUserId();
-                Navigator.pushNamed(context, RouteNames.group);
-                return;
-              }
-              if (widget.isSimple) {
-                Navigator.pop(context);
-                return;
-              }
-              Navigator.pushNamed(
-                context,
-                widget.routeText!,
-              );
-            },
-            icon: Image.asset(
-              AppIcons.arrowBack,
-              color: widget.iconColor,
-              height: 24.h,
-              width: 24.w,
-            ),
+    return Row(
+      children: [
+        IconButton(
+          onPressed: () {
+            if (widget.isSimple && widget.isImportant != null) {
+              context.read<GroupCubit>().getGroupsByUserId();
+              Navigator.pushNamed(context, RouteNames.group);
+              return;
+            }
+            if (widget.isSimple) {
+              Navigator.pop(context);
+              return;
+            }
+            Navigator.pushNamed(
+              context,
+              widget.routeText!,
+            );
+          },
+          icon: Image.asset(
+            AppIcons.arrowBack,
+            color: widget.iconColor,
+            height: 24.h,
+            width: 24.w,
           ),
-          Gap(10.w),
-          Text(
-            widget.titleText,
-            style: widget.style,
-          )
-        ],
-      ),
+        ),
+        Gap(10.w),
+        Text(
+          widget.titleText,
+          style: widget.style,
+        )
+      ],
     );
   }
 }

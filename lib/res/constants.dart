@@ -239,10 +239,10 @@ class AppIcons {
   static const String subFilled = "assets/sub_filled.png";
   static const String sub = "assets/sub.png";
   static const String sim = "assets/sim.png";
-
+  static const String edit = "assets/edit.png";
   static const String medlFilled = "assets/medl_filled.png";
   static const String medl = "assets/medl.png";
-
+  static const String replace = "assets/switch.png";
   static const String profileFilled = "assets/profile_filled.png";
   static const String profile = "assets/profile.png";
 
@@ -331,6 +331,7 @@ class ApiValues {
   static const String deleteMember = "user-group/delete-members";
 
   static const String ratingUrl = "user/rating";
+  static const String ratingUrlBySubjectId = "test/user-rating";
 
   static const String addCardUrl = "card/add-card";
   static const String amountUrl = "card/payment";

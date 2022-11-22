@@ -11,18 +11,14 @@ class DrawerInitial extends DrawerState {}
 
 class DrawerSubId extends DrawerState {
   final int subId;
-
   const DrawerSubId(this.subId);
-
   @override
   List<Object> get props => [subId];
 }
 
 class DrawerIndex extends DrawerState {
   final int index;
-
   const DrawerIndex(this.index);
-
   @override
   List<Object> get props => [index];
 }

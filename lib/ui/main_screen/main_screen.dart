@@ -9,15 +9,15 @@ import '../bottom_navigation/profile/profile.dart';
 import '../bottom_navigation/rating/rating_screen.dart';
 import '../bottom_navigation/subjects/subject_screen.dart';
 
-class MainScreen1 extends StatefulWidget {
-  const MainScreen1({
+class MainScreen extends StatefulWidget {
+  const MainScreen({
     super.key,
   });
   @override
-  State<MainScreen1> createState() => _MainScreen1State();
+  State<MainScreen> createState() => _MainScreenState();
 }
 
-class _MainScreen1State extends State<MainScreen1> {
+class _MainScreenState extends State<MainScreen> {
   int selectedIndex = 2;
   final _cubit = TestCubit();
   final _cubit1 = DrawerCubit();
@@ -35,9 +35,7 @@ class _MainScreen1State extends State<MainScreen1> {
       SubjectsScreen(
         testType: selectedIndex,
       ),
-      DtmScreen(
-        testType: selectedIndex,
-      ),
+      const DtmScreen(),
       const ProfileScreen(),
       const MistakesScreen(),
       const RatingScreen(),

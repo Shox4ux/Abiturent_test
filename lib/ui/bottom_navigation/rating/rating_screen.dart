@@ -9,6 +9,7 @@ import 'package:test_app/core/domain/user_model/user_model.dart';
 import 'package:test_app/core/helper/repos/user_repo.dart';
 import 'package:test_app/res/components/custom_drawer.dart';
 
+import '../../../core/block/drawer_cubit/drawer_cubit.dart';
 import '../../../core/block/user_block/user_cubit_cubit.dart';
 import '../../../res/constants.dart';
 import '../../../res/components/custom_appbar.dart';
@@ -25,11 +26,11 @@ class RatingScreen extends StatefulWidget {
 class _RatingScreenState extends State<RatingScreen> {
   final _repo = UserRepo();
 
-  Future<List<UserInfo>> callUserRating() async {
+  Future<List<UserInfo>> callUserRating(int subId) async {
     list.clear();
 
     try {
-      final response = await _repo.getUserRatings();
+      final response = await _repo.getUsersRatings(subId);
       final rowData = response.data as List;
       final rowList = rowData.map((e) => UserInfo.fromJson(e)).toList();
       list.addAll(rowList);
@@ -67,33 +68,44 @@ class _RatingScreenState extends State<RatingScreen> {
                     topRight: Radius.circular(28.r),
                   ),
                 ),
-                child: FutureBuilder(
-                  future: callUserRating(),
-                  builder:
-                      (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                    if (!snapshot.hasData) {
-                      return const Text("Iltimos kuting...");
+                child: BlocBuilder<DrawerCubit, DrawerState>(
+                  builder: (context, state) {
+                    if (state is DrawerSubId) {
+                      return FutureBuilder(
+                        future: callUserRating(state.subId),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<dynamic> snapshot) {
+                          if (!snapshot.hasData) {
+                            return const Center(
+                                child: Text("Iltimos kuting..."));
+                          }
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Umumiy reyting",
+                                style: AppStyles.introButtonText.copyWith(
+                                  color: Colors.black,
+                                ),
+                              ),
+                              Gap(18.h),
+                              Expanded(
+                                child: ListView.builder(
+                                    padding: const EdgeInsets.only(bottom: 20),
+                                    itemCount: list.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return ratingItem(
+                                          "${index + 1}", list[index]);
+                                    }),
+                              ),
+                            ],
+                          );
+                        },
+                      );
                     }
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Umumiy reyting",
-                          style: AppStyles.introButtonText.copyWith(
-                            color: Colors.black,
-                          ),
-                        ),
-                        Gap(18.h),
-                        Expanded(
-                          child: ListView.builder(
-                              padding: const EdgeInsets.only(bottom: 20),
-                              itemCount: list.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return ratingItem("${index + 1}", list[index]);
-                              }),
-                        ),
-                      ],
-                    );
+
+                    return const Center(child: Text("Bu oyna hozircha bo'sh"));
                   },
                 )),
           ),

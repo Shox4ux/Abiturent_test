@@ -5,7 +5,6 @@ import 'package:gap/gap.dart';
 import '../../../../../res/components/custom_simple_appbar.dart';
 import '../../../../../res/constants.dart';
 
-import 'package:intl/intl.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 import '../../../../../res/navigation/main_navigation.dart';
@@ -79,13 +78,6 @@ class _PaymeScreenState extends State<PaymeScreen> {
                     fontSize: 36.sp,
                   ),
                 )
-                // Text(
-                //   "100 000 UZS",
-                //   style: AppStyles.introButtonText.copyWith(
-                //     color: AppColors.fillingColor,
-                //     fontSize: 36.sp,
-                //   ),
-                // ),
               ],
             ),
           ),
@@ -110,12 +102,12 @@ class _PaymeScreenState extends State<PaymeScreen> {
                             margin: EdgeInsets.all(10.sp),
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(30.sp),
-                                image: DecorationImage(
+                                image: const DecorationImage(
                                     image: AssetImage(
                                   AppIcons.card,
                                 ))),
                           ),
-                          Container(
+                          SizedBox(
                             width: double.infinity,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,

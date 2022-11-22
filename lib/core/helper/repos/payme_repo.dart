@@ -12,11 +12,7 @@ class PaymentRepo {
       "card_pan": cardPan,
       "card_month": cardMonth,
     };
-
-    return await _dio.post(
-      ApiValues.addCardUrl,
-      data: params,
-    );
+    return await _dio.post(ApiValues.addCardUrl, data: params);
   }
 
   Future<Response> makePayment(int userId, int cardId, int amount) async {
@@ -25,29 +21,16 @@ class PaymentRepo {
       "card_id": cardId,
       "amount": amount,
     };
-
-    return await _dio.post(
-      ApiValues.amountUrl,
-      data: params,
-    );
+    return await _dio.post(ApiValues.amountUrl, data: params);
   }
 
   Future<Response> getCards(int userId) async {
-    final Map<String, dynamic> params = {
-      "user_id": userId,
-    };
-
-    return await _dio.post(
-      ApiValues.amountUrl,
-      data: params,
-    );
+    final Map<String, dynamic> params = {"user_id": userId};
+    return await _dio.post(ApiValues.getCardsUrl, data: params);
   }
 
   Future<Response> getPaymentHistory(int userId) async {
-    final Map<String, dynamic> params = {
-      "id": userId,
-    };
-
+    final Map<String, dynamic> params = {"id": userId};
     return await _dio.get(ApiValues.getHistoryUrl, queryParameters: params);
   }
 }

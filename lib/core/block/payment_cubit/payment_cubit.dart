@@ -17,12 +17,12 @@ class PaymentCubit extends Cubit<PaymentState> {
   Future<void> addCard(int cardPan, String cardMonth) async {
     emit(OnCardProgress());
     final userId = await _storage.getUserId();
-
     try {
-      await _repo.addCard(userId, cardPan, cardMonth);
-      emit(OnCardAdded());
+      final response = await _repo.addCard(userId, cardPan, cardMonth);
+      final rowData = CardModel.fromJson(response.data);
+      emit(OnCardAdded(rowData));
     } on DioError catch (e) {
-      emit(OnCardError(e.response!.data["message"]));
+      emit(OnCardError(e.response!.data["message"] ?? ""));
     } catch (e) {
       emit(OnCardError(e.toString()));
     }
@@ -34,21 +34,24 @@ class PaymentCubit extends Cubit<PaymentState> {
 
     try {
       await _repo.makePayment(userId, cardId, amount);
-      emit(OnPaymentSent());
+      emit(OnMadePayment());
     } on DioError catch (e) {
-      emit(OnCardError(e.response!.data["message"]));
+      emit(OnCardError(e.response!.data["message"] ?? ""));
     } catch (e) {
       emit(OnCardError(e.toString()));
     }
   }
 
+// does not work for a while
   Future<void> getCards() async {
     emit(OnCardProgress());
     final userId = await _storage.getUserId();
 
     try {
-      await _repo.getCards(userId);
-      emit(OnCardAdded());
+      final response = await _repo.getCards(userId);
+      final rowData = response.data as List;
+      final rowList = rowData.map((e) => CardModel.fromJson(e)).toList();
+      emit(OnCardsReceived(rowList));
     } on DioError catch (e) {
       emit(OnCardError(e.response?.data["message"] ?? ""));
     } catch (e) {

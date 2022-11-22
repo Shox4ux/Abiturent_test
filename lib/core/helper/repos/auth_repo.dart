@@ -33,11 +33,7 @@ class AuthRepository {
 
   Future<Response> logIn(String phone, String password) async {
     final Map<String, String> params = {"phone": phone, "password": password};
-
-    return await _dio.post(
-      ApiValues.loginUrl,
-      data: params,
-    );
+    return await _dio.post(ApiValues.loginUrl, data: params);
   }
 
   Future<Response> resetPassword(String phone) async {

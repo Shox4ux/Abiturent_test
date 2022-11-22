@@ -79,6 +79,16 @@ class SubjectsScreen extends StatelessWidget {
                               Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 20.w),
                                 child: Text(
+                                  "Mashg'ulot uchun testlar",
+                                  style: AppStyles.introButtonText.copyWith(
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                              Gap(10.h),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                                child: Text(
                                   testModel!.subjects!.name!,
                                   style: AppStyles.introButtonText.copyWith(
                                     color: Colors.black,
@@ -87,8 +97,11 @@ class SubjectsScreen extends StatelessWidget {
                               ),
                               Gap(10.h),
                               (testModel!.tests!.isEmpty)
-                                  ? const Center(
-                                      child: Text("Testlar topilmadi"))
+                                  ? const Expanded(
+                                      child: Center(
+                                        child: Text("Testlar topilmadi"),
+                                      ),
+                                    )
                                   : Expanded(
                                       child: ListView.builder(
                                           padding: EdgeInsets.only(
@@ -130,7 +143,11 @@ class SubjectsScreen extends StatelessWidget {
                             ),
                             Gap(10.h),
                             (testModel!.tests!.isEmpty)
-                                ? const Center(child: Text("Testlar topilmadi"))
+                                ? const Expanded(
+                                    child: Center(
+                                      child: Text("Testlar topilmadi"),
+                                    ),
+                                  )
                                 : Expanded(
                                     child: ListView.builder(
                                         padding: EdgeInsets.only(

@@ -44,23 +44,15 @@ class AuthCubit extends Cubit<AuthState> {
     try {
       final response = await _repo.sighUp(fullName, realNumber, password);
       emit(OnWaitingSmsResult());
+      print(response.data);
+      tempId = response.data["user_id"];
+      tempPhone = response.data["phone"];
 
-      if (response.statusCode == 200) {
-        print(response.data);
-
-        tempId = response.data["user_id"];
-        tempPhone = response.data["phone"];
-
-        print("tempId: $tempId");
-        print("tempPhone: $tempPhone");
-
-        emit(
-          AuthOnSMS(
-            id: tempId!,
-            phoneNumber: tempPhone!,
-          ),
-        );
-      }
+      print("tempId: $tempId");
+      print("tempPhone: $tempPhone");
+      emit(
+        AuthOnSMS(id: tempId!, phoneNumber: tempPhone!),
+      );
     } on DioError catch (e) {
       print(e.response);
       emit(AuthDenied(error: e.response?.data["message"] ?? ""));
@@ -171,11 +163,11 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> forgotPassword(String phone) async {
     final realPhone = "998$phone";
 
-    final u = await _storage.getUserId();
     emit(OnAuthProgress());
     try {
-      await _repo.resetPassword(realPhone);
-      emit(AuthOnSMS(id: u, phoneNumber: phone));
+      final response = await _repo.resetPassword(realPhone);
+      final rowData = response.data["id"];
+      emit(AuthOnSMS(id: rowData, phoneNumber: phone));
     } on DioError catch (e) {
       emit(AuthDenied(error: e.response?.data["message"] ?? ""));
     } on SocketException catch (e) {

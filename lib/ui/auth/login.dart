@@ -158,8 +158,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           }
                           return ElevatedButton(
                             style: AppStyles.introUpButton,
-                            onPressed: () async {
-                              await context
+                            onPressed: () {
+                              context
                                   .read<AuthCubit>()
                                   .authLogin(_phoneNumber, _password);
                             },

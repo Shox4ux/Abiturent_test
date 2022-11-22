@@ -6,10 +6,11 @@ import 'package:test_app/ui/auth/sign_up.dart';
 import 'package:test_app/res/components/waiting.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/group/add_user_to_group.dart';
-import 'package:test_app/ui/bottom_navigation/profile/profile_sections/payme/payme.dart';
+import 'package:test_app/ui/bottom_navigation/profile/profile_sections/payme/add_card_screen.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/news_screen/inside_news.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/news_screen/news.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/payments/payments.dart';
+import 'package:test_app/ui/bottom_navigation/profile/profile_sections/refactor/refactor.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/subscriptions/subscriptions_screen.dart';
 import 'package:test_app/ui/intro/intro.dart';
 import 'package:test_app/ui/main_screen/main_screen.dart';
@@ -25,8 +26,9 @@ class MainNavigation {
     RouteNames.signup: (context) => const SignUpScreen(),
     RouteNames.signin: (context) => const LoginScreen(),
     RouteNames.news: (context) => NewsScreen(),
-    RouteNames.main: (context) => const MainScreen1(),
-    RouteNames.payme: (context) => const AddCard(),
+    RouteNames.main: (context) => const MainScreen(),
+    RouteNames.payme: (context) => const AddCardScrenen(),
+    RouteNames.edit: (context) => const RefactorScreen(),
     RouteNames.forget: (context) => const ForgotPasswordScreen(),
     RouteNames.subscripts: (context) => const MySubscriptions(),
     RouteNames.budget: (context) => const PaymentsScreen(),
@@ -70,4 +72,5 @@ abstract class RouteNames {
   static const budget = "budget";
   static const addMembers = "addMembers";
   static const testEnd = "testEnd";
+  static const edit = "edit";
 }

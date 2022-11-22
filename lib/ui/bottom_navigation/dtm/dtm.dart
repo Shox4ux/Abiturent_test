@@ -17,14 +17,36 @@ import '../../../res/painter.dart';
 TestModel? testModel;
 
 class DtmScreen extends StatefulWidget {
-  const DtmScreen({Key? key, required this.testType}) : super(key: key);
-  final int testType;
+  const DtmScreen({
+    Key? key,
+  }) : super(key: key);
   @override
   State<DtmScreen> createState() => _DtmScreenState();
 }
 
-class _DtmScreenState extends State<DtmScreen> {
+class _DtmScreenState extends State<DtmScreen>
+    with SingleTickerProviderStateMixin {
   final repo = TestRepo();
+
+  AnimationController? _animationController;
+  Animation<double>? animation;
+  final maxProgress = 80.0;
+
+  @override
+  void initState() {
+    super.initState();
+    startAnimation();
+  }
+
+  void startAnimation() {
+    _animationController =
+        AnimationController(vsync: this, duration: const Duration(seconds: 3));
+    animation =
+        Tween<double>(begin: 0, end: maxProgress).animate(_animationController!)
+          ..addListener(() {
+            setState(() {});
+          });
+  }
 
   Future<TestModel> getTestModel(int subId) async {
     final response = await repo.getTestsBySubjectId(subId, 0);
@@ -43,6 +65,9 @@ class _DtmScreenState extends State<DtmScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (_animationController != null) {
+      _animationController!.forward();
+    }
     final GlobalKey<ScaffoldState> scaffKey = GlobalKey<ScaffoldState>();
     final screenWidth = MediaQuery.of(context).size.width;
     return SafeArea(
@@ -58,14 +83,14 @@ class _DtmScreenState extends State<DtmScreen> {
             CustomAppBar(scaffKey: scaffKey),
             Expanded(
               child: Container(
-                padding: EdgeInsets.only(top: 20.h, left: 20.w, right: 20.w),
+                width: double.maxFinite,
+                padding: EdgeInsets.only(top: 14.h),
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(28.r),
-                    topRight: Radius.circular(28.r),
-                  ),
-                ),
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(28.r),
+                      topRight: Radius.circular(28.r),
+                    )),
                 child: BlocBuilder<DrawerCubit, DrawerState>(
                   builder: (context, state) {
                     if (state is DrawerSubId) {
@@ -74,84 +99,93 @@ class _DtmScreenState extends State<DtmScreen> {
                         builder: (context, snapshot) {
                           if (!snapshot.hasData) {
                             return const Center(
-                              child: Text("Iltimos kuting..."),
-                            );
+                                child: Text("Iltimos kuting..."));
                           }
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "DTM testlar",
-                                    style: AppStyles.introButtonText
-                                        .copyWith(color: AppColors.titleColor),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                                child: Text(
+                                  "DTM testlar",
+                                  style: AppStyles.introButtonText.copyWith(
+                                    color: Colors.black,
                                   ),
-                                  Gap(5.h),
-                                  Text(
-                                    testModel!.subjects!.name!,
-                                    style: AppStyles.introButtonText
-                                        .copyWith(color: AppColors.titleColor),
-                                  ),
-                                ],
-                              ),
-                              Gap(20.h),
-                              Expanded(
-                                child: GridView.builder(
-                                  gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                          childAspectRatio: 157 / 169,
-                                          crossAxisCount: 2),
-                                  itemCount: testModel!.tests!.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    return gridItem(context,
-                                        testModel!.tests![index], (index + 1));
-                                  },
                                 ),
-                              )
+                              ),
+                              Gap(10.h),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                                child: Text(
+                                  testModel!.subjects!.name!,
+                                  style: AppStyles.introButtonText.copyWith(
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                              Gap(10.h),
+                              (testModel!.tests!.isEmpty)
+                                  ? const Center(
+                                      child: Text("Testlar topilmadi"))
+                                  : Expanded(
+                                      child: GridView.builder(
+                                        gridDelegate:
+                                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                                crossAxisCount: 2),
+                                        itemCount: testModel!.tests!.length,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          return gridItem(
+                                              context,
+                                              testModel!.tests![index],
+                                              (index + 1));
+                                        },
+                                      ),
+                                    ),
                             ],
                           );
                         },
                       );
                     }
                     return FutureBuilder(
-                      future: getTestModel(widget.testType),
+                      future: getTestModel(1),
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {
-                          return const Center(
-                            child: Text("Iltimos kuting..."),
-                          );
+                          return const Center(child: Text("Iltimos kuting..."));
                         }
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "DTM testlar",
-                                  style: AppStyles.introButtonText
-                                      .copyWith(color: AppColors.titleColor),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 20.w),
+                              child: Text(
+                                "DTM testlar",
+                                style: AppStyles.introButtonText.copyWith(
+                                  color: Colors.black,
                                 ),
-                                Gap(5.h),
-                                Text(
-                                  testModel!.subjects!.name!,
-                                  style: AppStyles.introButtonText
-                                      .copyWith(color: AppColors.titleColor),
-                                ),
-                              ],
+                              ),
                             ),
-                            Gap(20.h),
+                            Gap(10.h),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 20.w),
+                              child: Text(
+                                testModel!.subjects!.name!,
+                                style: AppStyles.introButtonText.copyWith(
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                            Gap(10.h),
                             (testModel!.tests!.isEmpty)
-                                ? const Center(
-                                    child: Text("Testlar topilmadi"),
+                                ? const Expanded(
+                                    child: Center(
+                                      child: Text("Testlar topilmadi"),
+                                    ),
                                   )
                                 : Expanded(
                                     child: GridView.builder(
                                       gridDelegate:
-                                          SliverGridDelegateWithFixedCrossAxisCount(
+                                          const SliverGridDelegateWithFixedCrossAxisCount(
                                               crossAxisCount: 2),
                                       itemCount: testModel!.tests!.length,
                                       itemBuilder:
@@ -162,7 +196,7 @@ class _DtmScreenState extends State<DtmScreen> {
                                             (index + 1));
                                       },
                                     ),
-                                  )
+                                  ),
                           ],
                         );
                       },
@@ -170,7 +204,7 @@ class _DtmScreenState extends State<DtmScreen> {
                   },
                 ),
               ),
-            ),
+            )
           ],
         ),
       ),
@@ -197,23 +231,18 @@ class _DtmScreenState extends State<DtmScreen> {
           Stack(
             children: [
               Container(
-                height: 150.h,
-                width: 132.w,
-                padding: EdgeInsets.all(9.h),
+                width: 130.w,
+                height: 130.h,
+                padding: EdgeInsets.all(10.h),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(120.r),
-                  border: Border.all(
-                    color: AppColors.mainColor, //<--- color
-                    width: 5.0,
-                  ),
                 ),
                 child: Container(
-                  padding: EdgeInsets.all(16.h),
-                  alignment: Alignment.center,
+                  padding: EdgeInsets.all(18.h),
                   decoration: BoxDecoration(
                     color: AppColors.mainColor,
-                    borderRadius: BorderRadius.circular(120.r),
+                    borderRadius: BorderRadius.circular(200.r),
                   ),
                   child: Image.asset(
                     AppIcons.star,
@@ -221,38 +250,32 @@ class _DtmScreenState extends State<DtmScreen> {
                   ),
                 ),
               ),
-              Container(
-                height: 130.h,
-                width: 130.w,
-                child: PaintIndecator(
-                  percent: 50,
-                  widthLine: 5,
+              CustomPaint(
+                foregroundPainter: CircleProgress(20.0, 8.0),
+              ),
+              Positioned(
+                top: 90.h,
+                right: 0.w,
+                child: Container(
+                  height: 35.h,
+                  width: 35.w,
+                  decoration: BoxDecoration(
+                    color: AppColors.subtitleColor,
+                    borderRadius: BorderRadius.circular(120.r),
+                  ),
+                  child: Center(
+                    child: Text(
+                      "${tests.questionsCount}",
+                      style: AppStyles.subtitleTextStyle.copyWith(
+                        fontSize: 12.sp,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ],
           ),
-          Positioned(
-            top: 90.h,
-            right: 0.w,
-            child: Container(
-              height: 42.h,
-              width: 42.w,
-              decoration: BoxDecoration(
-                color: AppColors.subtitleColor,
-                borderRadius: BorderRadius.circular(120.r),
-              ),
-              child: Center(
-                child: Text(
-                  "${tests.questionsCount}",
-                  style: AppStyles.subtitleTextStyle.copyWith(
-                    fontSize: 12.sp,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Gap(10.h),
           Text(
             "DTM test to’plam #$testIndex",
             style: AppStyles.smsVerBigTextStyle.copyWith(fontSize: 12.sp),

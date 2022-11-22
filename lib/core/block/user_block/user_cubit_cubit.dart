@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
+import 'package:test_app/core/block/drawer_cubit/drawer_cubit.dart';
 import 'package:test_app/core/helper/database/app_storage.dart';
 import 'package:test_app/core/helper/repos/user_repo.dart';
 
@@ -15,11 +16,10 @@ class UserCubit extends Cubit<UserState> {
   UserCubit() : super(UserCubitInitial());
 
   final _repo = UserRepo();
-
   final _storage = AppStorage();
-  Future<void> callUserRating() async {
+  Future<void> callUserRating(int subId) async {
     try {
-      final response = await _repo.getUserRatings();
+      final response = await _repo.getUsersRatings(subId);
       final rowData = response.data as List;
 
       final subjectList = rowData

@@ -304,7 +304,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget menu(BuildContext context) {
     return Container(
-      height: 410.h,
       width: 331.w,
       decoration: BoxDecoration(
         color: Colors.white,
@@ -320,6 +319,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
             context.read<PaymentCubit>().getPaymentHistory();
           },
           child: rowItem(AppIcons.purplePocket, "Mening hisoblarim", false),
+        ),
+        spacer(),
+        InkWell(
+          onTap: () {
+            Navigator.pushNamed(
+              context,
+              RouteNames.edit,
+            );
+          },
+          child: rowItem(AppIcons.edit, "Tahrirlash", false),
         ),
         spacer(),
         InkWell(
