@@ -25,9 +25,12 @@ class AuthRepository {
       "password": password
     };
 
+    var formData = FormData.fromMap(
+        {"phone": phone, "fullname": fullName, "password": password});
+
     return await _dio.post(
       ApiValues.sighUPUrl,
-      data: params,
+      data: formData,
     );
   }
 
