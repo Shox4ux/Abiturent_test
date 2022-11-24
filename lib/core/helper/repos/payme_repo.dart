@@ -6,27 +6,21 @@ import '../dio/dio_client.dart';
 class PaymentRepo {
   final _dio = DioClient.getDio();
 
-  Future<Response> addCard(int userId, int cardPan, String cardMonth) async {
-    final Map<String, dynamic> params = {
-      "user_id": userId,
-      "card_pan": cardPan,
-      "card_month": cardMonth,
-    };
-    return await _dio.post(ApiValues.addCardUrl, data: params);
+  Future<Response> addCard(int userId, String cardPan, String cardMonth) async {
+    var formData = FormData.fromMap(
+        {"user_id": userId, "card_pan": cardPan, "card_month": cardMonth});
+    return await _dio.post(ApiValues.addCardUrl, data: formData);
   }
 
   Future<Response> makePayment(int userId, int cardId, int amount) async {
-    final Map<String, dynamic> params = {
-      "user_id": userId,
-      "card_id": cardId,
-      "amount": amount,
-    };
-    return await _dio.post(ApiValues.amountUrl, data: params);
+    var formData = FormData.fromMap(
+        {"user_id": userId, "card_id": cardId, "amount": amount});
+    return await _dio.post(ApiValues.amountUrl, data: formData);
   }
 
   Future<Response> getCards(int userId) async {
-    final Map<String, dynamic> params = {"user_id": userId};
-    return await _dio.post(ApiValues.getCardsUrl, data: params);
+    var formData = FormData.fromMap({"user_id": userId});
+    return await _dio.post(ApiValues.getCardsUrl, data: formData);
   }
 
   Future<Response> getPaymentHistory(int userId) async {

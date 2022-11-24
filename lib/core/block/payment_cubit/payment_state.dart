@@ -12,10 +12,10 @@ class PaymentInitial extends PaymentState {}
 class OnCardProgress extends PaymentState {}
 
 class OnCardAdded extends PaymentState {
-  final CardModel model;
-  const OnCardAdded(this.model);
+  final List<CardModel> list;
+  const OnCardAdded(this.list);
   @override
-  List<Object> get props => [model];
+  List<Object> get props => [list];
 }
 
 class OnMadePayment extends PaymentState {}

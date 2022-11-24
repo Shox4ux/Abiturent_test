@@ -22,9 +22,14 @@ class PinPutWidget extends StatefulWidget {
 }
 
 class _PinPutWidgetState extends State<PinPutWidget> {
-  final controller = TextEditingController();
   var focusNode = FocusNode();
   String code = '';
+
+  @override
+  void dispose() {
+    focusNode.dispose();
+    super.dispose();
+  }
 
   void onChanged(String value) {
     code = value;

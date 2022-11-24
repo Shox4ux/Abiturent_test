@@ -17,19 +17,13 @@ class GroupRepo {
   }
 
   Future<Response> addGroupMember(String memberId, int groupId) async {
-    final Map<String, dynamic> params = {
-      "user_id": memberId,
-      "group_id": groupId,
-    };
-    return await _dio.post(ApiValues.addMember, data: params);
+    var formData = FormData.fromMap({"user_id": memberId, "group_id": groupId});
+    return await _dio.post(ApiValues.addMember, data: formData);
   }
 
   Future<Response> deleteGroupMember(int userId, int memberId) async {
-    final Map<String, dynamic> params = {
-      "member_id": memberId,
-      "user_id": userId,
-    };
-    return await _dio.post(ApiValues.deleteMember, data: params);
+    var formData = FormData.fromMap({"member_id": memberId, "user_id": userId});
+    return await _dio.post(ApiValues.deleteMember, data: formData);
   }
 
   Future<Response> getGroup(int userId) async {

@@ -1,30 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-
+import 'package:test_app/core/block/payment_cubit/payment_cubit.dart';
+import 'package:test_app/res/components/custom_card.dart';
+import '../../../../../res/components/custom_dot_indicators.dart';
 import '../../../../../res/components/custom_simple_appbar.dart';
 import '../../../../../res/constants.dart';
-
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-
 import '../../../../../res/navigation/main_navigation.dart';
 
 class PaymeScreen extends StatefulWidget {
   const PaymeScreen({
     super.key,
-    required this.cardName,
-    required this.cardNumber,
-    required this.period,
   });
-  final String cardName;
-  final String cardNumber;
-  final String period;
+
   @override
   State<PaymeScreen> createState() => _PaymeScreenState();
 }
 
 class _PaymeScreenState extends State<PaymeScreen> {
   final textFormat = MaskTextInputFormatter(mask: '### ### ### ### ###');
+  int activeIndex = 0;
+  final _controller = PageController();
 
   @override
   Widget build(BuildContext context) {
@@ -84,6 +82,7 @@ class _PaymeScreenState extends State<PaymeScreen> {
           Gap(22.h),
           Expanded(
             child: Container(
+                padding: EdgeInsets.only(top: 20.h),
                 height: double.maxFinite,
                 width: double.maxFinite,
                 decoration: BoxDecoration(
@@ -94,66 +93,74 @@ class _PaymeScreenState extends State<PaymeScreen> {
                   ),
                 ),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Expanded(
-                      child: Stack(
-                        children: [
-                          Container(
-                            margin: EdgeInsets.all(10.sp),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30.sp),
-                                image: const DecorationImage(
-                                    image: AssetImage(
-                                  AppIcons.card,
-                                ))),
-                          ),
-                          SizedBox(
-                            width: double.infinity,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Gap(60.h),
-                                Text(
-                                  widget.cardName,
-                                  style: TextStyle(
-                                      color: Colors.grey.shade700,
-                                      fontSize: 25.sp),
+                    BlocBuilder<PaymentCubit, PaymentState>(
+                      builder: (context, state) {
+                        if (state is OnCardAdded) {
+                          return Column(
+                            children: [
+                              SizedBox(
+                                height: 220.h,
+                                child: PageView.builder(
+                                  controller: _controller,
+                                  itemCount: 4,
+                                  itemBuilder: (context, index) => Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: CustomCard("", "", ""),
+                                  ),
+                                  onPageChanged: (value) {
+                                    setState(() {
+                                      activeIndex = value;
+                                    });
+                                  },
                                 ),
-                                Gap(60.h),
-                                Text(
-                                  widget.cardNumber,
-                                  style: TextStyle(
-                                      color: Colors.grey.shade700,
-                                      fontSize: 25.sp),
-                                ),
-                                Gap(10.h),
-                                Text(
-                                  widget.period,
-                                  style: TextStyle(
-                                      color: Colors.grey.shade700,
-                                      fontSize: 25.sp),
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    Gap(114.h),
-                    ElevatedButton(
-                      style: AppStyles.introUpButton,
-                      onPressed: () {
-                        Navigator.pushNamed(
-                          context,
-                          RouteNames.smsVerification,
-                          arguments: "+998912222222",
-                        );
+                              ),
+                              Gap(10.h),
+                              CustomDotIndicator(
+                                activeIndex: activeIndex,
+                                itemCount: 4,
+                              )
+                            ],
+                          );
+                        }
+                        return const Center(
+                            child: Text("Hozircha hechnara yo"));
                       },
-                      child: Text(
-                        "To’lov amalga oshirish",
-                        style: AppStyles.introButtonText
-                            .copyWith(color: const Color(0xffFCFCFC)),
-                      ),
+                    ),
+                    Column(
+                      children: [
+                        ElevatedButton(
+                          style: AppStyles.introUpButton,
+                          onPressed: () {
+                            // Navigator.pushNamed(
+                            //   context,
+                            //   RouteNames.smsVerification,
+                            //   arguments: "+998912222222",
+                            // );
+                          },
+                          child: Text(
+                            "To’lov amalga oshirish",
+                            style: AppStyles.introButtonText
+                                .copyWith(color: const Color(0xffFCFCFC)),
+                          ),
+                        ),
+                        Gap(10.h),
+                        ElevatedButton(
+                          style: AppStyles.introUpButton,
+                          onPressed: () {
+                            Navigator.pushNamed(
+                              context,
+                              RouteNames.addCard,
+                            );
+                          },
+                          child: Text(
+                            "Karta qo'shish",
+                            style: AppStyles.introButtonText
+                                .copyWith(color: const Color(0xffFCFCFC)),
+                          ),
+                        ),
+                      ],
                     ),
                     Gap(16.h)
                   ],

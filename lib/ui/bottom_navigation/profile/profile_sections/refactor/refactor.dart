@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:test_app/res/components/custom_simple_appbar.dart';
 import 'package:test_app/res/constants.dart';
 
@@ -12,6 +16,26 @@ class RefactorScreen extends StatefulWidget {
 }
 
 class _RefactorScreenState extends State<RefactorScreen> {
+  File? _pickedFile;
+  final ImagePicker _picker = ImagePicker();
+
+  Future _takePhoto(ImageSource source) async {
+    try {
+      final pickedImage = await _picker.pickImage(source: source);
+      if (pickedImage == null) {
+        return;
+      } else {
+        File img = File(pickedImage.path);
+        setState(() {
+          _pickedFile = img;
+        });
+      }
+    } on PlatformException catch (e) {
+      print(e);
+      Navigator.pop(context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,16 +76,23 @@ class _RefactorScreenState extends State<RefactorScreen> {
                         Positioned(
                           top: 110.h,
                           right: 0.w,
-                          child: Container(
-                            height: 45.h,
-                            width: 45.w,
-                            decoration: BoxDecoration(
-                              color: AppColors.mainColor,
-                              borderRadius: BorderRadius.circular(120.r),
-                            ),
-                            child: Image.asset(
-                              AppIcons.replace,
-                              scale: 2,
+                          child: InkWell(
+                            onTap: () {
+                              showModalBottomSheet(
+                                  context: context,
+                                  builder: (context) => bottomSheet(context));
+                            },
+                            child: Container(
+                              height: 45.h,
+                              width: 45.w,
+                              decoration: BoxDecoration(
+                                color: AppColors.mainColor,
+                                borderRadius: BorderRadius.circular(120.r),
+                              ),
+                              child: Image.asset(
+                                AppIcons.replace,
+                                scale: 2,
+                              ),
                             ),
                           ),
                         ),
@@ -143,6 +174,52 @@ class _RefactorScreenState extends State<RefactorScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget bottomSheet(BuildContext context) {
+    return Container(
+      height: 100.h,
+      width: MediaQuery.of(context).size.width,
+      margin: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+      child: Column(children: [
+        const Text(
+          "Profil uchun Rasm tanlang",
+        ),
+        Gap(20.h),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton.icon(
+              style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all(AppColors.mainColor)),
+              label: const Text("kamera"),
+              onPressed: () {
+                _takePhoto(ImageSource.camera);
+              },
+              icon: Icon(
+                Icons.camera,
+                size: 24.h,
+              ),
+            ),
+            Gap(20.h),
+            ElevatedButton.icon(
+              style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all(AppColors.mainColor)),
+              label: const Text("galerya"),
+              onPressed: () {
+                _takePhoto(ImageSource.gallery);
+              },
+              icon: Icon(
+                Icons.image,
+                size: 24.h,
+              ),
+            )
+          ],
+        )
+      ]),
     );
   }
 }

@@ -225,29 +225,61 @@ class SubjectsScreen extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 11.w),
-              width: 94.w,
-              height: 32.h,
-              decoration: BoxDecoration(
-                color: AppColors.mainColor,
-                borderRadius: BorderRadius.circular(120.r),
-              ),
-              child: Row(
-                children: [
-                  Image.asset(
-                    AppIcons.info,
+            Row(
+              children: [
+                Container(
+                  padding:
+                      EdgeInsets.symmetric(vertical: 6.h, horizontal: 11.w),
+                  height: 32.h,
+                  decoration: BoxDecoration(
+                    color: AppColors.mainColor,
+                    borderRadius: BorderRadius.circular(120.r),
                   ),
-                  Gap(9.w),
-                  Text(
-                    "${tests.questionsCount}",
-                    style: AppStyles.subtitleTextStyle.copyWith(
-                      color: Colors.white,
-                      fontSize: 12.sp,
+                  child: Row(
+                    children: [
+                      Image.asset(
+                        AppIcons.info,
+                      ),
+                      Gap(9.w),
+                      Text(
+                        "${tests.questionsCount}",
+                        style: AppStyles.subtitleTextStyle.copyWith(
+                          color: Colors.white,
+                          fontSize: 12.sp,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                Gap(20.w),
+                InkWell(
+                  onTap: () {},
+                  child: Container(
+                    padding:
+                        EdgeInsets.symmetric(vertical: 6.h, horizontal: 11.w),
+                    height: 32.h,
+                    decoration: BoxDecoration(
+                      color: AppColors.mainColor,
+                      borderRadius: BorderRadius.circular(120.r),
                     ),
-                  )
-                ],
-              ),
+                    child: Row(
+                      children: [
+                        Image.asset(
+                          AppIcons.book,
+                        ),
+                        Gap(9.w),
+                        Text(
+                          "qo’llanmalar",
+                          style: AppStyles.subtitleTextStyle.copyWith(
+                            color: Colors.white,
+                            fontSize: 12.sp,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
             GestureDetector(
               onTap: () {
@@ -268,7 +300,6 @@ class SubjectsScreen extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 11.h, horizontal: 16.w),
                 height: 32.h,
-                width: 48.w,
                 decoration: BoxDecoration(
                   color: AppColors.mainColor,
                   borderRadius: BorderRadius.circular(120.r),

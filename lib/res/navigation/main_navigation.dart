@@ -27,7 +27,8 @@ class MainNavigation {
     RouteNames.signin: (context) => const LoginScreen(),
     RouteNames.news: (context) => NewsScreen(),
     RouteNames.main: (context) => const MainScreen(),
-    RouteNames.payme: (context) => const AddCardScrenen(),
+    RouteNames.addCard: (context) => const AddCardScrenen(),
+    RouteNames.payme: (context) => const PaymentsScreen(),
     RouteNames.edit: (context) => const RefactorScreen(),
     RouteNames.forget: (context) => const ForgotPasswordScreen(),
     RouteNames.subscripts: (context) => const MySubscriptions(),
@@ -65,7 +66,9 @@ abstract class RouteNames {
   static const news = "news";
   static const group = "group";
   static const changePassword = "reset";
+  static const addCard = "addCard";
   static const payme = "payme";
+
   static const forget = "forget";
   static const innerNews = "innerNews";
   static const subscripts = "subscripts";

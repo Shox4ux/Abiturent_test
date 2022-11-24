@@ -148,115 +148,7 @@ class _GroupScreenState extends State<GroupScreen> {
                                     ),
                                   )),
                                   context: context,
-                                  builder: ((context) =>
-                                      StatefulBuilder(builder: (context, sts) {
-                                        return Padding(
-                                          padding: EdgeInsets.only(
-                                              top: 20.h,
-                                              left: 20.w,
-                                              right: 20.w,
-                                              bottom: MediaQuery.of(context)
-                                                  .viewInsets
-                                                  .bottom),
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Gap(16.h),
-                                              Container(
-                                                padding: EdgeInsets.symmetric(
-                                                  horizontal: 10.w,
-                                                  vertical: 4.h,
-                                                ),
-                                                decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                      color: Colors.black,
-                                                      width: 2.w),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          16.r),
-                                                ),
-                                                child:
-                                                    DropdownButtonHideUnderline(
-                                                  child: DropdownButton(
-                                                    // Initial Value
-                                                    isExpanded: true,
-                                                    value: dropValue,
-                                                    // Down Arrow Icon
-                                                    icon: const Icon(Icons
-                                                        .keyboard_arrow_down),
-                                                    // Array list of items
-                                                    items: subNameList
-                                                        .map((String items) {
-                                                      return DropdownMenuItem(
-                                                        value: items,
-                                                        child: Text(items),
-                                                      );
-                                                    }).toList(),
-                                                    onChanged:
-                                                        (String? newValue) {
-                                                      dropValue = newValue!;
-                                                      sts.call(() {});
-                                                    },
-                                                  ),
-                                                ),
-                                              ),
-                                              Gap(16.h),
-                                              TextField(
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    groupName = value;
-                                                  });
-                                                },
-                                                decoration: InputDecoration(
-                                                  counter:
-                                                      const SizedBox.shrink(),
-                                                  labelText: "Guruh nomi",
-                                                  border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            16.h),
-                                                    borderSide: BorderSide(
-                                                        color: Colors.red,
-                                                        width: 2.w),
-                                                  ),
-                                                  enabledBorder:
-                                                      OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            16.h),
-                                                    borderSide: BorderSide(
-                                                        color: AppColors
-                                                            .textFieldBorderColor,
-                                                        width: 2.w),
-                                                  ),
-                                                ),
-                                              ),
-                                              Gap(16.h),
-                                              ElevatedButton(
-                                                onPressed: () {
-                                                  Navigator.pop(context);
-                                                  context
-                                                      .read<GroupCubit>()
-                                                      .creatGroup(
-                                                          dropValue!,
-                                                          subjectList,
-                                                          groupName!);
-                                                },
-                                                style: AppStyles.introUpButton,
-                                                child: Text(
-                                                  "Yaratish",
-                                                  style: AppStyles
-                                                      .introButtonText
-                                                      .copyWith(
-                                                          color: const Color(
-                                                              0xffFCFCFC)),
-                                                ),
-                                              ),
-                                              Gap(16.h),
-                                            ],
-                                          ),
-                                        );
-                                      })),
+                                  builder: ((context) => bottomSheet()),
                                 );
                               },
                               child: Text(
@@ -279,6 +171,91 @@ class _GroupScreenState extends State<GroupScreen> {
         ),
       ),
     );
+  }
+
+  Widget bottomSheet() {
+    return StatefulBuilder(builder: (context, sts) {
+      return Padding(
+        padding: EdgeInsets.only(
+            top: 20.h,
+            left: 20.w,
+            right: 20.w,
+            bottom: MediaQuery.of(context).viewInsets.bottom),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Gap(16.h),
+            Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: 10.w,
+                vertical: 4.h,
+              ),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.black, width: 2.w),
+                borderRadius: BorderRadius.circular(16.r),
+              ),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton(
+                  // Initial Value
+                  isExpanded: true,
+                  value: dropValue,
+                  // Down Arrow Icon
+                  icon: const Icon(Icons.keyboard_arrow_down),
+                  // Array list of items
+                  items: subNameList.map((String items) {
+                    return DropdownMenuItem(
+                      value: items,
+                      child: Text(items),
+                    );
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    dropValue = newValue!;
+                    sts.call(() {});
+                  },
+                ),
+              ),
+            ),
+            Gap(16.h),
+            TextField(
+              onChanged: (value) {
+                setState(() {
+                  groupName = value;
+                });
+              },
+              decoration: InputDecoration(
+                counter: const SizedBox.shrink(),
+                labelText: "Guruh nomi",
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16.h),
+                  borderSide: BorderSide(color: Colors.red, width: 2.w),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16.h),
+                  borderSide: BorderSide(
+                      color: AppColors.textFieldBorderColor, width: 2.w),
+                ),
+              ),
+            ),
+            Gap(16.h),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+                context
+                    .read<GroupCubit>()
+                    .creatGroup(dropValue!, subjectList, groupName!);
+              },
+              style: AppStyles.introUpButton,
+              child: Text(
+                "Yaratish",
+                style: AppStyles.introButtonText
+                    .copyWith(color: const Color(0xffFCFCFC)),
+              ),
+            ),
+            Gap(16.h),
+          ],
+        ),
+      );
+    });
   }
 }
 

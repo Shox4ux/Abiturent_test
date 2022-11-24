@@ -363,7 +363,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         spacer(),
         InkWell(
           onTap: () {
-            Navigator.pushNamed(context, RouteNames.payme);
+            Navigator.pushNamed(context, RouteNames.addCard);
           },
           child: rowItem(AppIcons.payme, "Hisobni to’ldirish", false),
         ),

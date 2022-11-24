@@ -268,6 +268,9 @@ class AppIcons {
   static const String gold = "assets/gold-medal.png";
 
   static const String drop = "assets/drop.png";
+  static const String book = "assets/book.png";
+
+  static const String bd = "assets/bd.png";
 
   static const String man = "assets/man.png";
   static const String tab = "assets/tab.png";

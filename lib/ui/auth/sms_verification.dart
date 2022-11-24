@@ -94,8 +94,8 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen>
 
   // Step 6
   void setCountDown() {
-    const reduceSecondsBy = 1;
     setState(() {
+      const reduceSecondsBy = 1;
       final seconds = myDuration.inSeconds - reduceSecondsBy;
       if (seconds < 0) {
         countdownTimer!.cancel();

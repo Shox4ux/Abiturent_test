@@ -25,19 +25,19 @@ class CustomAppBar extends StatefulWidget {
 final _repo = UserRepo();
 
 class _CustomAppBarState extends State<CustomAppBar> {
-  Future<RatingModel> getUserRatingData(int subId) async {
-    final e = await _s.getUserInfo();
-    if (e.id != null) {
-      final rowData = await _repo.getUserRatingBySubject(e.id!, subId);
-      if (rowData.statusCode == 200) {
-        final y = RatingModel.fromJson(rowData.data);
-        subRating = y;
-        return subRating!;
-      }
-      return subRating!;
-    }
-    return subRating!;
-  }
+  // Future<RatingModel> getUserRatingData(int subId) async {
+  //   final e = await _s.getUserInfo();
+  //   if (e.id != null) {
+  //     final rowData = await _repo.getUserRatingBySubject(e.id!, subId);
+  //     if (rowData.statusCode == 200) {
+  //       final y = RatingModel.fromJson(rowData.data);
+  //       subRating = y;
+  //       return subRating!;
+  //     }
+  //     return subRating!;
+  //   }
+  //   return subRating!;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +45,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
       builder: (context, state) {
         if (state is DrawerSubId) {
           return FutureBuilder(
-            future: getUserRatingData(state.subId),
+            // future: getUserRatingData(state.subId),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return customAppBar(widget.scaffKey, context, "...", "...");
@@ -72,7 +72,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
     String? ratingMonth,
   ) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 20.w),
+      padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.w),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -126,6 +126,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                   ),
                 ],
               ),
+              Gap(20.w),
               IconButton(
                 onPressed: () {
                   Navigator.pushNamed(context, RouteNames.group);

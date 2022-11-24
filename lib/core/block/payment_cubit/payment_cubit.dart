@@ -14,13 +14,14 @@ class PaymentCubit extends Cubit<PaymentState> {
   final _repo = PaymentRepo();
   final _storage = AppStorage();
 
-  Future<void> addCard(int cardPan, String cardMonth) async {
+  Future<void> addCard(String cardPan, String cardMonth) async {
     emit(OnCardProgress());
     final userId = await _storage.getUserId();
     try {
       final response = await _repo.addCard(userId, cardPan, cardMonth);
-      final rowData = CardModel.fromJson(response.data);
-      emit(OnCardAdded(rowData));
+      final rowData = response.data as List;
+      final rowList = rowData.map((e) => CardModel.fromJson(e)).toList();
+      emit(OnCardAdded(rowList));
     } on DioError catch (e) {
       emit(OnCardError(e.response!.data["message"] ?? ""));
     } catch (e) {

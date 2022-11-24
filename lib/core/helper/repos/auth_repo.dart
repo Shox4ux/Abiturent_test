@@ -6,25 +6,8 @@ import '../dio/dio_client.dart';
 class AuthRepository {
   final _dio = DioClient.getDio();
 
-  Future<Response> getSubjects() async {
-    final response = await _dio.get("subjects/index");
-
-    if (response.statusCode == 200) {
-      print(response.data);
-      return response;
-    }
-    print(response.data);
-    return response.data;
-  }
-
   Future<Response> sighUp(
       String fullName, String phone, String password) async {
-    final Map<String, String> params = {
-      "phone": phone,
-      "fullname": fullName,
-      "password": password
-    };
-
     var formData = FormData.fromMap(
         {"phone": phone, "fullname": fullName, "password": password});
 
@@ -35,59 +18,55 @@ class AuthRepository {
   }
 
   Future<Response> logIn(String phone, String password) async {
-    final Map<String, String> params = {"phone": phone, "password": password};
-    return await _dio.post(ApiValues.loginUrl, data: params);
+    var formData = FormData.fromMap({"phone": phone, "password": password});
+    return await _dio.post(ApiValues.loginUrl, data: formData);
   }
 
   Future<Response> resetPassword(String phone) async {
-    final Map<String, String> params = {
-      "phone": phone,
-    };
-
-    return await _dio.post(ApiValues.resetPasswordUrl, data: params);
+    var formData = FormData.fromMap({"phone": phone});
+    return await _dio.post(ApiValues.resetPasswordUrl, data: formData);
   }
 
   Future<Response> checkSmsCode(
       int userId, String phone, String smsCode) async {
-    final Map<String, dynamic> params = {
+    var formData = FormData.fromMap({
       "user_id": userId,
       "phone": phone,
       "sms_live": smsCode,
-    };
-
-    return await _dio.post(ApiValues.checkSmsUrl, data: params);
+    });
+    return await _dio.post(ApiValues.checkSmsUrl, data: formData);
   }
 
   Future<Response> checkResetPassWord(
       int userId, String phone, String smsCode) async {
-    final Map<String, dynamic> params = {
+    var formData = FormData.fromMap({
       "user_id": userId,
       "phone": phone,
       "sms_live": smsCode,
-    };
-    return await _dio.post(ApiValues.resetPasswordUrl, data: params);
+    });
+
+    return await _dio.post(ApiValues.resetPasswordUrl, data: formData);
   }
 
   Future<Response> logOut(int userId, String authKey) async {
-    final Map<String, dynamic> params = {
+    var formData = FormData.fromMap({
       "user_id": userId,
       "auth_key": authKey,
-    };
-
-    return await _dio.post(ApiValues.logoutUrl, data: params);
+    });
+    return await _dio.post(ApiValues.logoutUrl, data: formData);
   }
 
   Future<Response> changePassword(
       String phone, String newPassword, String confirmPassword) async {
-    final Map<String, dynamic> params = {
+    var formData = FormData.fromMap({
       "phone": phone,
       "new_pass": newPassword,
       "confirm_pass": confirmPassword,
-    };
+    });
 
     return await _dio.post(
       ApiValues.changePasswordUrl,
-      data: params,
+      data: formData,
     );
   }
 }

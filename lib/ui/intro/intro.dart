@@ -5,6 +5,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:test_app/res/constants.dart';
 import 'package:test_app/res/models/intro_data.dart';
 
+import '../../res/components/custom_dot_indicators.dart';
 import '../../res/navigation/main_navigation.dart';
 
 class IntroScreen extends StatefulWidget {
@@ -39,7 +40,10 @@ class _IntroScreenState extends State<IntroScreen> {
               ),
             ),
             Gap(20.h),
-            dotIndicator(),
+            CustomDotIndicator(
+              activeIndex: activeIndex,
+              itemCount: AppIntroImages.introList.length,
+            ),
             Gap(31.h),
             SizedBox(
               height: 56.h,
@@ -106,21 +110,6 @@ class _IntroScreenState extends State<IntroScreen> {
             textAlign: TextAlign.center,
           )
         ],
-      ),
-    );
-  }
-
-  Widget dotIndicator() {
-    return AnimatedSmoothIndicator(
-      activeIndex: activeIndex,
-      count: AppIntroImages.introList.length,
-      effect: ScrollingDotsEffect(
-        spacing: 16.w,
-        activeDotScale: 1.8.h,
-        activeDotColor: AppColors.mainColor,
-        dotColor: AppColors.secondaryColor,
-        dotHeight: 10.h,
-        dotWidth: 10.w,
       ),
     );
   }
