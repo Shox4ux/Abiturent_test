@@ -12,12 +12,36 @@ class UserRepo {
   }
 
   Future<Response> getUserRatingBySubject(int subId, int userId) async {
-    var formData = FormData.fromMap({"subject_id": subId, "user_id": userId});
+    var formData = FormData.fromMap({
+      "user_id": userId,
+      "subject_id": subId,
+    });
     return _dio.post(ApiValues.ratingUrlBySubjectId, data: formData);
+  }
+
+  Future<Response> getStats(int userId) async {
+    var formData = FormData.fromMap({"user_id": userId});
+    return _dio.post(ApiValues.stats, data: formData);
   }
 
   Future<Response> getUserProfile(int userId) async {
     final Map<String, dynamic> params = {"id": userId};
     return _dio.get(ApiValues.getUserProfile, queryParameters: params);
+  }
+
+  Future<Response> updateProfil(
+    String fullName,
+    int userId,
+    String avatar,
+    String authKey,
+  ) async {
+    var formData = FormData.fromMap({
+      "fullname": fullName,
+      "user_id": userId,
+      "avatar": avatar,
+      "auth_key": authKey,
+    });
+
+    return _dio.post(ApiValues.updateProfileUrl, data: formData);
   }
 }

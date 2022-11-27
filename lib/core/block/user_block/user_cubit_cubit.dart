@@ -21,23 +21,14 @@ class UserCubit extends Cubit<UserState> {
     try {
       final response = await _repo.getUsersRatings(subId);
       final rowData = response.data as List;
-
-      final subjectList = rowData
-          .map(
-            (e) => UserInfo.fromJson(e),
-          )
-          .toList();
-      print("rowData : ${subjectList.length}");
-
+      final subjectList = rowData.map((e) => UserInfo.fromJson(e)).toList();
       emit(OnSuccess(list: subjectList));
     } on DioError catch (e) {
-      emit(OnError(error: e.message));
-
-      print(e);
+      emit(OnError(error: e.response!.data["message"]));
+    } on SocketException catch (e) {
+      emit(const OnError(error: "Tarmoqda nosozlik"));
     } catch (e) {
-      emit(OnError(error: e.toString()));
-
-      print(e);
+      emit(const OnError(error: "Tizimda nosozlik"));
     }
   }
 
@@ -45,20 +36,17 @@ class UserCubit extends Cubit<UserState> {
     emit(UserForAppBar(rating, ratingMonth));
   }
 
-  Future<void> updateProfile() async {
+  Future<void> updateProfile(String fullName, String avatar) async {
     emit(OnUserProgress());
     final u = await _storage.getUserInfo();
-
+    final t = await _storage.getToken();
     try {
-      final rowData = await _repo.getUserProfile(u.id!);
-
-      emit(OnProflieUpdated(UserInfo.fromJson(rowData.data)));
-
-      await _storage.saveUserInfo(jsonEncode(UserInfo.fromJson(rowData.data)));
-      final newData = await _storage.getUserInfo();
-      print("from update ${newData.fullname}");
-    } on SocketException catch (e) {
-      emit(OnError(error: e.message));
+      final response = await _repo.updateProfil(fullName, u.id!, avatar, t!);
+      print(response.data);
+    } on DioError catch (e) {
+      emit(OnError(error: e.response!.data["message"]));
+    } on SocketException {
+      emit(const OnError(error: "Tarmoqda nosozlik"));
     } catch (e) {
       emit(const OnError(error: "Tizimda nosozlik"));
     }

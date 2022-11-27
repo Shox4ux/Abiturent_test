@@ -9,6 +9,7 @@ import 'package:test_app/res/navigation/main_navigation.dart';
 import '../../core/block/auth_block/auth_cubit.dart';
 import '../../res/constants.dart';
 import '../../res/components/custom_simple_appbar.dart';
+import '../../res/functions/show_toast.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -47,20 +48,14 @@ class _LoginScreenState extends State<LoginScreen> {
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is UserActive) {
-          print("from login: ${state.userInfo.fullname}");
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Muvaffaqiyatli ro'yxattan o'tildi"),
-            ),
-          );
+          showToast("Muvaffaqiyatli ro'yxattan o'tildi");
           Navigator.of(context).pushNamedAndRemoveUntil(
             RouteNames.main,
             (Route<dynamic> route) => false,
           );
         }
         if (state is AuthDenied) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text(state.error)));
+          showToast(state.error);
         }
       },
       child: Scaffold(
@@ -86,8 +81,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
                   child: TextField(
                     textInputAction: TextInputAction.next,
-
-                    // inputFormatters: [_textFormat],
                     maxLength: 9,
                     onChanged: (value) {
                       setState(() {

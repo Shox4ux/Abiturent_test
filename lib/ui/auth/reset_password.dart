@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:test_app/res/components/custom_simple_appbar.dart';
 import 'package:test_app/res/components/waiting.dart';
+import 'package:test_app/res/functions/show_toast.dart';
 
 import '../../core/block/auth_block/auth_cubit.dart';
 import '../../res/constants.dart';
@@ -44,31 +45,21 @@ class _ResetPassWordState extends State<ResetPassWord> {
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is AuthGranted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Muvaffaqiyatli ro'yxattan o'tildi"),
-            ),
-          );
-
+          showToast("Muvaffaqiyatli ro'yxattan o'tildi");
           Navigator.pushAndRemoveUntil<void>(
             context,
             MaterialPageRoute<void>(
                 builder: (BuildContext context) => const WaitingScreen(
                       status: WarningValues.smsDone,
-                      errorText: "",
+                      alertText: "",
+                      extraText: "",
                       buttonText: "",
                     )),
             (Route<dynamic> route) => false,
           );
         }
         if (state is AuthDenied) {
-          (ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                state.error,
-              ),
-            ),
-          ));
+          showToast(state.error);
         }
       },
       child: Scaffold(

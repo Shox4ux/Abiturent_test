@@ -17,8 +17,11 @@ class ScriptRepo {
   }
 
   Future<Response> makeScript(int userId, String authKey, int subId) async {
-    var formData = FormData.fromMap(
-        {"user_id": userId, "auth_key": authKey, "subject_id": subId});
+    var formData = FormData.fromMap({
+      "user_id": userId,
+      "auth_key": authKey,
+      "subject_id": subId,
+    });
     return await _dio.post(ApiValues.makeScript, data: formData);
   }
 }

@@ -7,6 +7,8 @@ import 'package:test_app/core/domain/test_model/test_model.dart';
 import 'package:test_app/core/helper/repos/test_repo.dart';
 import 'package:test_app/res/components/custom_dot.dart';
 import 'package:test_app/res/components/custom_drawer.dart';
+import 'package:test_app/res/navigation/main_navigation.dart';
+import 'package:test_app/ui/test_screens/books.dart';
 
 import '../../../core/block/drawer_cubit/drawer_cubit.dart';
 
@@ -113,6 +115,7 @@ class SubjectsScreen extends StatelessWidget {
                                               int index) {
                                             return subjectItem(
                                               testModel!.tests![index],
+                                              testModel!.books!,
                                               context,
                                               (index + 1),
                                             );
@@ -159,6 +162,7 @@ class SubjectsScreen extends StatelessWidget {
                                             (BuildContext context, int index) {
                                           return subjectItem(
                                               testModel!.tests![index],
+                                              testModel!.books!,
                                               context,
                                               (index + 1));
                                         }),
@@ -177,7 +181,8 @@ class SubjectsScreen extends StatelessWidget {
     );
   }
 
-  Widget subjectItem(Tests tests, BuildContext context, int testIndex) {
+  Widget subjectItem(
+      Tests tests, List<Books> books, BuildContext context, int testIndex) {
     return Container(
       margin: EdgeInsets.only(bottom: 20.h, left: 20.w, right: 20.w),
       width: 333.w,
@@ -252,33 +257,43 @@ class SubjectsScreen extends StatelessWidget {
                   ),
                 ),
                 Gap(20.w),
-                InkWell(
-                  onTap: () {},
-                  child: Container(
-                    padding:
-                        EdgeInsets.symmetric(vertical: 6.h, horizontal: 11.w),
-                    height: 32.h,
-                    decoration: BoxDecoration(
-                      color: AppColors.mainColor,
-                      borderRadius: BorderRadius.circular(120.r),
-                    ),
-                    child: Row(
-                      children: [
-                        Image.asset(
-                          AppIcons.book,
-                        ),
-                        Gap(9.w),
-                        Text(
-                          "qo’llanmalar",
-                          style: AppStyles.subtitleTextStyle.copyWith(
-                            color: Colors.white,
-                            fontSize: 12.sp,
+                (testModel!.books!.isNotEmpty)
+                    ? InkWell(
+                        onTap: () {
+                          Navigator.push<void>(
+                            context,
+                            MaterialPageRoute<void>(
+                                builder: (BuildContext context) => BookScreen(
+                                      bookList: books,
+                                    )),
+                          );
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 6.h, horizontal: 11.w),
+                          height: 32.h,
+                          decoration: BoxDecoration(
+                            color: AppColors.mainColor,
+                            borderRadius: BorderRadius.circular(120.r),
                           ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
+                          child: Row(
+                            children: [
+                              Image.asset(
+                                AppIcons.book,
+                              ),
+                              Gap(9.w),
+                              Text(
+                                "qo’llanmalar",
+                                style: AppStyles.subtitleTextStyle.copyWith(
+                                  color: Colors.white,
+                                  fontSize: 12.sp,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      )
+                    : const SizedBox.shrink(),
               ],
             ),
             GestureDetector(

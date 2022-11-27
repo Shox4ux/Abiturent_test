@@ -36,8 +36,10 @@ class GroupCubit extends Cubit<GroupState> {
 
       final rowData = GroupModel.fromJson(response.data);
       emit(OnGroupAdded(rowData, u.id!));
+    } on DioError catch (e) {
+      emit(OnError(e.response!.data["message"]));
     } catch (e) {
-      emit(OnError(e.toString()));
+      emit(const OnError("Tizimda nosozlik"));
     }
   }
 

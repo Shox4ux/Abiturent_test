@@ -21,6 +21,11 @@ class MySubscriptions extends StatefulWidget {
 
 class _MySubscriptionsState extends State<MySubscriptions> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocListener<SubscriptionCubit, SubscriptionState>(
       listener: (context, state) {
@@ -30,8 +35,9 @@ class _MySubscriptionsState extends State<MySubscriptions> {
             MaterialPageRoute<void>(
                 builder: (BuildContext context) => const WaitingScreen(
                       status: WarningValues.subFirstDone,
-                      errorText: "",
+                      alertText: "",
                       buttonText: "",
+                      extraText: "",
                     )),
             (Route<dynamic> route) => false,
           );
@@ -42,20 +48,16 @@ class _MySubscriptionsState extends State<MySubscriptions> {
         body: SafeArea(
           child: Column(
             children: [
-              Padding(
-                padding: EdgeInsets.only(left: 20.w),
-                child: CustomSimpleAppBar(
-                  isSimple: true,
-                  titleText: "Mening obunalarim",
-                  iconColor: Colors.white,
-                  routeText: RouteNames.main,
-                  style: AppStyles.subtitleTextStyle.copyWith(
-                    color: Colors.white,
-                    fontSize: 24.sp,
-                  ),
+              CustomSimpleAppBar(
+                isSimple: true,
+                titleText: "Mening obunalarim",
+                iconColor: Colors.white,
+                routeText: RouteNames.main,
+                style: AppStyles.subtitleTextStyle.copyWith(
+                  color: Colors.white,
+                  fontSize: 24.sp,
                 ),
               ),
-              Gap(17.h),
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(

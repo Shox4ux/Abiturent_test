@@ -65,19 +65,15 @@ class _TestScreenState extends State<TestScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            Padding(
-              padding: EdgeInsets.only(left: 20.w, bottom: 17.h),
-              child: CustomSimpleAppBar(
-                isSimple: true,
-                titleText:
-                    "${widget.subName} fani: To’plam #${widget.testIndex}",
-                routeText: RouteNames.profile,
-                style: AppStyles.subtitleTextStyle.copyWith(
-                  fontSize: 20.sp,
-                  color: Colors.white,
-                ),
-                iconColor: Colors.white,
+            CustomSimpleAppBar(
+              isSimple: true,
+              titleText: "${widget.subName} fani: To’plam #${widget.testIndex}",
+              routeText: RouteNames.profile,
+              style: AppStyles.subtitleTextStyle.copyWith(
+                fontSize: 20.sp,
+                color: Colors.white,
               ),
+              iconColor: Colors.white,
             ),
             Expanded(
               child: Container(
@@ -108,7 +104,8 @@ class _TestScreenState extends State<TestScreen> {
                         MaterialPageRoute<void>(
                             builder: (BuildContext context) => WaitingScreen(
                                   status: WarningValues.obunaError,
-                                  errorText: state.error,
+                                  alertText: state.error,
+                                  extraText: "",
                                   buttonText: "Obunalar oynasiga o'tish",
                                 )),
                         (Route<dynamic> route) => false,
@@ -194,37 +191,43 @@ class _TestScreenState extends State<TestScreen> {
                                 ),
                               ]),
                           _selectedAnswerIndex != null
-                              ? ElevatedButton(
-                                  style: AppStyles.introUpButton,
-                                  onPressed: () {
-                                    setState(() {
-                                      _questionNumber = _questionNumber + 1;
-                                    });
+                              ? Padding(
+                                  padding: EdgeInsets.only(bottom: 24.h),
+                                  child: ElevatedButton(
+                                    style: AppStyles.introUpButton,
+                                    onPressed: () {
+                                      setState(() {
+                                        _questionNumber = _questionNumber + 1;
+                                      });
 
-                                    context.read<TestCubit>().sendTestAnswer(
-                                          state.innerTest.id!,
-                                          state
-                                              .innerTest
-                                              .answers![_selectedAnswerIndex!]
-                                              .id!,
-                                          state.innerTest.testListId!,
-                                        );
+                                      context.read<TestCubit>().sendTestAnswer(
+                                            state.innerTest.id!,
+                                            state
+                                                .innerTest
+                                                .answers![_selectedAnswerIndex!]
+                                                .id!,
+                                            state.innerTest.testListId!,
+                                          );
 
-                                    _selectedAnswerIndex = null;
-                                  },
-                                  child: Text(
-                                    "Keyingi savol",
-                                    style: AppStyles.introButtonText.copyWith(
-                                        color: const Color(0xffFCFCFC)),
+                                      _selectedAnswerIndex = null;
+                                    },
+                                    child: Text(
+                                      "Keyingi savol",
+                                      style: AppStyles.introButtonText.copyWith(
+                                          color: const Color(0xffFCFCFC)),
+                                    ),
                                   ),
                                 )
-                              : ElevatedButton(
-                                  style: AppStyles.disabledButton,
-                                  onPressed: null,
-                                  child: Text(
-                                    "Keyingi savol",
-                                    style: AppStyles.introButtonText.copyWith(
-                                        color: const Color(0xffFCFCFC)),
+                              : Padding(
+                                  padding: EdgeInsets.only(bottom: 24.h),
+                                  child: ElevatedButton(
+                                    style: AppStyles.disabledButton,
+                                    onPressed: null,
+                                    child: Text(
+                                      "Keyingi savol",
+                                      style: AppStyles.introButtonText.copyWith(
+                                          color: const Color(0xffFCFCFC)),
+                                    ),
                                   ),
                                 ),
                         ],

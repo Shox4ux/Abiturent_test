@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:test_app/res/components/custom_card.dart';
+import 'package:test_app/res/functions/show_toast.dart';
 import 'package:test_app/res/navigation/main_navigation.dart';
 
 import '../../../../../core/block/payment_cubit/payment_cubit.dart';
@@ -19,9 +19,9 @@ class AddCardScrenen extends StatefulWidget {
 }
 
 class _AddCardScrenenState extends State<AddCardScrenen> {
-  var _cartNumber = "";
-  var _cardPeriod = "";
-  var _cardName = "";
+  final _cartNumber = TextEditingController();
+  final _cardPeriod = TextEditingController();
+  final _cardName = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,21 +30,15 @@ class _AddCardScrenenState extends State<AddCardScrenen> {
       body: BlocListener<PaymentCubit, PaymentState>(
         listener: (context, state) {
           if (state is OnCardError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  state.error,
-                ),
-              ),
-            );
+            showToast(state.error);
           }
-          if (state is OnCardAdded) {
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              RouteNames.payme,
-              (route) => false,
-            );
-          }
+          // if (state is OnCardAdded) {
+          //   Navigator.pushNamedAndRemoveUntil(
+          //     context,
+          //     RouteNames.payme,
+          //     (route) => false,
+          //   );
+          // }
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,13 +54,6 @@ class _AddCardScrenenState extends State<AddCardScrenen> {
               ),
               iconColor: Colors.white,
             ),
-            Gap(54.w),
-            CustomCard(
-              _cardName,
-              _cartNumber,
-              _cardPeriod,
-            ),
-            Gap(80.h),
             Expanded(
               child: Container(
                 height: double.maxFinite,
@@ -88,10 +75,9 @@ class _AddCardScrenenState extends State<AddCardScrenen> {
                         children: [
                           TextField(
                             keyboardType: TextInputType.text,
-                            onSubmitted: (value) {
-                              setState(() {
-                                _cardName = value;
-                              });
+                            controller: _cardName,
+                            onChanged: (value) {
+                              setState(() {});
                             },
                             decoration: InputDecoration(
                               hintText: "Karta nomi",
@@ -119,15 +105,14 @@ class _AddCardScrenenState extends State<AddCardScrenen> {
                               SizedBox(
                                 width: 240.w,
                                 child: TextField(
-                                  onSubmitted: (value) {
-                                    setState(() {
-                                      _cartNumber = value;
-                                    });
+                                  controller: _cartNumber,
+                                  onChanged: (value) {
+                                    setState(() {});
                                   },
-                                  keyboardType: TextInputType.phone,
                                   inputFormatters: [
                                     MaskTextInputFormatter(
-                                        mask: '#### #### #### ####')
+                                      mask: '#### #### #### ####',
+                                    )
                                   ],
                                   decoration: InputDecoration(
                                     hintText: "0000 0000 0000 0000",
@@ -153,10 +138,9 @@ class _AddCardScrenenState extends State<AddCardScrenen> {
                               SizedBox(
                                 width: 80.w,
                                 child: TextField(
-                                  onSubmitted: (value) {
-                                    setState(() {
-                                      _cardPeriod = value;
-                                    });
+                                  controller: _cardPeriod,
+                                  onChanged: (value) {
+                                    setState(() {});
                                   },
                                   keyboardType: TextInputType.phone,
                                   inputFormatters: [
@@ -190,7 +174,7 @@ class _AddCardScrenenState extends State<AddCardScrenen> {
                     Gap(53.h),
                     BlocBuilder<PaymentCubit, PaymentState>(
                       builder: (context, state) {
-                        if (state is OnPayHistoryProgress) {
+                        if (state is OnCardProgress) {
                           return const CircularProgressIndicator(
                             color: AppColors.mainColor,
                           );
@@ -198,8 +182,10 @@ class _AddCardScrenenState extends State<AddCardScrenen> {
                         return ElevatedButton(
                           style: AppStyles.introUpButton,
                           onPressed: () {
-                            context.read<PaymentCubit>().addCard(
-                                _cartNumber.replaceAll(" ", ""), _cardPeriod);
+                            // context.read<PaymentCubit>().addCard(
+                            //     _cartNumber.text.replaceAll(" ", ""),
+                            //     _cardPeriod.text,
+                            //     _cardName.text);
                           },
                           child: Text(
                             "Karta qo'shish",

@@ -38,14 +38,19 @@ class _DtmScreenState extends State<DtmScreen>
     startAnimation();
   }
 
+  @override
+  void dispose() {
+    _animationController!.dispose();
+
+    super.dispose();
+  }
+
   void startAnimation() {
     _animationController =
         AnimationController(vsync: this, duration: const Duration(seconds: 3));
-    animation =
-        Tween<double>(begin: 0, end: maxProgress).animate(_animationController!)
-          ..addListener(() {
-            setState(() {});
-          });
+    animation = Tween<double>(begin: 0, end: maxProgress)
+        .animate(_animationController!)
+      ..addListener(() {});
   }
 
   Future<TestModel> getTestModel(int subId) async {
@@ -251,7 +256,10 @@ class _DtmScreenState extends State<DtmScreen>
                 ),
               ),
               CustomPaint(
-                foregroundPainter: CircleProgress(20.0, 8.0),
+                foregroundPainter: CircleProgress(
+                  tests.percent!.toDouble(),
+                  8.0,
+                ),
               ),
               Positioned(
                 top: 90.h,

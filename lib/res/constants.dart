@@ -107,134 +107,6 @@ class AppIntroImages {
   ];
 }
 
-class SubjectList {
-  static List<SubjectData> introList = [
-    const SubjectData(
-        text: "Tarix fanidan namunaviy test topshiriqlari", quantity: "12"),
-    const SubjectData(
-        text: " Eng qadimgi tuzumdan sivilizatsiya sari", quantity: "10"),
-    const SubjectData(
-        text:
-            " O‘rta Osiyoning Arab xalifalari tomonidan fath etilishi. Xalq qo‘zg‘olonlari",
-        quantity: "12"),
-    const SubjectData(
-        text:
-            " 1918-1939- yillarda Osiyo davlatlarining iqtisodiy va siyosiy rivojlanishi",
-        quantity: "12"),
-  ];
-
-  static List<TestModel> tests = [
-    TestModel(
-        question:
-            "... miloddan avvalgi VII-VI asrlardagi O‘rta Osiyo tarixiga xos emas.",
-        options: [
-          TestOptionModel(
-              optionText: "Shaharlarda ichki qal’alar borligi",
-              status: TestVertions.neutral),
-          TestOptionModel(
-              optionText: "Shahar-davlatlar mavjudligi",
-              status: TestVertions.correct),
-          TestOptionModel(
-              optionText:
-                  "Kulolchilik charxida ishlangan sopol idishlar mavjudligi",
-              status: TestVertions.neutral),
-          TestOptionModel(
-              optionText: "Bronzadan ishlangan o‘q uchlari",
-              status: TestVertions.neutral),
-        ]),
-    TestModel(
-        question:
-            "... miloddan avvalgi VII-VI asrlardagi O‘rta Osiyo tarixiga xos emas.",
-        options: [
-          TestOptionModel(
-              optionText: "Shaharlarda ichki qal’alar borligi",
-              status: TestVertions.incorrect),
-          TestOptionModel(
-              optionText: "Shahar-davlatlar mavjudligi",
-              status: TestVertions.neutral),
-          TestOptionModel(
-              optionText:
-                  "Kulolchilik charxida ishlangan sopol idishlar mavjudligi",
-              status: TestVertions.neutral),
-          TestOptionModel(
-              optionText: "Bronzadan ishlangan o‘q uchlari",
-              status: TestVertions.neutral),
-        ]),
-    TestModel(
-        question:
-            "... miloddan avvalgi VII-VI asrlardagi O‘rta Osiyo tarixiga xos emas.",
-        options: [
-          TestOptionModel(
-              optionText: "Shaharlarda ichki qal’alar borligi",
-              status: TestVertions.neutral),
-          TestOptionModel(
-              optionText: "Shahar-davlatlar mavjudligi",
-              status: TestVertions.correct),
-          TestOptionModel(
-              optionText:
-                  "Kulolchilik charxida ishlangan sopol idishlar mavjudligi",
-              status: TestVertions.neutral),
-          TestOptionModel(
-              optionText: "Bronzadan ishlangan o‘q uchlari",
-              status: TestVertions.neutral),
-        ]),
-    TestModel(
-        question:
-            "... miloddan avvalgi VII-VI asrlardagi O‘rta Osiyo tarixiga xos emas.",
-        options: [
-          TestOptionModel(
-              optionText: "Shaharlarda ichki qal’alar borligi",
-              status: TestVertions.incorrect),
-          TestOptionModel(
-              optionText: "Shahar-davlatlar mavjudligi",
-              status: TestVertions.neutral),
-          TestOptionModel(
-              optionText:
-                  "Kulolchilik charxida ishlangan sopol idishlar mavjudligi",
-              status: TestVertions.neutral),
-          TestOptionModel(
-              optionText: "Bronzadan ishlangan o‘q uchlari",
-              status: TestVertions.neutral),
-        ]),
-    TestModel(
-        question:
-            "... miloddan avvalgi VII-VI asrlardagi O‘rta Osiyo tarixiga xos emas.",
-        options: [
-          TestOptionModel(
-              optionText: "Shaharlarda ichki qal’alar borligi",
-              status: TestVertions.neutral),
-          TestOptionModel(
-              optionText: "Shahar-davlatlar mavjudligi",
-              status: TestVertions.correct),
-          TestOptionModel(
-              optionText:
-                  "Kulolchilik charxida ishlangan sopol idishlar mavjudligi",
-              status: TestVertions.neutral),
-          TestOptionModel(
-              optionText: "Bronzadan ishlangan o‘q uchlari",
-              status: TestVertions.neutral),
-        ]),
-    TestModel(
-        question:
-            "... miloddan avvalgi VII-VI asrlardagi O‘rta Osiyo tarixiga xos emas.",
-        options: [
-          TestOptionModel(
-              optionText: "Shaharlarda ichki qal’alar borligi",
-              status: TestVertions.incorrect),
-          TestOptionModel(
-              optionText: "Shahar-davlatlar mavjudligi",
-              status: TestVertions.neutral),
-          TestOptionModel(
-              optionText:
-                  "Kulolchilik charxida ishlangan sopol idishlar mavjudligi",
-              status: TestVertions.neutral),
-          TestOptionModel(
-              optionText: "Bronzadan ishlangan o‘q uchlari",
-              status: TestVertions.neutral),
-        ]),
-  ];
-}
-
 class AppIcons {
   static const String subFilled = "assets/sub_filled.png";
   static const String sub = "assets/sub.png";
@@ -255,10 +127,12 @@ class AppIcons {
 
   static const String bilim = "assets/bilim.png";
   static const String testFilled = "assets/testFilled.png";
+  static const String test = "assets/test.png";
 
   static const String mobile = "assets/mobile.png";
   static const String noImage = "assets/no_image.png";
   static const String delete = "assets/delete.png";
+  static const String big = "assets/big.png";
 
   static const String purplePocket = "assets/wallet.png";
   static const String greenPocket = "assets/green.png";
@@ -271,11 +145,13 @@ class AppIcons {
   static const String book = "assets/book.png";
 
   static const String bd = "assets/bd.png";
+  static const String y = "assets/y.png";
 
   static const String man = "assets/man.png";
   static const String tab = "assets/tab.png";
   static const String user = "assets/user.png";
   static const String borrow = "assets/borrow.png";
+  static const String gear = "assets/gear.png";
 
   static const String info = "assets/info.png";
   static const String arrow = "assets/arrow.png";
@@ -309,6 +185,7 @@ class AppIcons {
 }
 
 class WarningValues {
+  static const String paymentDone = "paymentDone";
   static const String smsDone = "smsDone";
   static const String subFirstDone = "subFirstDone";
   static const String subSecondDone = "subSecondDone";
@@ -334,11 +211,11 @@ class ApiValues {
   static const String deleteMember = "user-group/delete-members";
 
   static const String ratingUrl = "user/rating";
-  static const String ratingUrlBySubjectId = "test/user-rating";
+  static const String stats = "user/statistics";
+  static const String ratingUrlBySubjectId = "user/common-stats";
+  static const String updateProfileUrl = "user/update";
 
-  static const String addCardUrl = "card/add-card";
   static const String amountUrl = "card/payment";
-  static const String getCardsUrl = "card/index";
   static const String getErrorListUrl = "test/show-mistakes";
 
   static const String getScripts = "subjects/index";

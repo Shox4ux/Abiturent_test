@@ -9,9 +9,9 @@ class DioClient {
         baseUrl: ApiValues.baseUrl,
       ),
     );
-    dio.interceptors.add(
-      InterceptorToRetry(),
-    );
+    // dio.interceptors.add(
+    //   InterceptorToRetry(),
+    // );
     return dio;
   }
 }

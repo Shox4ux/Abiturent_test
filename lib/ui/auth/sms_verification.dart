@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:test_app/res/functions/show_toast.dart';
 import 'package:test_app/ui/auth/reset_password.dart';
 
 import 'package:test_app/res/components/custom_countdown_timer.dart';
@@ -119,11 +120,6 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen>
           startTimer();
         }
         if (state is AuthGranted) {
-          // ScaffoldMessenger.of(context).showSnackBar(
-          //   const SnackBar(
-          //     content: Text("Muvaffaqiyatli ro'yxattan o'tildi"),
-          //   ),
-          // );
           if (widget.fromWhere == RouteNames.forget) {
             Navigator.push(
               context,
@@ -138,16 +134,16 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen>
               MaterialPageRoute<void>(
                   builder: (BuildContext context) => const WaitingScreen(
                         status: WarningValues.smsDone,
-                        errorText: "",
+                        alertText: "",
                         buttonText: "",
+                        extraText: "",
                       )),
               (Route<dynamic> route) => false,
             );
           }
         }
         if (state is AuthDenied) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text(state.error)));
+          showToast(state.error);
         }
       },
       child: Scaffold(

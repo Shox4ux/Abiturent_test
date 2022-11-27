@@ -1,31 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:test_app/core/block/group_block/group_cubit.dart';
 import 'package:test_app/core/block/payment_cubit/payment_cubit.dart';
-import 'package:test_app/core/block/subjecy_bloc/subject_cubit.dart';
 import 'package:test_app/core/block/subscription_block/subscription_cubit.dart';
-import 'package:test_app/core/block/test_block/test_cubit.dart';
 import 'package:test_app/core/domain/p_h_model/payment_history_model.dart';
+import 'package:test_app/core/domain/user_model/stat_model.dart';
 import 'package:test_app/core/domain/user_model/user_model.dart';
 import 'package:test_app/core/helper/database/app_storage.dart';
 import 'package:test_app/res/constants.dart';
-import 'package:test_app/ui/bottom_navigation/profile/profile_sections/group/group.dart';
 import 'package:test_app/res/functions/number_formatter.dart';
+import 'package:test_app/ui/bottom_navigation/profile/profile_sections/refactor/refactor.dart';
 
 import '../../../core/block/auth_block/auth_cubit.dart';
-import '../../../core/block/user_block/user_cubit_cubit.dart';
 import '../../../core/helper/repos/user_repo.dart';
 import '../../../res/enum.dart';
 import '../../../res/navigation/main_navigation.dart';
-import '../../../res/components/waiting.dart';
 
 UserInfo? user;
 final _s = AppStorage();
-final _c = UserCubit();
 final _repo = UserRepo();
+List<StatModel>? stats;
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({
@@ -38,6 +34,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   bool isInSubs = false;
+  bool isStats = true;
 
   Future<UserInfo> getUserData() async {
     final e = await _s.getUserInfo();
@@ -53,27 +50,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return user!;
   }
 
-  String _medalStatus(int meadalID) {
-    print(meadalID);
-    if (meadalID == 2) {
-      return "Oltin";
-    }
-    if (meadalID == 1) {
-      return "Kumush";
-    }
-    return "Bronza";
-  }
+  Future<List<StatModel>> getStatistics() async {
+    try {
+      if (user!.id != null) {
+        final response = await _repo.getStats(user!.id!);
 
-  String _medalAsset(int meadalID) {
-    print(0);
-    if (meadalID == 2) {
-      return AppIcons.gold;
-    }
-    if (meadalID == 1) {
-      return AppIcons.silver;
-    }
+        if (response.statusCode == 200) {
+          final rowData = response.data as List;
 
-    return AppIcons.bronze;
+          final rowList = rowData.map((e) => StatModel.fromJson(e)).toList();
+          stats = rowList;
+          return stats!;
+        }
+      }
+      return stats!;
+    } catch (e) {
+      print(e);
+      return stats!;
+    }
   }
 
   @override
@@ -115,7 +109,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         return Column(
                           children: [
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 CircleAvatar(
                                   radius: 48.w,
@@ -128,7 +122,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Text(
                                         "ID #${user!.id}",
@@ -149,21 +142,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     ],
                                   ),
                                 ),
-                                Gap(48.w),
-                                Column(
-                                  children: [
-                                    Text(
-                                      _medalStatus(user!.medalId!),
-                                      style: AppStyles.subtitleTextStyle,
-                                    ),
-                                    Gap(11.h),
-                                    SizedBox(
-                                        width: 48.w,
-                                        height: 48.h,
-                                        child: Image.asset(
-                                            _medalAsset(user!.medalId!)))
-                                  ],
-                                )
+                                isStats
+                                    ? IconButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            isStats = false;
+                                          });
+                                        },
+                                        icon: Icon(
+                                          Icons.settings,
+                                          color: AppColors.mainColor,
+                                          size: 28.h,
+                                        ),
+                                      )
+                                    : const SizedBox.shrink()
                               ],
                             ),
                             Gap(19.h),
@@ -209,8 +201,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ],
                               ),
                             ),
-                            Gap(25.h),
-                            body()
+                            Gap(20.h),
+                            FutureBuilder(
+                              future: getStatistics(),
+                              builder: (context, snapshot) {
+                                if (!snapshot.hasData) {
+                                  return const Center(
+                                    child: CircularProgressIndicator(
+                                      color: AppColors.mainColor,
+                                    ),
+                                  );
+                                }
+                                return body(stats!);
+                              },
+                            )
                           ],
                         );
                       },
@@ -223,7 +227,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget body() {
+  Widget statistics(List<StatModel> statList) {
+    if (statList.isEmpty) {
+      return const Center(
+        child: Text("Obuna sotil oling"),
+      );
+    }
+    return Expanded(
+      child: ListView.builder(
+        itemCount: statList.length,
+        itemBuilder: (context, index) {
+          return statisticsItem(statList[index]);
+        },
+      ),
+    );
+  }
+
+  Widget body(List<StatModel> statList) {
+    if (isStats) {
+      return statistics(statList);
+    }
     return isInSubs ? subs() : menu(context);
   }
 
@@ -272,7 +295,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                 if (state is OnPayHistoryReceived) {
                   return ListView.separated(
-                    padding: EdgeInsets.only(bottom: 20.h, top: 10.h),
+                    padding: EdgeInsets.only(
+                        bottom: 20.h, top: 10.h, right: 10.w, left: 10.w),
                     itemCount: state.list.length,
                     itemBuilder: (BuildContext context, int index) {
                       if (state.list[index].type == 2) {
@@ -303,161 +327,190 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget menu(BuildContext context) {
-    return Container(
-      width: 331.w,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20.r),
-      ),
-      child: Column(children: [
-        InkWell(
-          onTap: () async {
-            setState(() {
-              isInSubs = true;
-            });
+    return Column(
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            InkWell(
+              onTap: () {
+                setState(() {
+                  isStats = true;
+                });
+              },
+              child: Image.asset(
+                AppIcons.sim,
+                scale: 3,
+              ),
+            ),
+          ],
+        ),
+        Gap(5.h),
+        Container(
+          width: 331.w,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20.r),
+          ),
+          child: Column(children: [
+            InkWell(
+              onTap: () async {
+                setState(() {
+                  isInSubs = true;
+                });
 
-            context.read<PaymentCubit>().getPaymentHistory();
-          },
-          child: rowItem(AppIcons.purplePocket, "Mening hisoblarim", false),
-        ),
-        spacer(),
-        InkWell(
-          onTap: () {
-            Navigator.pushNamed(
-              context,
-              RouteNames.edit,
-            );
-          },
-          child: rowItem(AppIcons.edit, "Tahrirlash", false),
-        ),
-        spacer(),
-        InkWell(
-          onTap: () {
-            Navigator.pushNamed(
-              context,
-              RouteNames.news,
-            );
-          },
-          child: rowItem(AppIcons.gallery, "Yangiliklar", false),
-        ),
-        spacer(),
-        InkWell(
-          onTap: () {
-            Navigator.pushNamed(
-              context,
-              RouteNames.subscripts,
-            );
+                context.read<PaymentCubit>().getPaymentHistory();
+              },
+              child: rowItem(AppIcons.purplePocket, "Mening hisoblarim", false),
+            ),
+            spacer(),
+            InkWell(
+              onTap: () {
+                Navigator.push<void>(
+                  context,
+                  MaterialPageRoute<void>(
+                    builder: (BuildContext context) =>
+                        RefactorScreen(user: user!),
+                  ),
+                );
+              },
+              child: rowItem(AppIcons.edit, "Tahrirlash", false),
+            ),
+            spacer(),
+            InkWell(
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  RouteNames.news,
+                );
+              },
+              child: rowItem(AppIcons.gallery, "Yangiliklar", false),
+            ),
+            spacer(),
+            InkWell(
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  RouteNames.subscripts,
+                );
 
-            context.read<SubscriptionCubit>().getScripts();
-          },
-          child: rowItem(AppIcons.purpleDone, "Mening obunalarim", false),
+                context.read<SubscriptionCubit>().getScripts();
+              },
+              child: rowItem(AppIcons.purpleDone, "Mening obunalarim", false),
+            ),
+            spacer(),
+            InkWell(
+              onTap: () {
+                Navigator.pushNamed(context, RouteNames.group);
+                context.read<GroupCubit>().getGroupsByUserId();
+              },
+              child: rowItem(AppIcons.purpleDone, "Mening guruhlarim", false),
+            ),
+            spacer(),
+            InkWell(
+              onTap: () {
+                Navigator.pushNamed(context, RouteNames.payme);
+              },
+              child: rowItem(AppIcons.payme, "Hisobni to’ldirish", false),
+            ),
+            spacer(),
+            InkWell(
+              onTap: () {
+                logOutBottomSheet(context);
+              },
+              child: rowItem(AppIcons.logout, "Tizimdan chiqish", true),
+            ),
+          ]),
         ),
-        spacer(),
-        InkWell(
-          onTap: () {
-            Navigator.pushNamed(context, RouteNames.group);
-            context.read<GroupCubit>().getGroupsByUserId();
-          },
-          child: rowItem(AppIcons.purpleDone, "Mening guruhlarim", false),
+      ],
+    );
+  }
+
+  logOutBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+        top: Radius.circular(
+          16.r,
         ),
-        spacer(),
-        InkWell(
-          onTap: () {
-            Navigator.pushNamed(context, RouteNames.addCard);
-          },
-          child: rowItem(AppIcons.payme, "Hisobni to’ldirish", false),
-        ),
-        spacer(),
-        InkWell(
-          onTap: () {
-            showModalBottomSheet(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(
-                top: Radius.circular(
-                  16.r,
+      )),
+      context: context,
+      builder: ((context) => Padding(
+            padding: EdgeInsets.all(20.h),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 36.w,
+                  height: 4.h,
+                  decoration: BoxDecoration(
+                      color: const Color(0xffD3BDFF),
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(20.r),
+                        topLeft: Radius.circular(20.r),
+                      )),
                 ),
-              )),
-              context: context,
-              builder: ((context) => Padding(
-                    padding: EdgeInsets.all(20.h),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          width: 36.w,
-                          height: 4.h,
-                          decoration: BoxDecoration(
-                              color: const Color(0xffD3BDFF),
-                              borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(20.r),
-                                topLeft: Radius.circular(20.r),
-                              )),
-                        ),
-                        Gap(20.h),
-                        Text(
-                          "Tizimda chiqish xoxlaysizmi ?",
-                          style: AppStyles.introButtonText.copyWith(
-                            color: Colors.black,
+                Gap(20.h),
+                Text(
+                  "Tizimda chiqish xoxlaysizmi ?",
+                  style: AppStyles.introButtonText.copyWith(
+                    color: Colors.black,
+                  ),
+                ),
+                Gap(20.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        height: 56.h,
+                        width: 150.w,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: AppColors.secondaryColor,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(16.r),
                           ),
                         ),
-                        Gap(20.h),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
-                              child: Container(
-                                height: 56.h,
-                                width: 150.w,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  color: AppColors.secondaryColor,
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(16.r),
-                                  ),
-                                ),
-                                child: Text(
-                                  "Yo'q",
-                                  style: AppStyles.introButtonText
-                                      .copyWith(color: AppColors.mainColor),
-                                ),
-                              ),
-                            ),
-                            Gap(16.w),
-                            InkWell(
-                              onTap: () async {
-                                Navigator.pop(context);
-                                await context.read<AuthCubit>().authLogOut();
-                              },
-                              child: Container(
-                                height: 56.h,
-                                width: 150.w,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  color: AppColors.mainColor,
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(16.r),
-                                  ),
-                                ),
-                                child: Text(
-                                  "Ha",
-                                  style: AppStyles.introButtonText
-                                      .copyWith(color: AppColors.fillingColor),
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
+                        child: Text(
+                          "Yo'q",
+                          style: AppStyles.introButtonText
+                              .copyWith(color: AppColors.mainColor),
+                        ),
+                      ),
                     ),
-                  )),
-            );
-          },
-          child: rowItem(AppIcons.logout, "Tizimdan chiqish", true),
-        ),
-      ]),
+                    Gap(16.w),
+                    InkWell(
+                      onTap: () async {
+                        Navigator.pop(context);
+                        await context.read<AuthCubit>().authLogOut();
+                      },
+                      child: Container(
+                        height: 56.h,
+                        width: 150.w,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: AppColors.mainColor,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(16.r),
+                          ),
+                        ),
+                        child: Text(
+                          "Ha",
+                          style: AppStyles.introButtonText
+                              .copyWith(color: AppColors.fillingColor),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          )),
     );
   }
 
@@ -467,8 +520,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Row(
         children: [
           Container(
-            height: 52.h,
-            width: 52.w,
+            height: 48.h,
+            width: 48.w,
             decoration: BoxDecoration(
               color: isRed ? const Color(0xffFFE2E4) : AppColors.secondaryColor,
               borderRadius: BorderRadius.circular(16.r),
@@ -497,6 +550,106 @@ class _ProfileScreenState extends State<ProfileScreen> {
       width: double.maxFinite,
     );
   }
+}
+
+String _medalStatus(int meadalID) {
+  print(meadalID);
+  if (meadalID == 2) {
+    return "Oltin";
+  }
+  if (meadalID == 1) {
+    return "Kumush";
+  }
+  return "Bronza";
+}
+
+String _medalAsset(int meadalID) {
+  print(0);
+  if (meadalID == 2) {
+    return AppIcons.gold;
+  }
+  if (meadalID == 1) {
+    return AppIcons.silver;
+  }
+
+  return AppIcons.bronze;
+}
+
+Widget statisticsItem(StatModel statModel) {
+  return Container(
+    margin: EdgeInsets.only(bottom: 5.h),
+    padding: EdgeInsets.symmetric(vertical: 13.h, horizontal: 17.w),
+    decoration: BoxDecoration(
+        color: Colors.white, borderRadius: BorderRadius.circular(14.r)),
+    child: Row(
+      children: [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.network(
+              statModel.medalImg!,
+              width: 36.w,
+              height: 36.h,
+            ),
+            Gap(10.h),
+            Text(
+              statModel.medalName!,
+              style: AppStyles.subtitleTextStyle.copyWith(fontSize: 14.sp),
+            ),
+          ],
+        ),
+        Gap(40.w),
+        Expanded(
+          child: Column(
+            children: [
+              Text(
+                "${statModel.subjectText}",
+                style: AppStyles.introButtonText.copyWith(
+                  color: Colors.black,
+                  fontSize: 24.sp,
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    children: [
+                      Text(
+                        "Umumiy:",
+                        style: AppStyles.introButtonText.copyWith(
+                          fontSize: 14.sp,
+                        ),
+                      ),
+                      Text(
+                        "${statModel.rating}",
+                        style: AppStyles.introButtonText
+                            .copyWith(color: Colors.green, fontSize: 24.sp),
+                      ),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Text(
+                        "So’ngi haftalik:",
+                        style: AppStyles.introButtonText.copyWith(
+                          fontSize: 14.sp,
+                        ),
+                      ),
+                      Text(
+                        "${statModel.ratingWeek}",
+                        style: AppStyles.introButtonText
+                            .copyWith(color: Colors.black, fontSize: 24.sp),
+                      ),
+                    ],
+                  )
+                ],
+              )
+            ],
+          ),
+        )
+      ],
+    ),
+  );
 }
 
 Widget inHistoryItem(PaymentHistory item) {

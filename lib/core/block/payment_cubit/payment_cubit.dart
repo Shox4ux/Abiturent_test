@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
-import 'package:test_app/core/domain/card_model/card_model.dart';
 import 'package:test_app/core/domain/p_h_model/payment_history_model.dart';
+import 'package:test_app/core/domain/patment_model/payment_response.dart';
 import 'package:test_app/core/helper/database/app_storage.dart';
 import 'package:test_app/core/helper/repos/payme_repo.dart';
 
@@ -14,47 +14,17 @@ class PaymentCubit extends Cubit<PaymentState> {
   final _repo = PaymentRepo();
   final _storage = AppStorage();
 
-  Future<void> addCard(String cardPan, String cardMonth) async {
+  Future<void> makePayment(
+      String cardPeriod, String cardPan, String amount) async {
     emit(OnCardProgress());
     final userId = await _storage.getUserId();
     try {
-      final response = await _repo.addCard(userId, cardPan, cardMonth);
-      final rowData = response.data as List;
-      final rowList = rowData.map((e) => CardModel.fromJson(e)).toList();
-      emit(OnCardAdded(rowList));
+      final response =
+          await _repo.makePayment(userId, cardPan, amount, cardPeriod);
+      final rowData = PaymentResponse.fromJson(response.data);
+      emit(OnMadePayment(rowData));
     } on DioError catch (e) {
       emit(OnCardError(e.response!.data["message"] ?? ""));
-    } catch (e) {
-      emit(OnCardError(e.toString()));
-    }
-  }
-
-  Future<void> makePayment(int cardId, int amount) async {
-    emit(OnCardProgress());
-    final userId = await _storage.getUserId();
-
-    try {
-      await _repo.makePayment(userId, cardId, amount);
-      emit(OnMadePayment());
-    } on DioError catch (e) {
-      emit(OnCardError(e.response!.data["message"] ?? ""));
-    } catch (e) {
-      emit(OnCardError(e.toString()));
-    }
-  }
-
-// does not work for a while
-  Future<void> getCards() async {
-    emit(OnCardProgress());
-    final userId = await _storage.getUserId();
-
-    try {
-      final response = await _repo.getCards(userId);
-      final rowData = response.data as List;
-      final rowList = rowData.map((e) => CardModel.fromJson(e)).toList();
-      emit(OnCardsReceived(rowList));
-    } on DioError catch (e) {
-      emit(OnCardError(e.response?.data["message"] ?? ""));
     } catch (e) {
       emit(OnCardError(e.toString()));
     }

@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:test_app/res/constants.dart';
+import 'package:test_app/res/functions/show_toast.dart';
 import 'package:test_app/ui/auth/sms_verification.dart';
 
 import '../../core/block/auth_block/auth_cubit.dart';
@@ -82,14 +83,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             child: BlocListener<AuthCubit, AuthState>(
               listener: (context, state) {
                 if (state is AuthOnSMS) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                        "Muvaffaqiyatli ro'yxattan o'tildi",
-                      ),
-                    ),
-                  );
-
+                  showToast("Muvaffaqiyatli ro'yxattan o'tildi");
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -102,13 +96,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   );
                 }
                 if (state is AuthDenied) {
-                  (ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        state.error,
-                      ),
-                    ),
-                  ));
+                  showToast(state.error);
                 }
               },
               child: Column(

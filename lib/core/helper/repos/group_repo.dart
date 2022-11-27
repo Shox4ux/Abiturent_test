@@ -8,12 +8,12 @@ class GroupRepo {
 
   Future<Response> createGroup(
       int userId, int subjectId, String groupTitle) async {
-    final Map<String, dynamic> params = {
+    var formData = FormData.fromMap({
       "user_id": userId,
       "subject_id": subjectId,
       "group_title": groupTitle,
-    };
-    return await _dio.post(ApiValues.createGroup, data: params);
+    });
+    return await _dio.post(ApiValues.createGroup, data: formData);
   }
 
   Future<Response> addGroupMember(String memberId, int groupId) async {

@@ -1,33 +1,4 @@
-class RatingModel {
-  int? subjectId;
-  String? subjectText;
-  List<Rating>? rating;
-
-  RatingModel({this.subjectId, this.subjectText, this.rating});
-
-  RatingModel.fromJson(Map<String, dynamic> json) {
-    subjectId = json['subject_id'];
-    subjectText = json['subject_text'];
-    if (json['rating'] != null) {
-      rating = <Rating>[];
-      json['rating'].forEach((v) {
-        rating!.add(Rating.fromJson(v));
-      });
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['subject_id'] = subjectId;
-    data['subject_text'] = subjectText;
-    if (rating != null) {
-      data['rating'] = rating!.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
-}
-
-class Rating {
+class CommonRatingModel {
   int? userId;
   String? userFullname;
   int? subjectId;
@@ -36,7 +7,7 @@ class Rating {
   int? ratingDay;
   int? ratingWeek;
 
-  Rating(
+  CommonRatingModel(
       {this.userId,
       this.userFullname,
       this.subjectId,
@@ -45,7 +16,7 @@ class Rating {
       this.ratingDay,
       this.ratingWeek});
 
-  Rating.fromJson(Map<String, dynamic> json) {
+  CommonRatingModel.fromJson(Map<String, dynamic> json) {
     userId = json['user_id'];
     userFullname = json['user_fullname'];
     subjectId = json['subject_id'];

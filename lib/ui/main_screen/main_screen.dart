@@ -77,7 +77,7 @@ class _MainScreenState extends State<MainScreen> {
           items: [
             BottomNavigationBarItem(
                 icon: bottomBarIcon(
-                  AppIcons.testFilled,
+                  AppIcons.test,
                 ),
                 activeIcon: bottomBarIcon(
                   AppIcons.testFilled,

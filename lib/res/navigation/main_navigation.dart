@@ -3,14 +3,15 @@ import 'package:test_app/core/domain/news_models/main_news_model.dart';
 import 'package:test_app/ui/auth/forgot_password.dart';
 import 'package:test_app/ui/auth/login.dart';
 import 'package:test_app/ui/auth/sign_up.dart';
-import 'package:test_app/res/components/waiting.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/group/add_user_to_group.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/payme/add_card_screen.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/news_screen/inside_news.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/news_screen/news.dart';
+import 'package:test_app/ui/bottom_navigation/profile/profile_sections/payme/payme_info_confirmation.dart';
+import 'package:test_app/ui/bottom_navigation/profile/profile_sections/payme/payme_screen.dart';
+import 'package:test_app/ui/bottom_navigation/profile/profile_sections/payme/payme_sms_confirmation.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/payments/payments.dart';
-import 'package:test_app/ui/bottom_navigation/profile/profile_sections/refactor/refactor.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/subscriptions/subscriptions_screen.dart';
 import 'package:test_app/ui/intro/intro.dart';
 import 'package:test_app/ui/main_screen/main_screen.dart';
@@ -28,13 +29,14 @@ class MainNavigation {
     RouteNames.news: (context) => NewsScreen(),
     RouteNames.main: (context) => const MainScreen(),
     RouteNames.addCard: (context) => const AddCardScrenen(),
-    RouteNames.payme: (context) => const PaymentsScreen(),
-    RouteNames.edit: (context) => const RefactorScreen(),
+    RouteNames.payme: (context) => const PaymeScreen(),
     RouteNames.forget: (context) => const ForgotPasswordScreen(),
     RouteNames.subscripts: (context) => const MySubscriptions(),
     RouteNames.budget: (context) => const PaymentsScreen(),
     RouteNames.group: (context) => const GroupScreen(),
     RouteNames.addMembers: (context) => const AddUserToGroup(),
+    RouteNames.paymeInfoConfirm: (context) => const PaymeInfoConfirmation(),
+    RouteNames.paymeSmsCinfirm: (context) => const PaymeSmsConfirmation(),
   };
 
   Route? onGenerateRoute(RouteSettings settings) {
@@ -68,7 +70,8 @@ abstract class RouteNames {
   static const changePassword = "reset";
   static const addCard = "addCard";
   static const payme = "payme";
-
+  static const paymeInfoConfirm = "paymeInfoConfirm";
+  static const paymeSmsCinfirm = "paymeSmsCinfirm";
   static const forget = "forget";
   static const innerNews = "innerNews";
   static const subscripts = "subscripts";

@@ -2,9 +2,10 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
+import 'package:test_app/core/helper/dio/dio_client.dart';
 
 class ConnectivityManager {
-  final _dio = Dio();
+  final _dio = DioClient.getDio();
   final _connectivity = Connectivity();
   StreamSubscription? streamSubscription;
 

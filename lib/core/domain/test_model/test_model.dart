@@ -1,20 +1,23 @@
 class TestModel {
   Subjects? subjects;
   List<Tests>? tests;
+  List<Books>? books;
 
-  TestModel({
-    required this.subjects,
-    required this.tests,
-  });
+  TestModel({this.subjects, this.tests, this.books});
 
   TestModel.fromJson(Map<String, dynamic> json) {
-    subjects = (json['subjects'] != null
-        ? Subjects.fromJson(json['subjects'])
-        : null)!;
+    subjects =
+        json['subjects'] != null ? Subjects.fromJson(json['subjects']) : null;
     if (json['tests'] != null) {
       tests = <Tests>[];
       json['tests'].forEach((v) {
-        tests?.add(Tests.fromJson(v));
+        tests!.add(Tests.fromJson(v));
+      });
+    }
+    if (json['books'] != null) {
+      books = <Books>[];
+      json['books'].forEach((v) {
+        books!.add(Books.fromJson(v));
       });
     }
   }
@@ -27,7 +30,9 @@ class TestModel {
     if (tests != null) {
       data['tests'] = tests!.map((v) => v.toJson()).toList();
     }
-
+    if (books != null) {
+      data['books'] = books!.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }
@@ -35,23 +40,15 @@ class TestModel {
 class Subjects {
   int? id;
   String? name;
-  String? alias;
   int? price;
   int? updated;
   String? updatedDate;
 
-  Subjects(
-      {required this.id,
-      required this.name,
-      required this.alias,
-      required this.price,
-      required this.updated,
-      required this.updatedDate});
+  Subjects({this.id, this.name, this.price, this.updated, this.updatedDate});
 
   Subjects.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
-    alias = json['alias'];
     price = json['price'];
     updated = json['updated'];
     updatedDate = json['updated_date'];
@@ -61,7 +58,6 @@ class Subjects {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['name'] = name;
-    data['alias'] = alias;
     data['price'] = price;
     data['updated'] = updated;
     data['updated_date'] = updatedDate;
@@ -81,19 +77,21 @@ class Tests {
   int? status;
   String? statusText;
   int? questionsCount;
+  int? percent;
 
   Tests(
-      {required this.id,
-      required this.created,
-      required this.createdDate,
-      required this.subjectId,
-      required this.subjectName,
-      required this.type,
-      required this.typeText,
-      required this.title,
-      required this.status,
-      required this.statusText,
-      required this.questionsCount});
+      {this.id,
+      this.created,
+      this.createdDate,
+      this.subjectId,
+      this.subjectName,
+      this.type,
+      this.typeText,
+      this.title,
+      this.status,
+      this.statusText,
+      this.questionsCount,
+      this.percent});
 
   Tests.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -107,6 +105,7 @@ class Tests {
     status = json['status'];
     statusText = json['status_text'];
     questionsCount = json['questions_count'];
+    percent = json['percent'];
   }
 
   Map<String, dynamic> toJson() {
@@ -122,6 +121,44 @@ class Tests {
     data['status'] = status;
     data['status_text'] = statusText;
     data['questions_count'] = questionsCount;
+    data['percent'] = percent;
+    return data;
+  }
+}
+
+class Books {
+  int? id;
+  String? title;
+  int? testListId;
+  int? subjectId;
+  String? subjectText;
+  String? files;
+
+  Books(
+      {this.id,
+      this.title,
+      this.testListId,
+      this.subjectId,
+      this.subjectText,
+      this.files});
+
+  Books.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    title = json['title'];
+    testListId = json['test_list_id'];
+    subjectId = json['subject_id'];
+    subjectText = json['subject_text'];
+    files = json['files'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['title'] = title;
+    data['test_list_id'] = testListId;
+    data['subject_id'] = subjectId;
+    data['subject_text'] = subjectText;
+    data['files'] = files;
     return data;
   }
 }

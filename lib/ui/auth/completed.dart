@@ -81,7 +81,11 @@ class _CompletedTestState extends State<CompletedTest> {
               ],
             );
           } else {
-            return const CircularProgressIndicator(color: AppColors.mainColor);
+            return const Center(
+              child: CircularProgressIndicator(
+                color: AppColors.mainColor,
+              ),
+            );
           }
         },
       )),

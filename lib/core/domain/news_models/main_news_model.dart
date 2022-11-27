@@ -1,39 +1,35 @@
-import 'package:equatable/equatable.dart';
-
-class MainNewsModel extends Equatable {
-  int id;
+class MainNewsModel {
+  int? id;
   int? created;
   String? createdText;
   String? title;
   String? short;
   String? content;
-  int? alias;
   String? image;
   String? imageLink;
+  String? video;
 
   MainNewsModel(
-      {required this.id,
+      {this.id,
       this.created,
       this.createdText,
       this.title,
       this.short,
       this.content,
-      this.alias,
       this.image,
-      this.imageLink});
+      this.imageLink,
+      this.video});
 
-  factory MainNewsModel.fromJson(Map<String, dynamic> json) {
-    return MainNewsModel(
-      id: json['id'] as int,
-      created: json['created'],
-      createdText: json['created_text'],
-      title: json['title'],
-      short: json['short'],
-      content: json['content'],
-      alias: json['alias'],
-      image: json['image'],
-      imageLink: json['image_link'],
-    );
+  MainNewsModel.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    created = json['created'];
+    createdText = json['created_text'];
+    title = json['title'];
+    short = json['short'];
+    content = json['content'];
+    image = json['image'];
+    imageLink = json['image_link'];
+    video = json['video'];
   }
 
   Map<String, dynamic> toJson() {
@@ -44,22 +40,9 @@ class MainNewsModel extends Equatable {
     data['title'] = title;
     data['short'] = short;
     data['content'] = content;
-    data['alias'] = alias;
     data['image'] = image;
     data['image_link'] = imageLink;
+    data['video'] = video;
     return data;
   }
-
-  @override
-  List<Object?> get props => [
-        id,
-        created,
-        createdText,
-        title,
-        short,
-        content,
-        alias,
-        image,
-        imageLink
-      ];
 }

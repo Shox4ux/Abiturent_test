@@ -5,16 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:test_app/core/domain/user_model/user_model.dart';
+import 'package:test_app/core/domain/user_model/rating_model.dart';
 import 'package:test_app/core/helper/repos/user_repo.dart';
 import 'package:test_app/res/components/custom_drawer.dart';
-
 import '../../../core/block/drawer_cubit/drawer_cubit.dart';
-import '../../../core/block/user_block/user_cubit_cubit.dart';
 import '../../../res/constants.dart';
 import '../../../res/components/custom_appbar.dart';
 
-List<UserInfo> list = [];
+RatingModel? ratingModel;
 
 class RatingScreen extends StatefulWidget {
   const RatingScreen({Key? key}) : super(key: key);
@@ -26,15 +24,17 @@ class RatingScreen extends StatefulWidget {
 class _RatingScreenState extends State<RatingScreen> {
   final _repo = UserRepo();
 
-  Future<List<UserInfo>> callUserRating(int subId) async {
-    list.clear();
+  @override
+  void initState() {
+    super.initState();
+  }
 
+  Future<RatingModel> callUserRating(int subId) async {
     try {
       final response = await _repo.getUsersRatings(subId);
-      final rowData = response.data as List;
-      final rowList = rowData.map((e) => UserInfo.fromJson(e)).toList();
-      list.addAll(rowList);
-      return list;
+      final rowData = RatingModel.fromJson(response.data);
+      ratingModel = rowData;
+      return ratingModel!;
     } on SocketException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -42,7 +42,7 @@ class _RatingScreenState extends State<RatingScreen> {
         ),
       );
     }
-    return list;
+    return ratingModel!;
   }
 
   @override
@@ -59,62 +59,80 @@ class _RatingScreenState extends State<RatingScreen> {
           CustomAppBar(scaffKey: scaffKey),
           Expanded(
             child: Container(
-                width: double.maxFinite,
-                padding: EdgeInsets.only(top: 20.h, left: 20.w, right: 20.w),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(28.r),
-                    topRight: Radius.circular(28.r),
-                  ),
+              width: double.maxFinite,
+              padding: EdgeInsets.only(top: 20.h, left: 20.w, right: 20.w),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(28.r),
+                  topRight: Radius.circular(28.r),
                 ),
-                child: BlocBuilder<DrawerCubit, DrawerState>(
-                  builder: (context, state) {
-                    if (state is DrawerSubId) {
-                      return FutureBuilder(
-                        future: callUserRating(state.subId),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<dynamic> snapshot) {
-                          if (!snapshot.hasData) {
-                            return const Center(
-                                child: Text("Iltimos kuting..."));
-                          }
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Umumiy reyting",
-                                style: AppStyles.introButtonText.copyWith(
-                                  color: Colors.black,
+              ),
+              child: BlocBuilder<DrawerCubit, DrawerState>(
+                builder: (context, state) {
+                  if (state is DrawerSubId) {
+                    return FutureBuilder(
+                      future: callUserRating(state.subId),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<dynamic> snapshot) {
+                        if (!snapshot.hasData) {
+                          return const Center(child: Text("Iltimos kuting..."));
+                        }
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Umumiy reyting",
+                              style: AppStyles.introButtonText.copyWith(
+                                color: Colors.black,
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                Image.asset(
+                                  AppIcons.medlFilled,
+                                  width: 24.w,
+                                  height: 24.h,
                                 ),
-                              ),
-                              Gap(18.h),
-                              Expanded(
-                                child: ListView.builder(
-                                    padding: const EdgeInsets.only(bottom: 20),
-                                    itemCount: list.length,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return ratingItem(
-                                          "${index + 1}", list[index]);
-                                    }),
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    }
-
-                    return const Center(child: Text("Bu oyna hozircha bo'sh"));
-                  },
-                )),
+                                Gap(10.h),
+                                Text(
+                                  "${ratingModel!.subjectText} fani",
+                                  style: AppStyles.subtitleTextStyle.copyWith(
+                                    color: Colors.black,
+                                    fontSize: 20.sp,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Gap(18.h),
+                            Expanded(
+                              child: ListView.builder(
+                                  padding: const EdgeInsets.only(bottom: 20),
+                                  itemCount: ratingModel!.rating!.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return ratingItem("${index + 1}",
+                                        ratingModel!.rating![index]);
+                                  }),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
+                  return const Center(
+                    child: Text("Fanni tanlang"),
+                  );
+                },
+              ),
+            ),
           ),
         ]),
       ),
     );
   }
 
-  Widget ratingItem(String index, UserInfo data) {
+  Widget ratingItem(String index, Rating data) {
     return Container(
       margin: EdgeInsets.only(bottom: 10.h),
       child: Row(
@@ -136,13 +154,13 @@ class _RatingScreenState extends State<RatingScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "# ${data.id.toString()}",
+                        "# ${data.userId}",
                         style: AppStyles.subtitleTextStyle.copyWith(
                           fontSize: 13.sp,
                         ),
                       ),
                       Text(
-                        data.fullname!,
+                        data.userFullname!,
                         maxLines: 2,
                         style: AppStyles.subtitleTextStyle
                             .copyWith(color: AppColors.smsVerColor),

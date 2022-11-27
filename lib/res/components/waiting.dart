@@ -13,12 +13,15 @@ class WaitingScreen extends StatefulWidget {
   const WaitingScreen({
     Key? key,
     required this.status,
-    required this.errorText,
+    required this.extraText,
+    required this.alertText,
     required this.buttonText,
   }) : super(key: key);
 
   final String status;
-  final String errorText;
+  final String alertText;
+  final String extraText;
+
   final String buttonText;
 
   @override
@@ -28,59 +31,117 @@ class WaitingScreen extends StatefulWidget {
 class _WaitingScreenState extends State<WaitingScreen> {
   @override
   Widget build(BuildContext context) {
-    if (widget.status == WarningValues.subFirstDone) {
-      return Scaffold(
-        body: SafeArea(
-          child: whenPreview(context),
-        ),
-      );
-    }
-
-    if (widget.status == WarningValues.hisobError) {
-      return Scaffold(
-        body: SafeArea(
-          child: whenError(
-              context, widget.errorText, widget.buttonText, widget.status),
-        ),
-      );
-    }
-    if (widget.status == WarningValues.obunaError) {
-      return Scaffold(
-        body: SafeArea(
-          child: whenError(
-              context, widget.errorText, widget.buttonText, widget.status),
-        ),
-      );
-    }
-
-    if (widget.status == WarningValues.subSecondDone) {
-      return Scaffold(
-        body: SafeArea(
-          child: whenScriptEnd(context),
-        ),
-      );
-    }
-    if (widget.status == WarningValues.fillBudget) {
-      return Scaffold(
-        body: SafeArea(
-          child: whenWaiting(context),
-        ),
-      );
-    }
-    if (widget.status == WarningValues.smsDone) {
-      return Scaffold(
-        body: SafeArea(
-          child: whenReceived(context),
-        ),
-      );
-    }
-
-    return const Scaffold(
-      body: Center(
-        child: Text("Hozircha bu qism ishlamaydi"),
-      ),
+    return Scaffold(
+      body: SafeArea(
+          child: checkStatus(context, widget.status, widget.alertText,
+              widget.buttonText, widget.extraText)),
     );
   }
+}
+
+Widget checkStatus(
+  BuildContext context,
+  String status,
+  String alertText,
+  String buttonText,
+  String extraText,
+) {
+  if (status == WarningValues.subFirstDone) {
+    return whenPreview(context);
+  }
+
+  if (status == WarningValues.paymentDone) {
+    return whenPaymentDone(context, alertText, buttonText, extraText);
+  }
+
+  if (status == WarningValues.hisobError) {
+    return whenError(context, alertText, buttonText, status);
+  }
+  if (status == WarningValues.obunaError) {
+    return whenError(context, alertText, buttonText, status);
+  }
+
+  if (status == WarningValues.subSecondDone) {
+    return whenScriptEnd(context);
+  }
+  if (status == WarningValues.fillBudget) {
+    return whenWaiting(context);
+  }
+  if (status == WarningValues.smsDone) {
+    return whenReceived(context);
+  }
+
+  // return const Scaffold(
+  //   body: Center(
+  //     child: Text("Hozircha bu qism ishlamaydi"),
+  //   ),
+  // );
+
+  return whenPaymentDone(context, alertText, buttonText, extraText);
+}
+
+Widget whenPaymentDone(BuildContext context, String alertText,
+    String buttonText, String extraText) {
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Gap(66.h),
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 32.w),
+            width: 312.w,
+            height: 312.h,
+            child: Image.asset(
+              AppIcons.bi,
+              color: AppColors.greenBackground,
+              scale: 3,
+            ),
+          ),
+          Text(
+            alertText,
+            style: AppStyles.introButtonText.copyWith(
+              color: Colors.black,
+              fontSize: 24.sp,
+            ),
+          ),
+          Gap(10.h),
+          RichText(
+            text: TextSpan(
+              text: numberFormatter(int.parse(extraText)),
+              style: AppStyles.introButtonText
+                  .copyWith(color: Colors.black, fontSize: 48.sp),
+              children: [
+                TextSpan(
+                  text: " UZS",
+                  style: AppStyles.introButtonText
+                      .copyWith(color: Colors.black, fontSize: 36.sp),
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
+      Padding(
+        padding: EdgeInsets.only(bottom: 24.h),
+        child: ElevatedButton(
+          style: AppStyles.introUpButton,
+          onPressed: () {
+            Navigator.of(context).pushNamedAndRemoveUntil(
+              RouteNames.main,
+              (Route<dynamic> route) => false,
+            );
+          },
+          child: Text(
+            "Bosh sahifa",
+            style: AppStyles.introButtonText
+                .copyWith(color: const Color(0xffFCFCFC)),
+          ),
+        ),
+      ),
+    ],
+  );
 }
 
 Widget whenPreview(BuildContext context) {
@@ -92,8 +153,9 @@ Widget whenPreview(BuildContext context) {
           MaterialPageRoute<void>(
               builder: (BuildContext context) => WaitingScreen(
                     status: WarningValues.hisobError,
-                    errorText: state.error,
+                    alertText: state.error,
                     buttonText: "Hisobni to'ldirish",
+                    extraText: '',
                   )),
         );
       }
@@ -103,7 +165,8 @@ Widget whenPreview(BuildContext context) {
           MaterialPageRoute<void>(
               builder: (BuildContext context) => const WaitingScreen(
                     status: WarningValues.subSecondDone,
-                    errorText: "",
+                    extraText: "",
+                    alertText: "",
                     buttonText: "",
                   )),
           (Route<dynamic> route) => false,
@@ -489,32 +552,37 @@ Widget whenError(
           ),
         ],
       ),
-      ElevatedButton(
-        style: AppStyles.introUpButton,
-        onPressed: () {
-          if (status == WarningValues.hisobError) {
-            Navigator.of(context).pushNamed(
-              RouteNames.addCard,
-            );
-            return;
-          }
+      Padding(
+        padding: EdgeInsets.only(bottom: 24.h),
+        child: ElevatedButton(
+          style: AppStyles.introUpButton,
+          onPressed: () {
+            if (status == WarningValues.hisobError) {
+              Navigator.of(context).pushNamed(
+                RouteNames.payme,
+              );
+              return;
+            }
 
-          if (status == WarningValues.hisobError) {
-            Navigator.of(context).pushNamed(
-              RouteNames.subscripts,
-            );
-            return;
-          }
+            if (status == WarningValues.obunaError) {
+              context.read<SubscriptionCubit>().getScripts();
 
-          Navigator.of(context).pushNamedAndRemoveUntil(
-            RouteNames.signin,
-            (Route<dynamic> route) => false,
-          );
-        },
-        child: Text(
-          buttonText,
-          style: AppStyles.introButtonText
-              .copyWith(color: const Color(0xffFCFCFC)),
+              Navigator.of(context).pushNamed(
+                RouteNames.subscripts,
+              );
+              return;
+            }
+
+            Navigator.of(context).pushNamedAndRemoveUntil(
+              RouteNames.signin,
+              (Route<dynamic> route) => false,
+            );
+          },
+          child: Text(
+            buttonText,
+            style: AppStyles.introButtonText
+                .copyWith(color: const Color(0xffFCFCFC)),
+          ),
         ),
       ),
     ],

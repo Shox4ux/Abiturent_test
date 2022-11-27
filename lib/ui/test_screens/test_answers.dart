@@ -44,19 +44,16 @@ class TestAnswerScreenState extends State<TestAnswerScreen> {
         child: SafeArea(
             child: Column(
           children: [
-            Padding(
-              padding: EdgeInsets.only(left: 20.w, bottom: 17.h),
-              child: CustomSimpleAppBar(
-                isSimple: false,
-                titleText:
-                    "${widget.subName} fani: To’plam #${widget.testNumber}",
-                routeText: RouteNames.main,
-                style: AppStyles.subtitleTextStyle.copyWith(
-                  fontSize: 20.sp,
-                  color: Colors.white,
-                ),
-                iconColor: Colors.white,
+            CustomSimpleAppBar(
+              isSimple: false,
+              titleText:
+                  "${widget.subName} fani: To’plam #${widget.testNumber}",
+              routeText: RouteNames.main,
+              style: AppStyles.subtitleTextStyle.copyWith(
+                fontSize: 20.sp,
+                color: Colors.white,
               ),
+              iconColor: Colors.white,
             ),
             Expanded(
               child: Container(
@@ -74,7 +71,7 @@ class TestAnswerScreenState extends State<TestAnswerScreen> {
                     if (state is OnTestCompleted) {
                       return Column(
                         children: [
-                          Gap(28.h),
+                          Gap(20.h),
                           Text(
                             "Tugatilgan sana: ${widget.complitionTime}",
                             style: AppStyles.subtitleTextStyle.copyWith(

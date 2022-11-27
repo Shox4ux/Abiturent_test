@@ -7,18 +7,14 @@ import 'package:test_app/core/block/news_bloc/cubit/news_cubit.dart';
 import 'package:test_app/core/block/payment_cubit/payment_cubit.dart';
 import 'package:test_app/core/block/test_block/test_cubit.dart';
 import 'package:test_app/res/navigation/main_navigation.dart';
-import 'package:test_app/ui/bottom_navigation/profile/profile_sections/payme/add_card_screen.dart';
-import 'package:test_app/ui/bottom_navigation/profile/profile_sections/payme/payme_screen.dart';
-import 'package:test_app/ui/bottom_navigation/profile/profile_sections/refactor/refactor.dart';
-import 'package:test_app/ui/intro/intro.dart';
 import 'package:test_app/ui/splash/splash.dart';
-import 'package:test_app/ui/test_screens/books.dart';
+import 'core/block/book_cubit/book_cubit.dart';
 import 'core/block/drawer_cubit/drawer_cubit.dart';
 import 'core/block/subjecy_bloc/subject_cubit.dart';
 import 'core/block/subscription_block/subscription_cubit.dart';
 import 'core/block/user_block/user_cubit_cubit.dart';
 
-void main() async {
+void main() {
   runApp(const MyApp());
 }
 
@@ -35,6 +31,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => NewsCubit(),
+        ),
+        BlocProvider(
+          create: (context) => BookCubit(),
         ),
         BlocProvider(
           create: (context) => SubjectCubit(),
@@ -66,7 +65,7 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             primarySwatch: Colors.blue,
           ),
-          home: RefactorScreen(),
+          home: const SplashScreen(),
           routes: navigation.routes,
           onGenerateRoute: navigation.onGenerateRoute,
         ),

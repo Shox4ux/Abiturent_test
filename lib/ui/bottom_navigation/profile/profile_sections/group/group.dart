@@ -6,6 +6,7 @@ import 'package:test_app/core/block/group_block/group_cubit.dart';
 import 'package:test_app/core/domain/group_model/group_item.dart';
 import 'package:test_app/core/domain/group_model/group_model.dart';
 import 'package:test_app/res/components/custom_simple_appbar.dart';
+import 'package:test_app/res/functions/show_toast.dart';
 import 'package:test_app/res/navigation/main_navigation.dart';
 
 import '../../../../../core/domain/subject_models/subject_model.dart';
@@ -68,11 +69,16 @@ class _GroupScreenState extends State<GroupScreen> {
           );
         }
         if (state is OnError) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text(state.error)));
+          showToast(state.error);
         }
 
         if (state is OnGroupTapped) {
+          Navigator.of(context).pushNamed(
+            RouteNames.addMembers,
+          );
+        }
+
+        if (state is OnGroupAdded) {
           Navigator.of(context).pushNamed(
             RouteNames.addMembers,
           );
@@ -95,7 +101,6 @@ class _GroupScreenState extends State<GroupScreen> {
                 ),
               ),
             ),
-            Gap(17.h),
             Expanded(
               child: Container(
                   width: double.maxFinite,

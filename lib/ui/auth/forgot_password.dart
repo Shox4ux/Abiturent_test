@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:test_app/res/functions/show_toast.dart';
 import 'package:test_app/ui/auth/sms_verification.dart';
 import 'package:test_app/res/navigation/main_navigation.dart';
 
@@ -57,9 +58,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   );
                 }
                 if (state is AuthDenied) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text(state.error),
-                  ));
+                  showToast(state.error);
                 }
               },
               child: Column(

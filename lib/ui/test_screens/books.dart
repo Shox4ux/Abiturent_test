@@ -1,15 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:test_app/res/components/custom_simple_appbar.dart';
 import 'package:test_app/res/constants.dart';
+import 'package:test_app/res/functions/show_toast.dart';
+import 'package:test_app/res/painter.dart';
+
+import '../../core/block/book_cubit/book_cubit.dart';
+import '../../core/domain/test_model/test_model.dart';
 
 class BookScreen extends StatefulWidget {
-  const BookScreen({super.key});
+  const BookScreen({super.key, required this.bookList});
+
+  final List<Books> bookList;
 
   @override
   State<BookScreen> createState() => _BookScreenState();
 }
+
+double progress = 10;
 
 class _BookScreenState extends State<BookScreen> {
   @override
@@ -46,20 +56,21 @@ class _BookScreenState extends State<BookScreen> {
                   children: [
                     Expanded(
                       child: ListView.builder(
-                        itemCount: 4,
-                        itemBuilder: (context, index) => bookItem(),
+                        itemCount: widget.bookList.length,
+                        itemBuilder: (context, index) =>
+                            bookItem(widget.bookList[index]),
                       ),
                     ),
-                    ElevatedButton(
-                      style: AppStyles.introUpButton,
-                      onPressed: () {},
-                      child: Text(
-                        "Testlarga o'tish",
-                        style: AppStyles.introButtonText
-                            .copyWith(color: const Color(0xffFCFCFC)),
-                      ),
-                    ),
-                    Gap(24.h),
+                    // ElevatedButton(
+                    //   style: AppStyles.introUpButton,
+                    //   onPressed: () {},
+                    //   child: Text(
+                    //     "Testlarga o'tish",
+                    //     style: AppStyles.introButtonText
+                    //         .copyWith(color: const Color(0xffFCFCFC)),
+                    //   ),
+                    // ),
+                    // Gap(24.h),
                   ],
                 ),
               ),
@@ -70,21 +81,56 @@ class _BookScreenState extends State<BookScreen> {
     );
   }
 
-  Widget bookItem() {
+  Widget bookItem(Books book) {
     return Container(
       alignment: Alignment.center,
       height: 70.h,
       width: double.maxFinite,
       child: Row(
         children: [
-          Image.asset(
-            AppIcons.bd,
-            scale: 3.5,
+          BlocConsumer<BookCubit, BookState>(
+            listener: (context, state) {
+              if (state is OnError) {
+                showToast(state.error);
+              }
+              if (state is OnDownloadCompleted) {
+                showToast("Kiton yuklab olindi");
+              }
+              if (state is OnProgress) {
+                setState(() {
+                  progress = state.progress;
+                });
+              }
+            },
+            builder: (context, state) {
+              if (state is OnProgress) {
+                // return Center(
+                //   child: Text("${state.progress.floor()}%"),
+                // );
+
+                return CircularProgressIndicator(
+                  valueColor: const AlwaysStoppedAnimation<Color>(
+                    AppColors.mainColor,
+                  ),
+                  value: state.progress,
+                );
+              }
+              return GestureDetector(
+                onTap: () {
+                  context
+                      .read<BookCubit>()
+                      .downloadFile(book.files!, book.title!);
+                },
+                child: Image.asset(
+                  AppIcons.bd,
+                  scale: 3.5,
+                ),
+              );
+            },
           ),
           Gap(9.w),
           Text(
-            '''Kulolchilik charxida ishlangan sopol 
-idishlar to’plami kitobi''',
+            book.title!,
             style: AppStyles.subtitleTextStyle.copyWith(
               color: Colors.black,
               fontSize: 13.sp,
