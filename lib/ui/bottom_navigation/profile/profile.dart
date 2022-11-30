@@ -112,9 +112,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 CircleAvatar(
-                                  radius: 48.w,
-                                  foregroundImage: const AssetImage(
-                                    AppIcons.man,
+                                  backgroundColor: AppColors.mainColor,
+                                  radius: 50.w,
+                                  child: Icon(
+                                    Icons.person,
+                                    size: 64.h,
+                                    color: Colors.white,
                                   ),
                                 ),
                                 Gap(10.w),

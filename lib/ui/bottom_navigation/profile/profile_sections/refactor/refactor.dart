@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:test_app/core/block/user_block/user_cubit_cubit.dart';
+import 'package:test_app/core/block/user_block/user_cubit.dart';
 import 'package:test_app/core/domain/user_model/user_model.dart';
 import 'package:test_app/res/components/custom_simple_appbar.dart';
 import 'package:test_app/res/constants.dart';
@@ -93,9 +93,11 @@ class _RefactorScreenState extends State<RefactorScreen> {
                             _pickedFile == null
                                 ? CircleAvatar(
                                     radius: 80.w,
-                                    foregroundImage: const AssetImage(
-                                      AppIcons.man,
-                                    ))
+                                    child: Icon(
+                                      Icons.person,
+                                      size: 128.h,
+                                    ),
+                                  )
                                 : CircleAvatar(
                                     radius: 80.w,
                                     foregroundImage: FileImage(_pickedFile!)),
@@ -161,16 +163,15 @@ class _RefactorScreenState extends State<RefactorScreen> {
                                 ),
                               );
                             }
-                            return (_changedName.isNotEmpty)
+                            return (_changedName.isNotEmpty ||
+                                    _pickedFile != null)
                                 ? Padding(
                                     padding: EdgeInsets.only(bottom: 24.h),
                                     child: ElevatedButton(
                                       style: AppStyles.introUpButton,
                                       onPressed: () {
-                                        //for now avatar place is empty
-                                        context
-                                            .read<UserCubit>()
-                                            .updateProfile(_changedName, "");
+                                        context.read<UserCubit>().updateProfile(
+                                            _changedName, _pickedFile!);
                                       },
                                       child: Text(
                                         "Saqlash",

@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:test_app/core/block/auth_block/auth_cubit.dart';
 import 'package:test_app/core/block/test_block/test_cubit.dart';
-import 'package:test_app/core/block/user_block/user_cubit_cubit.dart';
+import 'package:test_app/core/block/user_block/user_cubit.dart';
 import 'package:test_app/core/helper/database/app_storage.dart';
 import 'package:test_app/res/constants.dart';
 import 'package:test_app/res/navigation/main_navigation.dart';

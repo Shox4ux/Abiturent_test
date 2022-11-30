@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:test_app/res/constants.dart';
 
@@ -30,15 +32,11 @@ class UserRepo {
   }
 
   Future<Response> updateProfil(
-    String fullName,
-    int userId,
-    String avatar,
-    String authKey,
-  ) async {
+      String fullName, int userId, File avatar, String authKey) async {
     var formData = FormData.fromMap({
       "fullname": fullName,
       "user_id": userId,
-      "avatar": avatar,
+      "avatar": await MultipartFile.fromFile(avatar.path),
       "auth_key": authKey,
     });
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:test_app/core/block/auth_block/auth_cubit.dart';
 import 'package:test_app/core/block/group_block/group_cubit.dart';
 import 'package:test_app/core/block/news_bloc/cubit/news_cubit.dart';
@@ -12,9 +13,10 @@ import 'core/block/book_cubit/book_cubit.dart';
 import 'core/block/drawer_cubit/drawer_cubit.dart';
 import 'core/block/subjecy_bloc/subject_cubit.dart';
 import 'core/block/subscription_block/subscription_cubit.dart';
-import 'core/block/user_block/user_cubit_cubit.dart';
+import 'core/block/user_block/user_cubit.dart';
 
-void main() {
+void main() async {
+  await Hive.initFlutter();
   runApp(const MyApp());
 }
 

@@ -10,7 +10,7 @@ import 'package:test_app/res/components/custom_dot.dart';
 import 'package:test_app/res/components/custom_drawer.dart';
 
 import '../../../core/block/test_block/test_cubit.dart';
-import '../../../core/block/user_block/user_cubit_cubit.dart';
+import '../../../core/block/user_block/user_cubit.dart';
 import '../../../core/domain/test_model/test_result_model.dart';
 import '../../../res/constants.dart';
 

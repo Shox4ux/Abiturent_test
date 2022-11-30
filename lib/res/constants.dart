@@ -145,6 +145,8 @@ class AppIcons {
   static const String book = "assets/book.png";
 
   static const String bd = "assets/bd.png";
+  static const String rdb = "assets/rdb.png";
+
   static const String y = "assets/y.png";
 
   static const String man = "assets/man.png";

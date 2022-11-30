@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
-import 'package:test_app/core/block/user_block/user_cubit_cubit.dart';
+import 'package:test_app/core/block/user_block/user_cubit.dart';
 import 'package:test_app/core/domain/user_model/user_model.dart';
 import 'package:test_app/core/helper/database/app_storage.dart';
 
@@ -55,7 +55,8 @@ class AuthCubit extends Cubit<AuthState> {
       );
     } on DioError catch (e) {
       print(e.response);
-      emit(AuthDenied(error: e.response?.data["message"] ?? ""));
+      emit(
+          AuthDenied(error: e.response?.data["message"] ?? "Tizimda nosozlik"));
     } on SocketException catch (e) {
       emit(const AuthDenied(error: "Tarmoqda nosozlik"));
     } catch (e) {
@@ -83,14 +84,15 @@ class AuthCubit extends Cubit<AuthState> {
       emit(UserActive(userInfo: _userData!));
 
       //this is for appbar
-      await _cubit.getUserDataForAppBar(
-        _userData!.rating.toString(),
-        _userData!.ratingMonth.toString(),
-      );
+      // await _cubit.getUserDataForAppBar(
+      //   _userData!.rating.toString(),
+      //   _userData!.ratingMonth.toString(),
+      // );
       //
     } on DioError catch (e) {
-      emit(AuthDenied(error: e.response?.data["message"] ?? ""));
-    } on SocketException catch (e) {
+      emit(
+          AuthDenied(error: e.response?.data["message"] ?? "Tizimda nosozlik"));
+    } on SocketException {
       emit(const AuthDenied(error: "Tarmoqda nosozlik"));
     } catch (e) {
       emit(const AuthDenied(error: "Tizimda nosozlik"));
@@ -110,7 +112,8 @@ class AuthCubit extends Cubit<AuthState> {
       await _storage.saveUserInfo(jsonEncode(response.data["user"]));
       emit(AuthGranted());
     } on DioError catch (e) {
-      emit(AuthDenied(error: e.response?.data["message"] ?? ""));
+      emit(
+          AuthDenied(error: e.response?.data["message"] ?? "Tizimda nosozlik"));
     } on SocketException catch (e) {
       emit(const AuthDenied(error: "Tarmoqda nosozlik"));
     } catch (e) {

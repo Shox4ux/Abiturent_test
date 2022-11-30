@@ -5,7 +5,6 @@ import 'package:gap/gap.dart';
 import 'package:test_app/res/components/custom_simple_appbar.dart';
 import 'package:test_app/res/constants.dart';
 import 'package:test_app/res/functions/show_toast.dart';
-import 'package:test_app/res/painter.dart';
 
 import '../../core/block/book_cubit/book_cubit.dart';
 import '../../core/domain/test_model/test_model.dart';
@@ -20,6 +19,8 @@ class BookScreen extends StatefulWidget {
 }
 
 double progress = 10;
+
+bool isLoaded = false;
 
 class _BookScreenState extends State<BookScreen> {
   @override
@@ -61,16 +62,6 @@ class _BookScreenState extends State<BookScreen> {
                             bookItem(widget.bookList[index]),
                       ),
                     ),
-                    // ElevatedButton(
-                    //   style: AppStyles.introUpButton,
-                    //   onPressed: () {},
-                    //   child: Text(
-                    //     "Testlarga o'tish",
-                    //     style: AppStyles.introButtonText
-                    //         .copyWith(color: const Color(0xffFCFCFC)),
-                    //   ),
-                    // ),
-                    // Gap(24.h),
                   ],
                 ),
               ),
@@ -116,15 +107,25 @@ class _BookScreenState extends State<BookScreen> {
                 );
               }
               return GestureDetector(
-                onTap: () {
+                onTap: () async {
                   context
                       .read<BookCubit>()
-                      .downloadFile(book.files!, book.title!);
+                      .downloadFile(book.files!, book.title!, book.id!);
+
+                  // isLoaded = await context
+                  //     .read<BookCubit>()
+                  //     .isBookDownloaded(book.id!);
+                  // setState(() {});
                 },
-                child: Image.asset(
-                  AppIcons.bd,
-                  scale: 3.5,
-                ),
+                child: isLoaded
+                    ? Image.asset(
+                        AppIcons.bd,
+                        scale: 3.5,
+                      )
+                    : Image.asset(
+                        AppIcons.rdb,
+                        scale: 3.5,
+                      ),
               );
             },
           ),
