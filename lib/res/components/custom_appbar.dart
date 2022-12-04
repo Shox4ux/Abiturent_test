@@ -9,6 +9,7 @@ import 'package:test_app/core/domain/user_model/common_rating.dart';
 import 'package:test_app/res/navigation/main_navigation.dart';
 import '../../core/block/drawer_cubit/drawer_cubit.dart';
 import '../../core/block/group_block/group_cubit.dart';
+import '../../core/block/index_cubit/index_cubit.dart';
 import '../../core/helper/database/app_storage.dart';
 import '../../core/helper/repos/user_repo.dart';
 import '../constants.dart';

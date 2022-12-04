@@ -360,7 +360,7 @@ Widget whenScriptEnd(BuildContext context) {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20.w),
                   child: Text(
-                      "${state.madeScript.subjectText} fani obuna muvaffaqiyatli bo’ldi",
+                      "${state.madeScript.subjectText} faniga obuna bo'lish muvaffaqiyatli amalga oshirildi",
                       overflow: TextOverflow.visible,
                       maxLines: 2,
                       textAlign: TextAlign.center,
@@ -457,7 +457,7 @@ Widget whenReceived(BuildContext context) {
             ),
           ),
           Gap(18.h),
-          Text("SMS-kod yuborildi",
+          Text("SMS-kod tasdiqlandi",
               style: AppStyles.smsVerBigTextStyle.copyWith(
                 fontSize: 24.sp,
                 fontWeight: FontWeight.w600,

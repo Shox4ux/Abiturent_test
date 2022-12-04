@@ -85,7 +85,7 @@ class _BookScreenState extends State<BookScreen> {
                 showToast(state.error);
               }
               if (state is OnDownloadCompleted) {
-                showToast("Kiton yuklab olindi");
+                showToast("Kitob yuklab olindi");
               }
               if (state is OnProgress) {
                 setState(() {

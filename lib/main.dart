@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:test_app/core/block/auth_block/auth_cubit.dart';
 import 'package:test_app/core/block/group_block/group_cubit.dart';
+import 'package:test_app/core/block/index_cubit/index_cubit.dart';
 import 'package:test_app/core/block/news_bloc/cubit/news_cubit.dart';
 import 'package:test_app/core/block/payment_cubit/payment_cubit.dart';
 import 'package:test_app/core/block/test_block/test_cubit.dart';
@@ -33,6 +34,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => NewsCubit(),
+        ),
+        BlocProvider(
+          create: (context) => IndexCubit(),
         ),
         BlocProvider(
           create: (context) => BookCubit(),

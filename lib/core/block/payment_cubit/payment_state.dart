@@ -9,7 +9,41 @@ abstract class PaymentState extends Equatable {
 
 class PaymentInitial extends PaymentState {}
 
+class OnCardsEmpty extends PaymentState {}
+
 class OnCardProgress extends PaymentState {}
+
+class OnCardSelected extends PaymentState {
+  final CardModel model;
+
+  const OnCardSelected(this.model);
+  @override
+  List<Object> get props => [model];
+}
+
+class OnCardDeleted extends PaymentState {
+  final String message;
+  const OnCardDeleted(this.message);
+  @override
+  List<Object> get props => [message];
+}
+
+class OnCardAdded extends PaymentState {
+  final CardModel model;
+
+  const OnCardAdded(this.model);
+
+  @override
+  List<Object> get props => [model];
+}
+
+class OnCardsReceived extends PaymentState {
+  final List<CardModel> models;
+
+  const OnCardsReceived(this.models);
+  @override
+  List<Object> get props => [models];
+}
 
 class OnMadePayment extends PaymentState {
   final PaymentResponse paymentResponse;

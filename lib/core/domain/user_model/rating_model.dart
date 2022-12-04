@@ -30,6 +30,7 @@ class RatingModel {
 class Rating {
   int? userId;
   String? userFullname;
+  String? userTelegram;
   int? subjectId;
   String? subjectText;
   int? rating;
@@ -39,6 +40,7 @@ class Rating {
   Rating(
       {this.userId,
       this.userFullname,
+      this.userTelegram,
       this.subjectId,
       this.subjectText,
       this.rating,
@@ -48,6 +50,7 @@ class Rating {
   Rating.fromJson(Map<String, dynamic> json) {
     userId = json['user_id'];
     userFullname = json['user_fullname'];
+    userTelegram = json['user_telegram'];
     subjectId = json['subject_id'];
     subjectText = json['subject_text'];
     rating = json['rating'];
@@ -59,6 +62,7 @@ class Rating {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['user_id'] = userId;
     data['user_fullname'] = userFullname;
+    data['user_telegram'] = userTelegram;
     data['subject_id'] = subjectId;
     data['subject_text'] = subjectText;
     data['rating'] = rating;

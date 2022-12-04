@@ -66,7 +66,22 @@ class AppStorage {
     prefs.remove(AppStorageConstants.tokenKey);
   }
 
-//all about login status
+  Future<void> savePaymeConfirmed(bool isConfirmed) async {
+    var prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(AppStorageConstants.paymeKey, isConfirmed);
+  }
+
+  Future<bool> isPaymeConfirmed() async {
+    var prefs = await SharedPreferences.getInstance();
+
+    final val = prefs.getBool(AppStorageConstants.paymeKey);
+
+    if (val == null) {
+      return false;
+    }
+    return val;
+  }
+
   Future<bool> isLoggedIn() async {
     final token = await getToken();
     return token != null;
@@ -75,5 +90,20 @@ class AppStorage {
   Future<void> logOut() async {
     var prefs = await SharedPreferences.getInstance();
     await prefs.clear();
+  }
+
+  Future<void> saveDrawerIndex(int index) async {
+    var prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(AppStorageConstants.drawerIndexKey, index);
+  }
+
+  Future<int?> getDrawerIndex() async {
+    var prefs = await SharedPreferences.getInstance();
+    return prefs.getInt(AppStorageConstants.drawerIndexKey);
+  }
+
+  Future<void> clearDrawerIndex() async {
+    var prefs = await SharedPreferences.getInstance();
+    prefs.remove(AppStorageConstants.drawerIndexKey);
   }
 }

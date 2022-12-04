@@ -31,13 +31,25 @@ class UserRepo {
     return _dio.get(ApiValues.getUserProfile, queryParameters: params);
   }
 
-  Future<Response> updateProfil(
-      String fullName, int userId, File avatar, String authKey) async {
+  Future<Response> updateProfil(String fullName, int userId, File? avatar,
+      String authKey, String telegramLink) async {
+    if (avatar == null) {
+      var formData = FormData.fromMap({
+        "fullname": fullName,
+        "user_id": userId,
+        "avatar": null,
+        "auth_key": authKey,
+        "telegram_link": telegramLink,
+      });
+      return _dio.post(ApiValues.updateProfileUrl, data: formData);
+    }
+
     var formData = FormData.fromMap({
       "fullname": fullName,
       "user_id": userId,
       "avatar": await MultipartFile.fromFile(avatar.path),
       "auth_key": authKey,
+      "telegram_link": telegramLink,
     });
 
     return _dio.post(ApiValues.updateProfileUrl, data: formData);

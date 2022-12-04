@@ -139,18 +139,18 @@ class _InsideNewsScreenState extends State<InsideNewsScreen> {
                                   ),
                                   Gap(10.w),
                                   Link(
-                                      uri: Uri.parse(widget.model.video!),
-                                      builder: ((context, followLink) =>
-                                          InkWell(
-                                            onTap: followLink,
-                                            child: Text(
-                                              "Video file",
-                                              style: AppStyles.subtitleTextStyle
-                                                  .copyWith(
-                                                color: AppColors.mainColor,
-                                              ),
+                                    uri: Uri.parse(widget.model.video!),
+                                    builder: ((context, followLink) => InkWell(
+                                          onTap: followLink,
+                                          child: Text(
+                                            "Video file",
+                                            style: AppStyles.subtitleTextStyle
+                                                .copyWith(
+                                              color: AppColors.mainColor,
                                             ),
-                                          )))
+                                          ),
+                                        )),
+                                  )
                                 ],
                               )
                             : const SizedBox.shrink(),

@@ -11,6 +11,7 @@ import 'package:test_app/core/domain/user_model/user_model.dart';
 import 'package:test_app/core/helper/database/app_storage.dart';
 import 'package:test_app/res/constants.dart';
 import 'package:test_app/res/functions/number_formatter.dart';
+import 'package:test_app/ui/bottom_navigation/profile/profile_sections/payme/payme_info_confirmation.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/refactor/refactor.dart';
 
 import '../../../core/block/auth_block/auth_cubit.dart';
@@ -111,13 +112,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                CircleAvatar(
-                                  backgroundColor: AppColors.mainColor,
-                                  radius: 50.w,
-                                  child: Icon(
-                                    Icons.person,
-                                    size: 64.h,
-                                    color: Colors.white,
+                                Container(
+                                  height: 100.h,
+                                  width: 100.w,
+                                  clipBehavior: Clip.hardEdge,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(100.r),
+                                  ),
+                                  child: Image.network(
+                                    user!.image!,
+                                    fit: BoxFit.fill,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Icon(
+                                        Icons.person,
+                                        size: 64.h,
+                                        color: AppColors.mainColor,
+                                      );
+                                    },
                                   ),
                                 ),
                                 Gap(10.w),
@@ -233,7 +244,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget statistics(List<StatModel> statList) {
     if (statList.isEmpty) {
       return const Center(
-        child: Text("Obuna sotil oling"),
+        child: Text("Obuna sotib oling"),
       );
     }
     return Expanded(
@@ -412,8 +423,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             spacer(),
             InkWell(
-              onTap: () {
-                Navigator.pushNamed(context, RouteNames.payme);
+              onTap: () async {
+                if (await context.read<PaymentCubit>().isConfirmed()) {
+                  context.read<PaymentCubit>().getCards();
+                  Navigator.push<void>(
+                    context,
+                    MaterialPageRoute<void>(
+                      builder: (BuildContext context) =>
+                          const PaymeInfoConfirmation(
+                        null,
+                        isConfirmed: true,
+                      ),
+                    ),
+                  );
+                } else {
+                  Navigator.pushNamed(context, RouteNames.payme);
+                }
               },
               child: rowItem(AppIcons.payme, "Hisobni to’ldirish", false),
             ),
@@ -553,29 +578,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       width: double.maxFinite,
     );
   }
-}
-
-String _medalStatus(int meadalID) {
-  print(meadalID);
-  if (meadalID == 2) {
-    return "Oltin";
-  }
-  if (meadalID == 1) {
-    return "Kumush";
-  }
-  return "Bronza";
-}
-
-String _medalAsset(int meadalID) {
-  print(0);
-  if (meadalID == 2) {
-    return AppIcons.gold;
-  }
-  if (meadalID == 1) {
-    return AppIcons.silver;
-  }
-
-  return AppIcons.bronze;
 }
 
 Widget statisticsItem(StatModel statModel) {

@@ -7,6 +7,7 @@ import 'package:test_app/core/domain/test_model/test_model.dart';
 import 'package:test_app/core/helper/repos/test_repo.dart';
 import 'package:test_app/res/components/custom_dot.dart';
 import 'package:test_app/res/components/custom_drawer.dart';
+import 'package:test_app/res/functions/retry_dialog.dart';
 import 'package:test_app/res/navigation/main_navigation.dart';
 import 'package:test_app/ui/test_screens/books.dart';
 
@@ -67,6 +68,7 @@ class SubjectsScreen extends StatelessWidget {
                     )),
                 child: BlocBuilder<DrawerCubit, DrawerState>(
                   builder: (context, state) {
+
                     if (state is DrawerSubId) {
                       return FutureBuilder(
                         future: getTestModel(state.subId),

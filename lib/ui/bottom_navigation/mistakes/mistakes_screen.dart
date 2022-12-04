@@ -81,6 +81,7 @@ class MistakesScreen extends StatelessWidget {
                               itemCount: errorList!.length,
                               itemBuilder: (BuildContext context, int index) {
                                 return testItem(
+                                  errorList![index],
                                   errorList![index].answersDetail!,
                                   errorList![index].questionContent!,
                                 );
@@ -98,33 +99,54 @@ class MistakesScreen extends StatelessWidget {
     );
   }
 
-  Widget testItem(List<AnswersDetail> ansList, String testQ) {
+  Widget testItem(
+      TestResult result, List<AnswersDetail> ansList, String testQ) {
     return Container(
       margin: EdgeInsets.only(bottom: 15.h),
       child: Column(
         children: [
-          Row(
+          Column(
             children: [
-              CustomDot(
-                hight: 14.h,
-                width: 14.w,
-                color: AppColors.mainColor,
+              Row(
+                children: [
+                  CustomDot(
+                    hight: 14.h,
+                    width: 14.w,
+                    color: AppColors.mainColor,
+                  ),
+                  Gap(9.w),
+                  Expanded(
+                    child: Text(
+                      "Test: ${result.testContent}",
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      style: AppStyles.subtitleTextStyle.copyWith(
+                        color: AppColors.titleColor,
+                        fontSize: 14.sp,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              Gap(9.w),
-              Text(
-                "Test: Test11",
-                style: AppStyles.subtitleTextStyle.copyWith(
-                  color: AppColors.titleColor,
-                  fontSize: 14.sp,
-                ),
-              ),
-              Gap(24.w),
-              Text(
-                "Savol #: 12",
-                style: AppStyles.subtitleTextStyle.copyWith(
-                  color: AppColors.titleColor,
-                  fontSize: 14.sp,
-                ),
+              Gap(10.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Savol #: ${result.questionPrior}",
+                    style: AppStyles.subtitleTextStyle.copyWith(
+                      color: AppColors.titleColor,
+                      fontSize: 14.sp,
+                    ),
+                  ),
+                  Text(
+                    "Fan #: ${result.subjectName}",
+                    style: AppStyles.subtitleTextStyle.copyWith(
+                      color: AppColors.titleColor,
+                      fontSize: 14.sp,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

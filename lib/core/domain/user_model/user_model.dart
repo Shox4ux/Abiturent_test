@@ -13,22 +13,25 @@ class UserInfo {
   String? smsLive;
   String? image;
   int? medalId;
+  String? telegramLink;
 
-  UserInfo(
-      {this.id,
-      this.username,
-      this.fullname,
-      this.createdAt,
-      this.status,
-      this.statusText,
-      this.balance,
-      this.role,
-      this.roleText,
-      this.rating,
-      this.ratingMonth,
-      this.smsLive,
-      this.image,
-      this.medalId});
+  UserInfo({
+    this.id,
+    this.username,
+    this.fullname,
+    this.createdAt,
+    this.status,
+    this.statusText,
+    this.balance,
+    this.role,
+    this.roleText,
+    this.rating,
+    this.ratingMonth,
+    this.smsLive,
+    this.image,
+    this.medalId,
+    this.telegramLink,
+  });
 
   UserInfo.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -45,6 +48,7 @@ class UserInfo {
     smsLive = json['sms_live'];
     image = json['image'];
     medalId = json['medal_id'];
+    telegramLink = json['telegram_link'];
   }
 
   Map<String, dynamic> toJson() {
@@ -63,6 +67,7 @@ class UserInfo {
     data['sms_live'] = smsLive;
     data['image'] = image;
     data['medal_id'] = medalId;
+    data['telegram_link'] = telegramLink;
     return data;
   }
 }

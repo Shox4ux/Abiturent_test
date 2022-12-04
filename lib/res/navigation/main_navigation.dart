@@ -5,7 +5,6 @@ import 'package:test_app/ui/auth/login.dart';
 import 'package:test_app/ui/auth/sign_up.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/group/add_user_to_group.dart';
-import 'package:test_app/ui/bottom_navigation/profile/profile_sections/payme/add_card_screen.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/news_screen/inside_news.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/news_screen/news.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/payme/payme_info_confirmation.dart';
@@ -28,15 +27,12 @@ class MainNavigation {
     RouteNames.signin: (context) => const LoginScreen(),
     RouteNames.news: (context) => NewsScreen(),
     RouteNames.main: (context) => const MainScreen(),
-    RouteNames.addCard: (context) => const AddCardScrenen(),
     RouteNames.payme: (context) => const PaymeScreen(),
     RouteNames.forget: (context) => const ForgotPasswordScreen(),
     RouteNames.subscripts: (context) => const MySubscriptions(),
     RouteNames.budget: (context) => const PaymentsScreen(),
     RouteNames.group: (context) => const GroupScreen(),
     RouteNames.addMembers: (context) => const AddUserToGroup(),
-    RouteNames.paymeInfoConfirm: (context) => const PaymeInfoConfirmation(),
-    RouteNames.paymeSmsCinfirm: (context) => const PaymeSmsConfirmation(),
   };
 
   Route? onGenerateRoute(RouteSettings settings) {
@@ -68,7 +64,6 @@ abstract class RouteNames {
   static const news = "news";
   static const group = "group";
   static const changePassword = "reset";
-  static const addCard = "addCard";
   static const payme = "payme";
   static const paymeInfoConfirm = "paymeInfoConfirm";
   static const paymeSmsCinfirm = "paymeSmsCinfirm";

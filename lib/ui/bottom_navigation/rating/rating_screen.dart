@@ -165,6 +165,14 @@ class _RatingScreenState extends State<RatingScreen> {
                         style: AppStyles.subtitleTextStyle
                             .copyWith(color: AppColors.smsVerColor),
                       ),
+                      (data.userTelegram != null)
+                          ? Text(
+                              "${data.userTelegram}",
+                              style: AppStyles.subtitleTextStyle.copyWith(
+                                fontSize: 13.sp,
+                              ),
+                            )
+                          : const SizedBox.shrink(),
                     ],
                   ),
                 ),

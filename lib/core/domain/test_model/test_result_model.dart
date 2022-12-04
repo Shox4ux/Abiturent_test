@@ -1,13 +1,25 @@
 class TestResult {
   int? questionId;
   String? questionContent;
+  int? questionPrior;
+  String? testContent;
+  String? subjectName;
   List<AnswersDetail>? answersDetail;
 
-  TestResult({this.questionId, this.questionContent, this.answersDetail});
+  TestResult(
+      {this.questionId,
+      this.questionContent,
+      this.questionPrior,
+      this.testContent,
+      this.subjectName,
+      this.answersDetail});
 
   TestResult.fromJson(Map<String, dynamic> json) {
     questionId = json['question_id'];
     questionContent = json['question_content'];
+    questionPrior = json['question_prior'];
+    testContent = json['test_content'];
+    subjectName = json['subject_name'];
     if (json['answers_detail'] != null) {
       answersDetail = <AnswersDetail>[];
       json['answers_detail'].forEach((v) {
@@ -20,6 +32,9 @@ class TestResult {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['question_id'] = questionId;
     data['question_content'] = questionContent;
+    data['question_prior'] = questionPrior;
+    data['test_content'] = testContent;
+    data['subject_name'] = subjectName;
     if (answersDetail != null) {
       data['answers_detail'] = answersDetail!.map((v) => v.toJson()).toList();
     }

@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:test_app/core/domain/patment_model/card_model.dart';
+import 'package:test_app/res/functions/show_toast.dart';
+import 'package:test_app/res/navigation/main_navigation.dart';
 
 import '../../../../../core/block/payment_cubit/payment_cubit.dart';
 import '../../../../../res/components/custom_card.dart';
@@ -11,7 +14,9 @@ import '../../../../../res/constants.dart';
 import '../../../../../res/functions/number_formatter.dart';
 
 class PaymeSmsConfirmation extends StatefulWidget {
-  const PaymeSmsConfirmation({super.key});
+  const PaymeSmsConfirmation(this.cardModel, {super.key});
+
+  final CardModel cardModel;
 
   @override
   State<PaymeSmsConfirmation> createState() => _PaymeSmsConfirmationState();
@@ -35,7 +40,16 @@ class _PaymeSmsConfirmationState extends State<PaymeSmsConfirmation> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.mainColor,
-      body: BlocBuilder<PaymentCubit, PaymentState>(
+      body: BlocConsumer<PaymentCubit, PaymentState>(
+        listener: (context, state) {
+          if (state is OnCardDeleted) {
+            showToast(state.message);
+          }
+          // if (state is OnMadePayment) {
+          //   Navigator.pushNamedAndRemoveUntil(
+          //       context, RouteNames.main, (route) => false);
+          // }
+        },
         builder: (context, state) {
           if (state is OnMadePayment) {
             return Column(
@@ -93,10 +107,7 @@ class _PaymeSmsConfirmationState extends State<PaymeSmsConfirmation> {
                           children: [
                             Padding(
                               padding: EdgeInsets.all(10.h),
-                              child: CustomCard(
-                                cardNumber: state.paymentResponse.cardPan!,
-                                cardPeriod: state.paymentResponse.cardMonth!,
-                              ),
+                              child: CustomCard(widget.cardModel),
                             ),
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 16.w),

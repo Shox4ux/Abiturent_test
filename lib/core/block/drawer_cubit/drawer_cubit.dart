@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
+import 'package:test_app/core/helper/database/app_storage.dart';
 
 import '../../domain/subject_models/subject_model.dart';
 import '../../helper/repos/subject_repo.dart';
@@ -15,25 +16,11 @@ class DrawerCubit extends Cubit<DrawerState> {
 
   int? testType;
 
-  int? drawerItemIndex;
-
   void saveSubId(int id) {
     emit(DrawerSubId(id));
-    print("from cubit $id");
   }
 
-  void savePressedIndex(int index) {
-    drawerItemIndex = index;
-    print("from drawer cubit $drawerItemIndex");
-  }
-
-  int getPressedIndex() {
-    if (drawerItemIndex == null) {
-      return 0;
-    } else {
-      return drawerItemIndex!;
-    }
-  }
+  int? selectedIndex;
 
   Future<void> getSubs() async {
     emit(OnDrawerProgress());

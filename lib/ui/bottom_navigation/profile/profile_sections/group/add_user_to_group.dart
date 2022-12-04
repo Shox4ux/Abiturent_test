@@ -41,21 +41,17 @@ class _AddUserToGroupState extends State<AddUserToGroup> {
       backgroundColor: AppColors.mainColor,
       body: SafeArea(
         child: Column(children: [
-          Padding(
-            padding: EdgeInsets.only(left: 20.w),
-            child: CustomSimpleAppBar(
-              isSimple: true,
-              isImportant: true,
-              titleText: "Ishtirokchi qo’shish",
-              iconColor: Colors.white,
-              routeText: RouteNames.group,
-              style: AppStyles.subtitleTextStyle.copyWith(
-                color: Colors.white,
-                fontSize: 24.sp,
-              ),
+          CustomSimpleAppBar(
+            isSimple: true,
+            isImportant: true,
+            titleText: "Ishtirokchi qo’shish",
+            iconColor: Colors.white,
+            routeText: RouteNames.group,
+            style: AppStyles.subtitleTextStyle.copyWith(
+              color: Colors.white,
+              fontSize: 24.sp,
             ),
           ),
-          Gap(17.h),
           Expanded(
               child: Container(
             width: double.maxFinite,
@@ -71,9 +67,6 @@ class _AddUserToGroupState extends State<AddUserToGroup> {
               builder: (context, state) {
                 if (state is OnProgress) {
                   return const Center(child: Text("Iltimos kuting..."));
-                }
-                if (state is OnError) {
-                  return Center(child: Text(state.error));
                 }
 
                 if (state is OnGroupAdded) {

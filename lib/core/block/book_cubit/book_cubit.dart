@@ -54,6 +54,9 @@ class BookCubit extends Cubit<BookState> {
     final list = _hiveStorage.getBookList(box);
     for (var element in list) {
       if (element.id == bookId) {
+        print(element.id);
+        print(element.path);
+
         await OpenFile.open(element.path);
         await _hiveStorage.closeBox(box);
       } else {

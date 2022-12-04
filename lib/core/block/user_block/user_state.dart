@@ -11,6 +11,8 @@ class UserCubitInitial extends UserState {}
 
 class OnUserProgress extends UserState {}
 
+class OnUserUpdated extends UserState {}
+
 class OnSuccess extends UserState {
   final List<UserInfo> list;
   const OnSuccess({required this.list});

@@ -12,7 +12,6 @@ import 'package:test_app/res/components/custom_simple_appbar.dart';
 import 'package:test_app/res/constants.dart';
 import 'package:test_app/res/functions/show_toast.dart';
 import 'package:test_app/res/navigation/main_navigation.dart';
-import 'package:test_app/ui/bottom_navigation/mistakes/mistakes_screen.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile.dart';
 
 class RefactorScreen extends StatefulWidget {
@@ -26,7 +25,10 @@ class RefactorScreen extends StatefulWidget {
 class _RefactorScreenState extends State<RefactorScreen> {
   File? _pickedFile;
   final ImagePicker _picker = ImagePicker();
-  var _changedName = "";
+  final _changedNameController =
+      TextEditingController(text: user!.fullname ?? '');
+  final _tegLinkController =
+      TextEditingController(text: user!.telegramLink ?? '');
 
   Future _takePhoto(ImageSource source) async {
     try {
@@ -90,12 +92,26 @@ class _RefactorScreenState extends State<RefactorScreen> {
                       children: [
                         Stack(
                           children: [
-                            _pickedFile == null
-                                ? CircleAvatar(
-                                    radius: 80.w,
-                                    child: Icon(
-                                      Icons.person,
-                                      size: 128.h,
+                            (_pickedFile == null)
+                                ? Container(
+                                    height: 160.h,
+                                    width: 160.w,
+                                    clipBehavior: Clip.hardEdge,
+                                    decoration: BoxDecoration(
+                                      borderRadius:
+                                          BorderRadius.circular(100.r),
+                                    ),
+                                    child: Image.network(
+                                      user!.image!,
+                                      fit: BoxFit.fill,
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                        return Icon(
+                                          Icons.person,
+                                          size: 64.h,
+                                          color: AppColors.mainColor,
+                                        );
+                                      },
                                     ),
                                   )
                                 : CircleAvatar(
@@ -130,31 +146,53 @@ class _RefactorScreenState extends State<RefactorScreen> {
                         Gap(50.h),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 16.w),
-                          child: TextField(
-                            textInputAction: TextInputAction.done,
-                            onChanged: (value) {
-                              setState(() {
-                                _changedName = value;
-                              });
-                            },
-                            keyboardType: TextInputType.name,
-                            decoration: InputDecoration(
-                              labelText: "Abiturent FIO",
-                              counter: const SizedBox.shrink(),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16.h),
+                          child: Column(
+                            children: [
+                              TextField(
+                                controller: _changedNameController,
+                                keyboardType: TextInputType.name,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(16.h),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(16.h),
+                                    borderSide: BorderSide(
+                                        color: AppColors.textFieldBorderColor,
+                                        width: 2.w),
+                                  ),
+                                ),
                               ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16.h),
-                                borderSide: BorderSide(
-                                    color: AppColors.textFieldBorderColor,
-                                    width: 2.w),
+                              Gap(10.h),
+                              TextField(
+                                controller: _tegLinkController,
+                                keyboardType: TextInputType.name,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(16.h),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(16.h),
+                                    borderSide: BorderSide(
+                                        color: AppColors.textFieldBorderColor,
+                                        width: 2.w),
+                                  ),
+                                ),
                               ),
-                            ),
+                            ],
                           ),
                         ),
-                        Gap(10.h),
-                        BlocBuilder<UserCubit, UserState>(
+                        Gap(40.h),
+                        BlocConsumer<UserCubit, UserState>(
+                          listener: (context, state) {
+                            if (state is OnUserUpdated) {
+                              Navigator.pushNamedAndRemoveUntil(
+                                context,
+                                RouteNames.main,
+                                (route) => false,
+                              );
+                            }
+                          },
                           builder: (context, state) {
                             if (state is OnUserProgress) {
                               return const Center(
@@ -163,7 +201,7 @@ class _RefactorScreenState extends State<RefactorScreen> {
                                 ),
                               );
                             }
-                            return (_changedName.isNotEmpty ||
+                            return (_changedNameController.text.isNotEmpty ||
                                     _pickedFile != null)
                                 ? Padding(
                                     padding: EdgeInsets.only(bottom: 24.h),
@@ -171,7 +209,10 @@ class _RefactorScreenState extends State<RefactorScreen> {
                                       style: AppStyles.introUpButton,
                                       onPressed: () {
                                         context.read<UserCubit>().updateProfile(
-                                            _changedName, _pickedFile!);
+                                              _changedNameController.text,
+                                              _pickedFile,
+                                              _tegLinkController.text,
+                                            );
                                       },
                                       child: Text(
                                         "Saqlash",

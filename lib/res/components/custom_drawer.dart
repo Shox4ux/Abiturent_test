@@ -10,6 +10,7 @@ import 'package:test_app/core/helper/repos/subject_repo.dart';
 import 'package:test_app/res/constants.dart';
 
 import '../../core/block/drawer_cubit/drawer_cubit.dart';
+import '../../core/block/index_cubit/index_cubit.dart';
 
 List<SubjectModel> list = [];
 final _repo = SubjectRepo();
@@ -23,11 +24,6 @@ class CustomDrawer extends StatefulWidget {
 }
 
 class _CustomDrawerState extends State<CustomDrawer> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
   Future<List<SubjectModel>> getSubs() async {
     try {
       final response = await _repo.getSubjects();
@@ -45,64 +41,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
     }
     return list;
   }
-
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Drawer(
-  //       width: widget.mainWidth * 0.7,
-  //       child: Column(
-  //         crossAxisAlignment: CrossAxisAlignment.start,
-  //         children: [
-  //           Gap(50.h),
-  //           Container(
-  //             padding: EdgeInsets.only(left: 20.w),
-  //             alignment: Alignment.centerLeft,
-  //             height: 50.h,
-  //             width: double.maxFinite,
-  //             decoration: const BoxDecoration(
-  //               color: AppColors.mainColor,
-  //             ),
-  //             child: Text(
-  //               "Fanlar",
-  //               style: AppStyles.introButtonText.copyWith(
-  //                 fontSize: 24.sp,
-  //                 color: Colors.white,
-  //               ),
-  //             ),
-  //           ),
-  //           Gap(20.h),
-  //           BlocBuilder<DrawerCubit, DrawerState>(
-  //             builder: (context, state) {
-  //               if (state is OnDrawerSubsReceived) {
-  //                 return Column(
-  //                   children: [
-  //                     for (int i = 0; i < state.subList.length; i++)
-  //                       GestureDetector(
-  //                         onTap: () {
-  //                           setState(() {
-  //                             context.read<DrawerCubit>().savePressedIndex(i);
-  //                             context
-  //                                 .read<DrawerCubit>()
-  //                                 .saveSubId(state.subList[i].id!);
-  //                             Navigator.pop(context);
-  //                           });
-  //                         },
-  //                         child: drawerItem(
-  //                           state.subList[i].name!,
-  //                           context.read<DrawerCubit>().getPressedIndex() == i,
-  //                         ),
-  //                       )
-  //                   ],
-  //                 );
-  //               }
-  //               return const Center(
-  //                 child: Text("Iltimos kuting"),
-  //               );
-  //             },
-  //           )
-  //         ],
-  //       ));
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -138,23 +76,28 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   );
                 }
 
-                return Column(
-                  children: [
-                    for (int i = 0; i < list.length; i++)
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            context.read<DrawerCubit>().savePressedIndex(i);
-                            context.read<DrawerCubit>().saveSubId(list[i].id!);
-                            Navigator.pop(context);
-                          });
-                        },
-                        child: drawerItem(
-                          list[i].name!,
-                          context.read<DrawerCubit>().getPressedIndex() == i,
-                        ),
-                      )
-                  ],
+                return BlocBuilder<IndexCubit, int?>(
+                  builder: (context, state) {
+                    // context.read<IndexCubit>().checkDrawerIndex();
+                    return Column(
+                      children: [
+                        for (int i = 0; i < list.length; i++)
+                          GestureDetector(
+                            onTap: () {
+                              context.read<IndexCubit>().setUp(i);
+                              context
+                                  .read<DrawerCubit>()
+                                  .saveSubId(list[i].id!);
+                              Navigator.pop(context);
+                            },
+                            child: drawerItem(
+                              list[i].name!,
+                              _decider(state, i),
+                            ),
+                          )
+                      ],
+                    );
+                  },
                 );
               },
             ),
@@ -163,8 +106,16 @@ class _CustomDrawerState extends State<CustomDrawer> {
   }
 }
 
-Widget drawerItem(String text, bool isPressed) {
-  return isPressed ? selected(text) : unSelected(text);
+bool _decider(int? state, int i) {
+  if (state == null) {
+    return 0 == i;
+  } else {
+    return state == i;
+  }
+}
+
+Widget drawerItem(String text, bool isSelected) {
+  return isSelected ? selected(text) : unSelected(text);
 }
 
 Widget selected(String text) {

@@ -211,6 +211,8 @@ class ApiValues {
   static const String createGroup = "user-group/create-group";
   static const String addMember = "user-group/add-member";
   static const String deleteMember = "user-group/delete-members";
+  static const String addCardUrl = "card/add-card";
+  static const String deleteCardUrl = "card/delete";
 
   static const String ratingUrl = "user/rating";
   static const String stats = "user/statistics";
@@ -218,6 +220,8 @@ class ApiValues {
   static const String updateProfileUrl = "user/update";
 
   static const String amountUrl = "card/payment";
+  static const String getCardsUrl = "card/index";
+
   static const String getErrorListUrl = "test/show-mistakes";
 
   static const String getScripts = "subjects/index";
@@ -241,6 +245,9 @@ class ApiValues {
 
 class AppStorageConstants {
   static const String tokenKey = "token";
+  static const String paymeKey = "paymeKey";
+
   static const String userKey = "user";
+  static const String drawerIndexKey = "index_key";
   static const String passwordKey = "password";
 }

@@ -264,27 +264,6 @@ class _GroupScreenState extends State<GroupScreen> {
   }
 }
 
-// Widget groupItem(GroupModel groupItem) {
-//   return Column(
-//     crossAxisAlignment: CrossAxisAlignment.start,
-//     children: [
-//       Gap(6.h),
-//       Text(
-//         "${groupItem.group!.subjectTitle} fani",
-//         style: AppStyles.introButtonText.copyWith(
-//           color: AppColors.smsVerColor,
-//         ),
-//       ),
-//       Gap(13.h),
-//       Column(
-//         children: [
-//           for (var i = 0; i < 3; i++) groupMemberItem(),
-//         ],
-//       )
-//     ],
-//   );
-// }
-
 Widget groupItem(GroupItem item) {
   return Padding(
     padding: EdgeInsets.only(bottom: 14.h),

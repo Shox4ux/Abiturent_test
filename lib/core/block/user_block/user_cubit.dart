@@ -34,18 +34,14 @@ class UserCubit extends Cubit<UserState> {
     emit(UserForAppBar(rating, ratingMonth));
   }
 
-  Future<void> updateProfile(String fullName, File avatar) async {
+  Future<void> updateProfile(
+      String fullName, File? avatar, String tegLink) async {
     emit(OnUserProgress());
     final u = await _storage.getUserInfo();
     final t = await _storage.getToken();
     try {
-      if (fullName == "") {
-        final r = await _repo.updateProfil(user!.fullname!, u.id!, avatar, t!);
-        print("Update response: $r");
-        return;
-      }
-      final r = await _repo.updateProfil(fullName, u.id!, avatar, t!);
-      print("Update response: $r");
+      await _repo.updateProfil(fullName, u.id!, avatar, t!, tegLink);
+      emit(OnUserUpdated());
     } on DioError catch (e) {
       emit(OnError(error: e.response!.data["message"]));
     } on SocketException {
