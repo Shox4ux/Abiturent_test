@@ -66,6 +66,7 @@ class _TestScreenState extends State<TestScreen> {
         child: Column(
           children: [
             CustomSimpleAppBar(
+              isIcon: false,
               isSimple: true,
               titleText: "${widget.subName} fani: To’plam #${widget.testIndex}",
               routeText: RouteNames.profile,

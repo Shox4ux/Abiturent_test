@@ -155,6 +155,7 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CustomSimpleAppBar(
+                    isIcon: false,
                     isSimple: true,
                     titleText: "Abiturentni tasniqlash",
                     routeText: "routeText",

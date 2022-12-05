@@ -184,6 +184,7 @@ Widget whenPreview(BuildContext context) {
                   children: [
                     Gap(20.h),
                     CustomSimpleAppBar(
+                      isIcon: false,
                       titleText: "Obuna bo'lish",
                       style: AppStyles.introButtonText
                           .copyWith(color: Colors.black),
@@ -521,6 +522,7 @@ Widget whenError(
             children: [
               Gap(20.h),
               CustomSimpleAppBar(
+                isIcon: false,
                 titleText: "Orqaga qaytish",
                 style: AppStyles.introButtonText.copyWith(color: Colors.black),
                 iconColor: Colors.black,

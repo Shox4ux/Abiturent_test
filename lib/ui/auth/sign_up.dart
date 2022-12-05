@@ -105,6 +105,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   Padding(
                     padding: EdgeInsets.only(left: 16.w),
                     child: CustomSimpleAppBar(
+                      isIcon: false,
                       isSimple: false,
                       titleText: "Ro’yhatdan o’tish",
                       routeText: RouteNames.intro,

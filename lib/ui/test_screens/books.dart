@@ -33,6 +33,7 @@ class _BookScreenState extends State<BookScreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: CustomSimpleAppBar(
+                isIcon: false,
                 isSimple: true,
                 titleText: "Test bo’yicha adabiyotlar",
                 iconColor: Colors.white,
@@ -111,11 +112,6 @@ class _BookScreenState extends State<BookScreen> {
                   context
                       .read<BookCubit>()
                       .downloadFile(book.files!, book.title!, book.id!);
-
-                  // isLoaded = await context
-                  //     .read<BookCubit>()
-                  //     .isBookDownloaded(book.id!);
-                  // setState(() {});
                 },
                 child: isLoaded
                     ? Image.asset(

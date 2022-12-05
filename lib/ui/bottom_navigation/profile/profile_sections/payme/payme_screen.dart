@@ -60,6 +60,7 @@ class _PaymeScreenState extends State<PaymeScreen> {
             children: [
               Gap(40.h),
               CustomSimpleAppBar(
+                isIcon: false,
                 isSimple: false,
                 titleText: "Hisobni to’ldirish",
                 routeText: RouteNames.main,

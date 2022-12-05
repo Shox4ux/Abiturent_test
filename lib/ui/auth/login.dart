@@ -67,6 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Padding(
                   padding: EdgeInsets.only(left: 16.w),
                   child: CustomSimpleAppBar(
+                    isIcon: false,
                     isSimple: false,
                     titleText: "Tizimga kirish",
                     routeText: RouteNames.intro,

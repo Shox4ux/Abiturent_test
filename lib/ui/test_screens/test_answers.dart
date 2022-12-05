@@ -6,7 +6,6 @@ import 'package:test_app/core/domain/test_model/test_result_model.dart';
 
 import '../../core/block/test_block/test_cubit.dart';
 import '../../res/constants.dart';
-import '../../res/models/test_model.dart';
 import '../../res/components/custom_dot.dart';
 import '../../res/components/custom_simple_appbar.dart';
 import '../../res/navigation/main_navigation.dart';
@@ -45,6 +44,7 @@ class TestAnswerScreenState extends State<TestAnswerScreen> {
             child: Column(
           children: [
             CustomSimpleAppBar(
+              isIcon: false,
               isSimple: false,
               titleText:
                   "${widget.subName} fani: To’plam #${widget.testNumber}",

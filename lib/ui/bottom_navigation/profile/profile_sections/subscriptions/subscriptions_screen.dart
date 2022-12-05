@@ -49,6 +49,7 @@ class _MySubscriptionsState extends State<MySubscriptions> {
           child: Column(
             children: [
               CustomSimpleAppBar(
+                isIcon: false,
                 isSimple: true,
                 titleText: "Mening obunalarim",
                 iconColor: Colors.white,

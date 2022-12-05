@@ -64,6 +64,7 @@ class _PaymeSmsConfirmationState extends State<PaymeSmsConfirmation> {
                     color: Colors.white,
                   ),
                   iconColor: Colors.white,
+                  isIcon: false,
                 ),
                 Gap(64.w),
                 Padding(

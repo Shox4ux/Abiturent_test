@@ -44,6 +44,7 @@ class _InsideNewsScreenState extends State<InsideNewsScreen> {
               Positioned(
                 top: 170,
                 child: CustomSimpleAppBar(
+                  isIcon: false,
                   isSimple: true,
                   titleText: "Yangiliklar",
                   routeText: "routeText",

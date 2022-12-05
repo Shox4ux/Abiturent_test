@@ -173,46 +173,72 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ],
                             ),
                             Gap(19.h),
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 5.h, horizontal: 10.w),
-                              height: 52.h,
-                              decoration: BoxDecoration(
-                                  color: AppColors.greenBackground,
-                                  borderRadius: BorderRadius.circular(10.r)),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Container(
-                                    height: 40.h,
-                                    width: 52.w,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(16.r),
+                            GestureDetector(
+                              onTap: () async {
+                                if (await context
+                                    .read<PaymentCubit>()
+                                    .isConfirmed()) {
+                                  context.read<PaymentCubit>().getCards();
+                                  Navigator.push<void>(
+                                    context,
+                                    MaterialPageRoute<void>(
+                                      builder: (BuildContext context) =>
+                                          const PaymeInfoConfirmation(
+                                        null,
+                                        isConfirmed: true,
+                                      ),
                                     ),
-                                    child: Image.asset(
-                                      AppIcons.greenPocket,
-                                      scale: 3.h,
+                                  );
+                                } else {
+                                  Navigator.pushNamed(
+                                      context, RouteNames.payme);
+                                }
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 5.h, horizontal: 10.w),
+                                height: 52.h,
+                                decoration: BoxDecoration(
+                                    color: AppColors.greenBackground,
+                                    borderRadius: BorderRadius.circular(10.r)),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      height: 40.h,
+                                      width: 52.w,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius:
+                                            BorderRadius.circular(16.r),
+                                      ),
+                                      child: Image.asset(
+                                        AppIcons.greenPocket,
+                                        scale: 3.h,
+                                      ),
                                     ),
-                                  ),
-                                  RichText(
-                                    text: TextSpan(
-                                      text: "UZS ",
-                                      style: AppStyles.introButtonText.copyWith(
-                                          color: Colors.white, fontSize: 14.sp),
-                                      children: [
-                                        TextSpan(
-                                          text: numberFormatter(user!.balance),
-                                          style: AppStyles.introButtonText
-                                              .copyWith(
-                                                  color: Colors.white,
-                                                  fontSize: 28.sp),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                ],
+                                    RichText(
+                                      text: TextSpan(
+                                        text: "UZS ",
+                                        style: AppStyles.introButtonText
+                                            .copyWith(
+                                                color: Colors.white,
+                                                fontSize: 14.sp),
+                                        children: [
+                                          TextSpan(
+                                            text:
+                                                numberFormatter(user!.balance),
+                                            style: AppStyles.introButtonText
+                                                .copyWith(
+                                                    color: Colors.white,
+                                                    fontSize: 28.sp),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
                             Gap(20.h),

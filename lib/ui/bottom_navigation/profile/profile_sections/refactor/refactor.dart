@@ -68,6 +68,7 @@ class _RefactorScreenState extends State<RefactorScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               CustomSimpleAppBar(
+                  isIcon: false,
                   titleText: "Tahrirlash",
                   style: AppStyles.smsVerBigTextStyle.copyWith(
                       fontSize: 24.sp,

@@ -67,6 +67,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   Padding(
                     padding: EdgeInsets.only(left: 20.w),
                     child: CustomSimpleAppBar(
+                      isIcon: false,
                       isSimple: true,
                       titleText: "Maxfiy so’zni tiklash",
                       routeText: "routeText",

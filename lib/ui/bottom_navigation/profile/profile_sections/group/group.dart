@@ -91,6 +91,7 @@ class _GroupScreenState extends State<GroupScreen> {
             Padding(
               padding: EdgeInsets.only(left: 20.w),
               child: CustomSimpleAppBar(
+                isIcon: false,
                 isSimple: false,
                 titleText: "Guruhlarim",
                 iconColor: Colors.white,

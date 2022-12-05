@@ -83,6 +83,7 @@ class _PaymeInfoConfirmationState extends State<PaymeInfoConfirmation> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CustomSimpleAppBar(
+                    isIcon: true,
                     isSimple: true,
                     titleText: "Hisobni to’ldirish",
                     style: AppStyles.introButtonText.copyWith(

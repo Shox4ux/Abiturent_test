@@ -73,6 +73,7 @@ class _ResetPassWordState extends State<ResetPassWord> {
                   Padding(
                     padding: EdgeInsets.only(left: 20.w),
                     child: CustomSimpleAppBar(
+                      isIcon: false,
                       isSimple: true,
                       titleText: "Abiturentni tasdiqlash",
                       routeText: "routeText",

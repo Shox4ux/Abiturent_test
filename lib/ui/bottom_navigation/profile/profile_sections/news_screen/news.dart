@@ -42,6 +42,7 @@ class NewsScreen extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(left: 20.w, bottom: 17.h),
             child: CustomSimpleAppBar(
+              isIcon: false,
               isSimple: true,
               titleText: "Yangiliklar",
               routeText: RouteNames.profile,

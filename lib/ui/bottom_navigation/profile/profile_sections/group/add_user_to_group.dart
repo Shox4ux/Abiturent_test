@@ -42,6 +42,7 @@ class _AddUserToGroupState extends State<AddUserToGroup> {
       body: SafeArea(
         child: Column(children: [
           CustomSimpleAppBar(
+            isIcon: false,
             isSimple: true,
             isImportant: true,
             titleText: "Ishtirokchi qo’shish",
@@ -283,30 +284,6 @@ class _AddUserToGroupState extends State<AddUserToGroup> {
                         .copyWith(color: const Color(0xffFCFCFC)),
                   ),
                 ),
-                // isEmpty!
-                //     ? ElevatedButton(
-                //         onPressed: () {
-                //           Navigator.pop(context);
-                //           context
-                //               .read<GroupCubit>()
-                //               .addMember(memberId!, groupId);
-                //         },
-                //         style: AppStyles.introUpButton,
-                //         child: Text(
-                //           "Ishtirokchi qo’shish",
-                //           style: AppStyles.introButtonText
-                //               .copyWith(color: const Color(0xffFCFCFC)),
-                //         ),
-                //       )
-                //     : ElevatedButton(
-                //         onPressed: null,
-                //         style: AppStyles.disabledButton,
-                //         child: Text(
-                //           "Ishtirokchi qo’shish",
-                //           style: AppStyles.introButtonText
-                //               .copyWith(color: const Color(0xffFCFCFC)),
-                //         ),
-                //       ),
                 Gap(16.h),
               ],
             ),
@@ -338,11 +315,17 @@ Widget memberItem(String index, MembersArray data, bool isAdmin,
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "# ${data.userId.toString()}",
-                      style: AppStyles.subtitleTextStyle.copyWith(
-                        fontSize: 13.sp,
-                      ),
+                    Row(
+                      children: [
+                        Text(
+                          "# ${data.userId.toString()}",
+                          style: AppStyles.subtitleTextStyle.copyWith(
+                            fontSize: 13.sp,
+                          ),
+                        ),
+                        Gap(10.h),
+                        Image.asset(AppIcons.crown, scale: 8),
+                      ],
                     ),
                     Text(
                       data.fullname!,
@@ -372,24 +355,6 @@ Widget memberItem(String index, MembersArray data, bool isAdmin,
               ],
             ),
           ),
-          // Gap(6.w),
-          // !isAdmin
-          //     ? Container(
-          //         width: 47.w,
-          //         padding: EdgeInsets.all(8.h),
-          //         decoration: BoxDecoration(
-          //           borderRadius: BorderRadius.all(
-          //             Radius.circular(13.r),
-          //           ),
-          //           color: Colors.red,
-          //         ),
-          //         child: Image.asset(
-          //           width: 18.w,
-          //           height: 22.h,
-          //           AppIcons.delete,
-          //         ),
-          //       )
-          //     : const SizedBox.shrink(),
         ],
       ),
     );
@@ -461,24 +426,6 @@ Widget memberItem(String index, MembersArray data, bool isAdmin,
               ],
             ),
           ),
-          // Gap(6.w),
-          // !isAdmin
-          //     ? Container(
-          //         width: 47.w,
-          //         padding: EdgeInsets.all(8.h),
-          //         decoration: BoxDecoration(
-          //           borderRadius: BorderRadius.all(
-          //             Radius.circular(13.r),
-          //           ),
-          //           color: Colors.red,
-          //         ),
-          //         child: Image.asset(
-          //           width: 18.w,
-          //           height: 22.h,
-          //           AppIcons.delete,
-          //         ),
-          //       )
-          //     : const SizedBox.shrink(),
         ],
       ),
     ),
