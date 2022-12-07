@@ -57,7 +57,7 @@ class _MainScreenState extends State<MainScreen> {
             }
 
             if (index == 3) {
-              await _cubit.getErrorResult();
+              await _cubit.getErrorResult(1);
             }
           },
           currentIndex: selectedIndex,

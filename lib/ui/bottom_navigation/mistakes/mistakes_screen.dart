@@ -2,15 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:test_app/core/block/drawer_cubit/drawer_cubit.dart';
 import 'package:test_app/core/helper/database/app_storage.dart';
 import 'package:test_app/core/helper/repos/test_repo.dart';
-import 'package:test_app/res/enum.dart';
 import 'package:test_app/res/components/custom_appbar.dart';
 import 'package:test_app/res/components/custom_dot.dart';
 import 'package:test_app/res/components/custom_drawer.dart';
-
-import '../../../core/block/test_block/test_cubit.dart';
-import '../../../core/block/user_block/user_cubit.dart';
+import '../../../core/block/subjecy_bloc/subject_cubit.dart';
 import '../../../core/domain/test_model/test_result_model.dart';
 import '../../../res/constants.dart';
 
@@ -26,9 +24,9 @@ class MistakesScreen extends StatelessWidget {
     final GlobalKey<ScaffoldState> scaffKey = GlobalKey<ScaffoldState>();
     final screenWidth = MediaQuery.of(context).size.width;
 
-    Future<List<TestResult>> getErrorList() async {
+    Future<List<TestResult>> getErrorList(int subId) async {
       final uId = await _storage.getUserId();
-      final response = await _repo.getErrorList(uId);
+      final response = await _repo.getErrorList(uId, subId);
       errorList = null;
       if (response.statusCode == 200) {
         final rowData = response.data as List;
@@ -57,40 +55,83 @@ class MistakesScreen extends StatelessWidget {
                   topRight: Radius.circular(28.r),
                 ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Xatolar bilan ishlash",
-                    style: AppStyles.introButtonText.copyWith(
-                      color: Colors.black,
-                    ),
-                  ),
-                  Gap(10.h),
-                  FutureBuilder(
-                    future: getErrorList(),
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData) {
-                        return const Center(
-                          child: Text("Iltimos kuting..."),
-                        );
-                      } else {
-                        return Expanded(
-                          child: ListView.builder(
-                              padding: const EdgeInsets.only(bottom: 20),
-                              itemCount: errorList!.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return testItem(
-                                  errorList![index],
-                                  errorList![index].answersDetail!,
-                                  errorList![index].questionContent!,
-                                );
-                              }),
-                        );
-                      }
-                    },
-                  )
-                ],
+              child: BlocBuilder<DrawerCubit, DrawerState>(
+                builder: (context, state) {
+                  if (state is DrawerSubId) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Xatolar bilan ishlash",
+                          style: AppStyles.introButtonText.copyWith(
+                            color: Colors.black,
+                          ),
+                        ),
+                        Gap(10.h),
+                        FutureBuilder(
+                          future: getErrorList(state.subId),
+                          builder: (context, snapshot) {
+                            if (!snapshot.hasData) {
+                              return const Center(
+                                child: Text("Hozircha xatolar topilmadi..."),
+                              );
+                            } else {
+                              return Expanded(
+                                child: ListView.builder(
+                                    padding: const EdgeInsets.only(bottom: 20),
+                                    itemCount: errorList!.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return testItem(
+                                        errorList![index],
+                                        errorList![index].answersDetail!,
+                                        errorList![index].questionContent!,
+                                      );
+                                    }),
+                              );
+                            }
+                          },
+                        )
+                      ],
+                    );
+                  }
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Xatolar bilan ishlash",
+                        style: AppStyles.introButtonText.copyWith(
+                          color: Colors.black,
+                        ),
+                      ),
+                      Gap(10.h),
+                      FutureBuilder(
+                        future: getErrorList(1),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return const Center(
+                              child: Text("Hozircha xatolar topilmadi..."),
+                            );
+                          } else {
+                            return Expanded(
+                              child: ListView.builder(
+                                  padding: const EdgeInsets.only(bottom: 20),
+                                  itemCount: errorList!.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return testItem(
+                                      errorList![index],
+                                      errorList![index].answersDetail!,
+                                      errorList![index].questionContent!,
+                                    );
+                                  }),
+                            );
+                          }
+                        },
+                      )
+                    ],
+                  );
+                },
               ),
             ),
           ),

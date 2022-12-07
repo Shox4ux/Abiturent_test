@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,7 +7,6 @@ import 'package:gap/gap.dart';
 import 'package:test_app/res/functions/show_toast.dart';
 import 'package:test_app/ui/auth/reset_password.dart';
 
-import 'package:test_app/res/components/custom_countdown_timer.dart';
 import 'package:test_app/res/components/custom_pinput_widget.dart';
 import 'package:test_app/res/components/waiting.dart';
 

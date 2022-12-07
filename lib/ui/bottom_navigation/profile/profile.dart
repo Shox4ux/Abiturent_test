@@ -270,7 +270,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget statistics(List<StatModel> statList) {
     if (statList.isEmpty) {
       return const Center(
-        child: Text("Obuna sotib oling"),
+        child: Text("Fanlarga obuna bo'linmagan..."),
       );
     }
     return Expanded(

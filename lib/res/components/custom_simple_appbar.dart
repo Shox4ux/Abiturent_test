@@ -64,9 +64,12 @@ class _CustomSimpleAppBarState extends State<CustomSimpleAppBar> {
                     ),
                   ),
                   Gap(10.w),
-                  Text(
-                    widget.titleText,
-                    style: widget.style,
+                  Expanded(
+                    child: Text(
+                      widget.titleText,
+                      style: widget.style,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   )
                 ],
               ),
@@ -111,9 +114,12 @@ class _CustomSimpleAppBarState extends State<CustomSimpleAppBar> {
                 ),
               ),
               Gap(10.w),
-              Text(
-                widget.titleText,
-                style: widget.style,
+              Expanded(
+                child: Text(
+                  widget.titleText,
+                  style: widget.style,
+                  overflow: TextOverflow.ellipsis,
+                ),
               )
             ],
           );

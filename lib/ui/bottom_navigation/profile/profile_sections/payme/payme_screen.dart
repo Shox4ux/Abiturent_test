@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:pattern_formatter/numeric_formatter.dart';
-
 import 'package:test_app/res/functions/show_toast.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/payme/payme_info_confirmation.dart';
 import '../../../../../core/block/payment_cubit/payment_cubit.dart';

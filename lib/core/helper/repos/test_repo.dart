@@ -39,8 +39,11 @@ class TestRepo {
     return await _dio.post(ApiValues.getResults, data: formData);
   }
 
-  Future<Response> getErrorList(int userId) async {
-    var formData = FormData.fromMap({"user_id": userId});
+  Future<Response> getErrorList(int userId, int subId) async {
+    var formData = FormData.fromMap({
+      "user_id": userId,
+      "subject_id": subId,
+    });
     return await _dio.post(ApiValues.getErrorListUrl, data: formData);
   }
 }

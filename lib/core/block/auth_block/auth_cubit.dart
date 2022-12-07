@@ -51,7 +51,7 @@ class AuthCubit extends Cubit<AuthState> {
       print("tempId: $tempId");
       print("tempPhone: $tempPhone");
       emit(
-        AuthOnSMS(id: tempId!, phoneNumber: tempPhone!),
+        AuthOnSMS(id: tempId!, phoneNumber: phone),
       );
     } on DioError catch (e) {
       print(e.response);
@@ -173,8 +173,8 @@ class AuthCubit extends Cubit<AuthState> {
       emit(AuthOnSMS(id: rowData, phoneNumber: phone));
     } on DioError catch (e) {
       emit(AuthDenied(error: e.response?.data["message"] ?? ""));
-    } on SocketException catch (e) {
-      emit(AuthDenied(error: "$e Tarmoqda nosozlik"));
+    } on SocketException {
+      emit(const AuthDenied(error: "Tarmoqda nosozlik"));
     } catch (e) {
       emit(const AuthDenied(error: "Tizimda nosozlik"));
     }

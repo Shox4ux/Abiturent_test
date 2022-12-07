@@ -92,11 +92,11 @@ class TestCubit extends Cubit<TestState> {
     }
   }
 
-  Future<void> getErrorResult() async {
+  Future<void> getErrorResult(int subId) async {
     emit(OnTestProgress());
     final u = await _storage.getUserInfo();
     try {
-      final response = await _repo.getErrorList(u.id!);
+      final response = await _repo.getErrorList(u.id!, subId);
       final rowList = response.data as List;
       final errortList = rowList.map((e) => TestResult.fromJson(e)).toList();
 

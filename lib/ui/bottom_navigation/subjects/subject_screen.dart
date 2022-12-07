@@ -68,7 +68,6 @@ class SubjectsScreen extends StatelessWidget {
                     )),
                 child: BlocBuilder<DrawerCubit, DrawerState>(
                   builder: (context, state) {
-
                     if (state is DrawerSubId) {
                       return FutureBuilder(
                         future: getTestModel(state.subId),

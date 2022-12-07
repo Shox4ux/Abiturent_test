@@ -118,11 +118,10 @@ class _MySubscriptionsState extends State<MySubscriptions> {
 Widget unSubedItem(SubscriptionModel scriptItem, BuildContext context) {
   return Container(
     margin: EdgeInsets.only(bottom: 20.h, left: 20.w, right: 20.w),
-    width: 337.w,
-    height: 73.h,
+    width: double.maxFinite,
     decoration: BoxDecoration(
-      color: Colors.white,
       borderRadius: BorderRadius.circular(16.r),
+      color: Colors.white,
       boxShadow: const [
         BoxShadow(
           color: Colors.grey,
@@ -153,9 +152,10 @@ Widget unSubedItem(SubscriptionModel scriptItem, BuildContext context) {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "${scriptItem.subjectName} fani",
+                    "${scriptItem.subjectName}",
                     style: AppStyles.subtitleTextStyle.copyWith(
                       color: Colors.black,
+                      overflow: TextOverflow.clip,
                     ),
                   ),
                   Row(
@@ -236,34 +236,40 @@ Widget subedItem(SubscriptionModel scriptItem) {
             ),
           ),
           Gap(10.w),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "${scriptItem.subjectName} fani",
-                style: AppStyles.subtitleTextStyle.copyWith(
-                  color: Colors.black,
-                ),
-              ),
-              Row(
-                children: [
-                  Text(
-                    "Obuna tugashi:",
-                    style:
-                        AppStyles.subtitleTextStyle.copyWith(fontSize: 13.sp),
-                  ),
-                  Gap(10.w),
-                  Text(
-                    "${scriptItem.subscriptionData!.endDay}",
-                    style: AppStyles.introButtonText.copyWith(
-                      fontSize: 14.sp,
-                      color: Colors.green,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    "${scriptItem.subjectName} fani",
+                    maxLines: 1,
+                    style: AppStyles.subtitleTextStyle.copyWith(
+                      overflow: TextOverflow.ellipsis,
+                      color: Colors.black,
                     ),
                   ),
-                ],
-              ),
-            ],
+                ),
+                Row(
+                  children: [
+                    Text(
+                      "Obuna tugashi:",
+                      style:
+                          AppStyles.subtitleTextStyle.copyWith(fontSize: 13.sp),
+                    ),
+                    Gap(10.w),
+                    Text(
+                      "${scriptItem.subscriptionData!.endDay}",
+                      style: AppStyles.introButtonText.copyWith(
+                        fontSize: 14.sp,
+                        color: Colors.green,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ],
       ),

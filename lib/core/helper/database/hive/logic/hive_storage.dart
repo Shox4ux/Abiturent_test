@@ -10,7 +10,6 @@ class HiveStorage extends HiveInterfaceStorage {
       Hive.registerAdapter(BookAdapter());
     }
     Box box = await Hive.openBox<HiveBookModel>(boxName);
-
     return box;
   }
 
