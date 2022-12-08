@@ -32,8 +32,14 @@ class _WaitingScreenState extends State<WaitingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-          child: checkStatus(context, widget.status, widget.alertText,
-              widget.buttonText, widget.extraText)),
+        child: checkStatus(
+          context,
+          widget.status,
+          widget.alertText,
+          widget.buttonText,
+          widget.extraText,
+        ),
+      ),
     );
   }
 }
@@ -70,17 +76,15 @@ Widget checkStatus(
     return whenReceived(context);
   }
 
-  // return const Scaffold(
-  //   body: Center(
-  //     child: Text("Hozircha bu qism ishlamaydi"),
-  //   ),
-  // );
-
   return whenPaymentDone(context, alertText, buttonText, extraText);
 }
 
-Widget whenPaymentDone(BuildContext context, String alertText,
-    String buttonText, String extraText) {
+Widget whenPaymentDone(
+  BuildContext context,
+  String alertText,
+  String buttonText,
+  String extraText,
+) {
   return Column(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
@@ -193,12 +197,14 @@ Widget whenPreview(BuildContext context) {
                   ],
                 ),
                 Gap(66.h),
-                Text("${state.preview.subjectData!.name} fani",
-                    style: AppStyles.smsVerBigTextStyle.copyWith(
-                      fontSize: 32.sp,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.mainColor,
-                    )),
+                Expanded(
+                  child: Text("${state.preview.subjectData!.name} fani",
+                      style: AppStyles.smsVerBigTextStyle.copyWith(
+                        fontSize: 32.sp,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.mainColor,
+                      )),
+                ),
                 Gap(11.h),
                 Text("1 oylik obuna narxi",
                     style: AppStyles.smsVerBigTextStyle.copyWith(
@@ -316,9 +322,10 @@ Widget whenPreview(BuildContext context) {
       }
 
       return const Center(
-          child: CircularProgressIndicator(
-        color: AppColors.mainColor,
-      ));
+        child: CircularProgressIndicator(
+          color: AppColors.mainColor,
+        ),
+      );
     },
   );
 }

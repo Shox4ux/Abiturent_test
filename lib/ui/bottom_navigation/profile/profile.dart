@@ -393,89 +393,92 @@ class _ProfileScreenState extends State<ProfileScreen> {
             color: Colors.white,
             borderRadius: BorderRadius.circular(20.r),
           ),
-          child: Column(children: [
-            InkWell(
-              onTap: () async {
-                setState(() {
-                  isInSubs = true;
-                });
+          child: SingleChildScrollView(
+            child: Column(children: [
+              InkWell(
+                onTap: () async {
+                  setState(() {
+                    isInSubs = true;
+                  });
 
-                context.read<PaymentCubit>().getPaymentHistory();
-              },
-              child: rowItem(AppIcons.purplePocket, "Mening hisoblarim", false),
-            ),
-            spacer(),
-            InkWell(
-              onTap: () {
-                Navigator.push<void>(
-                  context,
-                  MaterialPageRoute<void>(
-                    builder: (BuildContext context) =>
-                        RefactorScreen(user: user!),
-                  ),
-                );
-              },
-              child: rowItem(AppIcons.edit, "Tahrirlash", false),
-            ),
-            spacer(),
-            InkWell(
-              onTap: () {
-                Navigator.pushNamed(
-                  context,
-                  RouteNames.news,
-                );
-              },
-              child: rowItem(AppIcons.gallery, "Yangiliklar", false),
-            ),
-            spacer(),
-            InkWell(
-              onTap: () {
-                Navigator.pushNamed(
-                  context,
-                  RouteNames.subscripts,
-                );
-
-                context.read<SubscriptionCubit>().getScripts();
-              },
-              child: rowItem(AppIcons.purpleDone, "Mening obunalarim", false),
-            ),
-            spacer(),
-            InkWell(
-              onTap: () {
-                Navigator.pushNamed(context, RouteNames.group);
-                context.read<GroupCubit>().getGroupsByUserId();
-              },
-              child: rowItem(AppIcons.purpleDone, "Mening guruhlarim", false),
-            ),
-            spacer(),
-            InkWell(
-              onTap: () async {
-                if (await context.read<PaymentCubit>().isConfirmed()) {
-                  context.read<PaymentCubit>().getCards();
+                  context.read<PaymentCubit>().getPaymentHistory();
+                },
+                child:
+                    rowItem(AppIcons.purplePocket, "Mening hisoblarim", false),
+              ),
+              spacer(),
+              InkWell(
+                onTap: () {
                   Navigator.push<void>(
                     context,
                     MaterialPageRoute<void>(
                       builder: (BuildContext context) =>
-                          const PaymeInfoConfirmation(
-                        null,
-                        isConfirmed: true,
-                      ),
+                          RefactorScreen(user: user!),
                     ),
                   );
-                } else {
-                  Navigator.pushNamed(context, RouteNames.payme);
-                }
-              },
-              child: rowItem(AppIcons.payme, "Hisobni to’ldirish", false),
-            ),
-            spacer(),
-            InkWell(
-              onTap: () {
-                logOutBottomSheet(context);
-              },
-              child: rowItem(AppIcons.logout, "Tizimdan chiqish", true),
-            ),
-          ]),
+                },
+                child: rowItem(AppIcons.edit, "Tahrirlash", false),
+              ),
+              spacer(),
+              InkWell(
+                onTap: () {
+                  Navigator.pushNamed(
+                    context,
+                    RouteNames.news,
+                  );
+                },
+                child: rowItem(AppIcons.gallery, "Yangiliklar", false),
+              ),
+              spacer(),
+              InkWell(
+                onTap: () {
+                  Navigator.pushNamed(
+                    context,
+                    RouteNames.subscripts,
+                  );
+
+                  context.read<SubscriptionCubit>().getScripts();
+                },
+                child: rowItem(AppIcons.purpleDone, "Mening obunalarim", false),
+              ),
+              spacer(),
+              InkWell(
+                onTap: () {
+                  Navigator.pushNamed(context, RouteNames.group);
+                  context.read<GroupCubit>().getGroupsByUserId();
+                },
+                child: rowItem(AppIcons.purpleDone, "Mening guruhlarim", false),
+              ),
+              spacer(),
+              InkWell(
+                onTap: () async {
+                  if (await context.read<PaymentCubit>().isConfirmed()) {
+                    context.read<PaymentCubit>().getCards();
+                    Navigator.push<void>(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (BuildContext context) =>
+                            const PaymeInfoConfirmation(
+                          null,
+                          isConfirmed: true,
+                        ),
+                      ),
+                    );
+                  } else {
+                    Navigator.pushNamed(context, RouteNames.payme);
+                  }
+                },
+                child: rowItem(AppIcons.payme, "Hisobni to’ldirish", false),
+              ),
+              spacer(),
+              InkWell(
+                onTap: () {
+                  logOutBottomSheet(context);
+                },
+                child: rowItem(AppIcons.logout, "Tizimdan chiqish", true),
+              ),
+            ]),
+          ),
         ),
       ],
     );
