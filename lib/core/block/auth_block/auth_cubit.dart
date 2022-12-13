@@ -8,6 +8,7 @@ import 'package:test_app/core/block/user_block/user_cubit.dart';
 import 'package:test_app/core/domain/user_model/user_model.dart';
 import 'package:test_app/core/helper/database/app_storage.dart';
 
+import '../../../res/functions/show_toast.dart';
 import '../../helper/repos/auth_repo.dart';
 
 part 'auth_state.dart';
@@ -170,9 +171,12 @@ class AuthCubit extends Cubit<AuthState> {
     try {
       final response = await _repo.resetPassword(realPhone);
       final rowData = response.data["id"];
+      showToast(response.data["message"]);
       emit(AuthOnSMS(id: rowData, phoneNumber: phone));
     } on DioError catch (e) {
-      emit(AuthDenied(error: e.response?.data["message"] ?? ""));
+      emit(AuthDenied(
+          error: e.response?.data["message"] ??
+              "Tizimda nosozlik, qaytattan urinib ko'ring"));
     } on SocketException {
       emit(const AuthDenied(error: "Tarmoqda nosozlik"));
     } catch (e) {

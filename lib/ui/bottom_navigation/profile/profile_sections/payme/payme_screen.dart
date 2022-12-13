@@ -60,7 +60,7 @@ class _PaymeScreenState extends State<PaymeScreen> {
               Gap(40.h),
               CustomSimpleAppBar(
                 isIcon: false,
-                isSimple: false,
+                isSimple: true,
                 titleText: "Hisobni to’ldirish",
                 routeText: RouteNames.main,
                 style: AppStyles.introButtonText.copyWith(
@@ -199,11 +199,6 @@ class _PaymeScreenState extends State<PaymeScreen> {
                                     _cardPanController.text.replaceAll(" ", ""),
                                     _cardPeriodController.text,
                                   );
-                              // context.read<PaymentCubit>().makePayment(
-                              //       _cardPeriodController.text,
-                              //       _cardPanController.text.replaceAll(" ", ""),
-                              //       _amountController.text.replaceAll(",", ""),
-                              //     );
                             },
                             child: Text(
                               "Karta qo'shish",

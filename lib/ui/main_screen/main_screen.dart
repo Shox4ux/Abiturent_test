@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:test_app/core/block/test_block/test_cubit.dart';
-import '../../core/block/drawer_cubit/drawer_cubit.dart';
 import '../../res/constants.dart';
 import '../bottom_navigation/dtm/dtm.dart';
 import '../bottom_navigation/mistakes/mistakes_screen.dart';
@@ -10,27 +9,28 @@ import '../bottom_navigation/rating/rating_screen.dart';
 import '../bottom_navigation/subjects/subject_screen.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({
+  const MainScreen(
+    this.pageIndex, {
     super.key,
   });
   @override
   State<MainScreen> createState() => _MainScreenState();
+
+  final int? pageIndex;
 }
 
 class _MainScreenState extends State<MainScreen> {
   int selectedIndex = 2;
   final _cubit = TestCubit();
-  final _cubit1 = DrawerCubit();
 
   @override
   void initState() {
     super.initState();
+    selectedIndex = widget.pageIndex ?? 2;
   }
 
   @override
   Widget build(BuildContext context) {
-    // context.read<SubjectCubit>().getSubjects();
-    print("object_uri");
     final screens = [
       SubjectsScreen(
         testType: selectedIndex,

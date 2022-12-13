@@ -39,19 +39,16 @@ class NewsScreen extends StatelessWidget {
       backgroundColor: AppColors.mainColor,
       body: SafeArea(
         child: Column(children: [
-          Padding(
-            padding: EdgeInsets.only(left: 20.w, bottom: 17.h),
-            child: CustomSimpleAppBar(
-              isIcon: false,
-              isSimple: true,
-              titleText: "Yangiliklar",
-              routeText: RouteNames.profile,
-              style: AppStyles.subtitleTextStyle.copyWith(
-                fontSize: 24.sp,
-                color: Colors.white,
-              ),
-              iconColor: Colors.white,
+          CustomSimpleAppBar(
+            isIcon: false,
+            isSimple: true,
+            titleText: "Yangiliklar",
+            routeText: RouteNames.profile,
+            style: AppStyles.subtitleTextStyle.copyWith(
+              fontSize: 24.sp,
+              color: Colors.white,
             ),
+            iconColor: Colors.white,
           ),
           Expanded(
             child: Container(
@@ -75,21 +72,28 @@ class NewsScreen extends StatelessWidget {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child: ListView.builder(
-                            padding: const EdgeInsets.only(bottom: 20),
-                            itemCount: list.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return GestureDetector(
-                                onTap: () {
-                                  Navigator.pushNamed(
-                                      context, RouteNames.innerNews,
-                                      arguments: list[index]);
-                                },
-                                child: newsItem(list[index]),
-                              );
-                            }),
-                      ),
+                      list.isNotEmpty
+                          ? Expanded(
+                              child: ListView.builder(
+                                  padding: const EdgeInsets.only(bottom: 20),
+                                  itemCount: list.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return GestureDetector(
+                                      onTap: () {
+                                        Navigator.pushNamed(
+                                            context, RouteNames.innerNews,
+                                            arguments: list[index]);
+                                      },
+                                      child: newsItem(list[index]),
+                                    );
+                                  }),
+                            )
+                          : const Expanded(
+                              child: Center(
+                                child: Text("Hozircha yangiliklar yo'q..."),
+                              ),
+                            ),
                     ],
                   );
                 },

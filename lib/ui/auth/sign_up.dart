@@ -187,14 +187,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         counter: const SizedBox.shrink(),
                         labelText: "Maxfiy so’z",
                         suffixIcon: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                _isObscure = !_isObscure;
-                              });
-                            },
-                            child: Icon(_isObscure
-                                ? Icons.visibility_off_outlined
-                                : Icons.visibility_outlined)),
+                          onTap: () {
+                            setState(() {
+                              _isObscure = !_isObscure;
+                            });
+                          },
+                          child: Icon(_isObscure
+                              ? Icons.visibility_off_outlined
+                              : Icons.visibility_outlined),
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(16.h),
                           borderSide: BorderSide(color: Colors.red, width: 2.w),

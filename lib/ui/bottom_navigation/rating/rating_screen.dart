@@ -8,9 +8,12 @@ import 'package:gap/gap.dart';
 import 'package:test_app/core/domain/user_model/rating_model.dart';
 import 'package:test_app/core/helper/repos/user_repo.dart';
 import 'package:test_app/res/components/custom_drawer.dart';
+import 'package:test_app/res/functions/show_toast.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../core/block/drawer_cubit/drawer_cubit.dart';
 import '../../../res/constants.dart';
 import '../../../res/components/custom_appbar.dart';
+import '../subjects/subject_screen.dart';
 
 RatingModel? ratingModel;
 
@@ -54,25 +57,94 @@ class _RatingScreenState extends State<RatingScreen> {
       backgroundColor: AppColors.mainColor,
       key: scaffKey,
       drawer: CustomDrawer(mainWidth: screenWidth),
-      body: SafeArea(
-        child: Column(children: [
-          CustomAppBar(scaffKey: scaffKey),
-          Expanded(
-            child: Container(
-              width: double.maxFinite,
-              padding: EdgeInsets.only(top: 20.h, left: 20.w, right: 20.w),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(28.r),
-                  topRight: Radius.circular(28.r),
+      body: WillPopScope(
+        onWillPop: () async {
+          return await onWillPop(context);
+        },
+        child: SafeArea(
+          child: Column(children: [
+            CustomAppBar(scaffKey: scaffKey),
+            Expanded(
+              child: Container(
+                width: double.maxFinite,
+                padding: EdgeInsets.only(top: 20.h, left: 20.w, right: 20.w),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(28.r),
+                    topRight: Radius.circular(28.r),
+                  ),
                 ),
-              ),
-              child: BlocBuilder<DrawerCubit, DrawerState>(
-                builder: (context, state) {
-                  if (state is DrawerSubId) {
+                child: BlocBuilder<DrawerCubit, DrawerState>(
+                  builder: (context, state) {
+                    if (state is DrawerSubId) {
+                      return FutureBuilder(
+                        future: callUserRating(state.subId),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<dynamic> snapshot) {
+                          if (!snapshot.hasData) {
+                            return const Center(
+                                child: Text("Iltimos kuting..."));
+                          }
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Umumiy reyting",
+                                style: AppStyles.introButtonText.copyWith(
+                                  color: Colors.black,
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  Image.asset(
+                                    AppIcons.medlFilled,
+                                    width: 24.w,
+                                    height: 24.h,
+                                  ),
+                                  Gap(10.h),
+                                  Expanded(
+                                    child: Text(
+                                      "${ratingModel!.subjectText} fani",
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style:
+                                          AppStyles.subtitleTextStyle.copyWith(
+                                        color: Colors.black,
+                                        fontSize: 16.sp,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Gap(18.h),
+                              ratingModel!.rating!.isNotEmpty
+                                  ? Expanded(
+                                      child: ListView.builder(
+                                          padding:
+                                              const EdgeInsets.only(bottom: 20),
+                                          itemCount:
+                                              ratingModel!.rating!.length,
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            return ratingItem("${index + 1}",
+                                                ratingModel!.rating![index]);
+                                          }),
+                                    )
+                                  : const Expanded(
+                                      child: Center(
+                                        child: Text(
+                                          "Hozircha ishtirokchilar mavjud emas...",
+                                        ),
+                                      ),
+                                    ),
+                            ],
+                          );
+                        },
+                      );
+                    }
                     return FutureBuilder(
-                      future: callUserRating(state.subId),
+                      future: callUserRating(1),
                       builder: (BuildContext context,
                           AsyncSnapshot<dynamic> snapshot) {
                         if (!snapshot.hasData) {
@@ -95,39 +167,49 @@ class _RatingScreenState extends State<RatingScreen> {
                                   height: 24.h,
                                 ),
                                 Gap(10.h),
-                                Text(
-                                  "${ratingModel!.subjectText} fani",
-                                  style: AppStyles.subtitleTextStyle.copyWith(
-                                    color: Colors.black,
-                                    fontSize: 20.sp,
+                                Expanded(
+                                  child: Text(
+                                    "${ratingModel!.subjectText} fani",
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: AppStyles.subtitleTextStyle.copyWith(
+                                      color: Colors.black,
+                                      fontSize: 16.sp,
+                                    ),
                                   ),
                                 ),
                               ],
                             ),
                             Gap(18.h),
-                            Expanded(
-                              child: ListView.builder(
-                                  padding: const EdgeInsets.only(bottom: 20),
-                                  itemCount: ratingModel!.rating!.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    return ratingItem("${index + 1}",
-                                        ratingModel!.rating![index]);
-                                  }),
-                            ),
+                            ratingModel!.rating!.isNotEmpty
+                                ? Expanded(
+                                    child: ListView.builder(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 20),
+                                        itemCount: ratingModel!.rating!.length,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          return ratingItem("${index + 1}",
+                                              ratingModel!.rating![index]);
+                                        }),
+                                  )
+                                : const Expanded(
+                                    child: Center(
+                                      child: Text(
+                                        "Hozircha ishtirokchilar mavjud emas...",
+                                      ),
+                                    ),
+                                  ),
                           ],
                         );
                       },
                     );
-                  }
-                  return const Center(
-                    child: Text("Fanni tanlang"),
-                  );
-                },
+                  },
+                ),
               ),
             ),
-          ),
-        ]),
+          ]),
+        ),
       ),
     );
   }
@@ -166,10 +248,17 @@ class _RatingScreenState extends State<RatingScreen> {
                             .copyWith(color: AppColors.smsVerColor),
                       ),
                       (data.userTelegram != null)
-                          ? Text(
-                              "${data.userTelegram}",
-                              style: AppStyles.subtitleTextStyle.copyWith(
-                                fontSize: 13.sp,
+                          ? InkWell(
+                              onTap: () async {
+                                await _launcher(
+                                    data.userTelegram!.replaceAll("@", ""));
+                              },
+                              child: Text(
+                                "${data.userTelegram}",
+                                style: AppStyles.subtitleTextStyle.copyWith(
+                                  fontSize: 13.sp,
+                                  color: AppColors.mainColor,
+                                ),
                               ),
                             )
                           : const SizedBox.shrink(),
@@ -201,5 +290,26 @@ class _RatingScreenState extends State<RatingScreen> {
         ],
       ),
     );
+  }
+}
+
+Future<bool> onWillPop(BuildContext context) {
+  DateTime now = DateTime.now();
+  if (currentBackPressTime == null ||
+      now.difference(currentBackPressTime!) > const Duration(seconds: 2)) {
+    currentBackPressTime = now;
+    showToast("Darturdan chiqich uchun tugmani ikki marta bosing");
+    return Future.value(false);
+  }
+  return Future.value(true);
+}
+
+Future<void> _launcher(String? userTelegram) async {
+  final Uri uri = Uri.parse("https://t.me/$userTelegram");
+  if (!await launchUrl(
+    uri,
+    mode: LaunchMode.externalApplication,
+  )) {
+    showToast("Tizimda nosozlik...");
   }
 }

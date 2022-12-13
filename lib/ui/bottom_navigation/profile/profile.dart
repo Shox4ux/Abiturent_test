@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:test_app/core/block/drawer_cubit/drawer_cubit.dart';
 import 'package:test_app/core/block/group_block/group_cubit.dart';
 import 'package:test_app/core/block/payment_cubit/payment_cubit.dart';
 import 'package:test_app/core/block/subscription_block/subscription_cubit.dart';
@@ -13,8 +14,10 @@ import 'package:test_app/res/constants.dart';
 import 'package:test_app/res/functions/number_formatter.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/payme/payme_info_confirmation.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/refactor/refactor.dart';
+import 'package:test_app/ui/main_screen/main_screen.dart';
 
 import '../../../core/block/auth_block/auth_cubit.dart';
+import '../../../core/block/index_cubit/index_cubit.dart';
 import '../../../core/helper/repos/user_repo.dart';
 import '../../../res/enum.dart';
 import '../../../res/navigation/main_navigation.dart';
@@ -35,7 +38,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   bool isInSubs = false;
-  bool isStats = true;
+  bool isStats = false;
 
   Future<UserInfo> getUserData() async {
     final e = await _s.getUserInfo();
@@ -69,6 +72,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
       print(e);
       return stats!;
     }
+  }
+
+  @override
+  void initState() {
+    isStats = true;
+    super.initState();
   }
 
   @override
@@ -112,23 +121,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Container(
-                                  height: 100.h,
-                                  width: 100.w,
-                                  clipBehavior: Clip.hardEdge,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(100.r),
-                                  ),
-                                  child: Image.network(
-                                    user!.image!,
-                                    fit: BoxFit.fill,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return Icon(
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push<void>(
+                                      context,
+                                      MaterialPageRoute<void>(
+                                        builder: (BuildContext context) =>
+                                            RefactorScreen(user: user!),
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    height: 100.h,
+                                    width: 100.w,
+                                    clipBehavior: Clip.hardEdge,
+                                    decoration: BoxDecoration(
+                                      borderRadius:
+                                          BorderRadius.circular(100.r),
+                                    ),
+                                    child: FadeInImage.assetNetwork(
+                                      image: user!.image!,
+                                      fit: BoxFit.cover,
+                                      imageErrorBuilder:
+                                          (context, error, stackTrace) => Icon(
                                         Icons.person,
                                         size: 64.h,
                                         color: AppColors.mainColor,
-                                      );
-                                    },
+                                      ),
+                                      placeholder: AppIcons.info,
+                                    ),
                                   ),
                                 ),
                                 Gap(10.w),
@@ -269,15 +290,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget statistics(List<StatModel> statList) {
     if (statList.isEmpty) {
-      return const Center(
-        child: Text("Fanlarga obuna bo'linmagan..."),
+      return const Expanded(
+        child: Center(
+          child: Text("Fanlarga obuna bo'linmagan..."),
+        ),
       );
     }
     return Expanded(
       child: ListView.builder(
         itemCount: statList.length,
         itemBuilder: (context, index) {
-          return statisticsItem(statList[index]);
+          return InkWell(
+              onTap: () {
+                context.read<DrawerCubit>().saveSubId(
+                      statList[index].subjectId!,
+                    );
+                context
+                    .read<IndexCubit>()
+                    .setUp(statList[index].subjectId! - 1);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const MainScreen(0),
+                  ),
+                );
+              },
+              child: statisticsItem(statList[index]));
         },
       ),
     );
@@ -437,7 +475,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     RouteNames.subscripts,
                   );
 
-                  context.read<SubscriptionCubit>().getScripts();
+                  // context.read<SubscriptionCubit>().getScripts();
                 },
                 child: rowItem(AppIcons.purpleDone, "Mening obunalarim", false),
               ),
@@ -611,10 +649,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
 Widget statisticsItem(StatModel statModel) {
   return Container(
-    margin: EdgeInsets.only(bottom: 5.h),
-    padding: EdgeInsets.symmetric(vertical: 13.h, horizontal: 17.w),
+    margin: EdgeInsets.only(bottom: 10.h),
+    padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 15.w),
     decoration: BoxDecoration(
-        color: Colors.white, borderRadius: BorderRadius.circular(14.r)),
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(14.r),
+    ),
     child: Row(
       children: [
         Column(
@@ -622,13 +662,13 @@ Widget statisticsItem(StatModel statModel) {
           children: [
             Image.network(
               statModel.medalImg!,
-              width: 36.w,
-              height: 36.h,
+              width: 48.w,
+              height: 48.h,
             ),
             Gap(10.h),
             Text(
               statModel.medalName!,
-              style: AppStyles.subtitleTextStyle.copyWith(fontSize: 14.sp),
+              style: AppStyles.subtitleTextStyle.copyWith(fontSize: 12.sp),
             ),
           ],
         ),
@@ -640,7 +680,7 @@ Widget statisticsItem(StatModel statModel) {
                 "${statModel.subjectText}",
                 style: AppStyles.introButtonText.copyWith(
                   color: Colors.black,
-                  fontSize: 24.sp,
+                  fontSize: 18.sp,
                 ),
               ),
               Row(
@@ -651,13 +691,13 @@ Widget statisticsItem(StatModel statModel) {
                       Text(
                         "Umumiy:",
                         style: AppStyles.introButtonText.copyWith(
-                          fontSize: 14.sp,
+                          fontSize: 12.sp,
                         ),
                       ),
                       Text(
                         "${statModel.rating}",
                         style: AppStyles.introButtonText
-                            .copyWith(color: Colors.green, fontSize: 24.sp),
+                            .copyWith(color: Colors.green, fontSize: 18.sp),
                       ),
                     ],
                   ),
@@ -666,13 +706,13 @@ Widget statisticsItem(StatModel statModel) {
                       Text(
                         "So’ngi haftalik:",
                         style: AppStyles.introButtonText.copyWith(
-                          fontSize: 14.sp,
+                          fontSize: 12.sp,
                         ),
                       ),
                       Text(
                         "${statModel.ratingWeek}",
                         style: AppStyles.introButtonText
-                            .copyWith(color: Colors.black, fontSize: 24.sp),
+                            .copyWith(color: Colors.black, fontSize: 18.sp),
                       ),
                     ],
                   )

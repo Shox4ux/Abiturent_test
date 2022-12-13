@@ -1,13 +1,16 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:gap/gap.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../../../core/block/group_block/group_cubit.dart';
 import '../../../../../core/domain/group_model/group_model.dart';
-import '../../../../../core/helper/repos/user_repo.dart';
 import '../../../../../res/constants.dart';
 import '../../../../../res/components/custom_simple_appbar.dart';
+import '../../../../../res/functions/show_toast.dart';
 import '../../../../../res/navigation/main_navigation.dart';
 
 class AddUserToGroup extends StatefulWidget {
@@ -19,24 +22,12 @@ class AddUserToGroup extends StatefulWidget {
 
 class _AddUserToGroupState extends State<AddUserToGroup> {
   bool? isEmpty;
+  var isAdmin = false;
 
   String? memberId;
 
-  void checkId() {
-    if (memberId == null) {
-      setState(() {
-        isEmpty = false;
-      });
-    } else {
-      setState(() {
-        isEmpty = true;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    checkId();
     return Scaffold(
       backgroundColor: AppColors.mainColor,
       body: SafeArea(
@@ -45,7 +36,7 @@ class _AddUserToGroupState extends State<AddUserToGroup> {
             isIcon: false,
             isSimple: true,
             isImportant: true,
-            titleText: "Ishtirokchi qo’shish",
+            titleText: "Ishtirokchilar",
             iconColor: Colors.white,
             routeText: RouteNames.group,
             style: AppStyles.subtitleTextStyle.copyWith(
@@ -76,7 +67,7 @@ class _AddUserToGroupState extends State<AddUserToGroup> {
                       Padding(
                         padding:
                             EdgeInsets.only(left: 20.w, right: 20.w, top: 20.h),
-                        child: Row(
+                        child: Column(
                           children: [
                             Row(
                               children: [
@@ -90,7 +81,7 @@ class _AddUserToGroupState extends State<AddUserToGroup> {
                                         .copyWith(color: Colors.black))
                               ],
                             ),
-                            Gap(20.w),
+                            Gap(5.h),
                             Row(
                               children: [
                                 Image.asset(
@@ -117,6 +108,13 @@ class _AddUserToGroupState extends State<AddUserToGroup> {
                             ),
                             itemCount: state.model.group!.membersArray!.length,
                             itemBuilder: (BuildContext context, int index) {
+                              isAdmin = (state.userId ==
+                                      state.model.group!.membersArray![index]
+                                          .userId &&
+                                  state.model.group!.membersArray![index]
+                                          .type ==
+                                      0);
+
                               return memberItem(
                                   "${index + 1}",
                                   state.model.group!.membersArray![index],
@@ -130,18 +128,20 @@ class _AddUserToGroupState extends State<AddUserToGroup> {
                                   state.userId);
                             }),
                       ),
-                      ElevatedButton(
-                        style: AppStyles.introUpButton,
-                        onPressed: () {
-                          openBottomSheet(context, state.model.group!.id!);
-                        },
-                        child: Text(
-                          "Ishtirokchi qo’shish",
-                          style: AppStyles.introButtonText
-                              .copyWith(color: const Color(0xffFCFCFC)),
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 10.h),
+                        child: ElevatedButton(
+                          style: AppStyles.introUpButton,
+                          onPressed: () {
+                            openBottomSheet(context, state.model.group!.id!);
+                          },
+                          child: Text(
+                            "Ishtirokchilar qo'shish",
+                            style: AppStyles.introButtonText
+                                .copyWith(color: const Color(0xffFCFCFC)),
+                          ),
                         ),
                       ),
-                      Gap(10.h),
                     ],
                   );
                 }
@@ -152,10 +152,9 @@ class _AddUserToGroupState extends State<AddUserToGroup> {
                       Padding(
                         padding:
                             EdgeInsets.only(left: 20.w, right: 20.w, top: 20.h),
-                        child: Row(
+                        child: Column(
                           children: [
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Image.asset(
                                   AppIcons.tab,
@@ -167,9 +166,8 @@ class _AddUserToGroupState extends State<AddUserToGroup> {
                                         .copyWith(color: Colors.black))
                               ],
                             ),
-                            Gap(20.w),
+                            Gap(5.h),
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Image.asset(
                                   AppIcons.user,
@@ -194,6 +192,10 @@ class _AddUserToGroupState extends State<AddUserToGroup> {
                             ),
                             itemCount: state.group.membersArray!.length,
                             itemBuilder: (BuildContext context, int index) {
+                              isAdmin = (state.userId ==
+                                      state.group.membersArray![index].userId &&
+                                  state.group.membersArray![index].type == 0);
+
                               return memberItem(
                                   "${index + 1}",
                                   state.group.membersArray![index],
@@ -206,18 +208,22 @@ class _AddUserToGroupState extends State<AddUserToGroup> {
                                   state.userId);
                             }),
                       ),
-                      ElevatedButton(
-                        style: AppStyles.introUpButton,
-                        onPressed: () {
-                          openBottomSheet(context, state.group.id!);
-                        },
-                        child: Text(
-                          "Ishtirokchi qo’shish",
-                          style: AppStyles.introButtonText
-                              .copyWith(color: const Color(0xffFCFCFC)),
-                        ),
-                      ),
-                      Gap(10.h),
+                      isAdmin
+                          ? Padding(
+                              padding: EdgeInsets.only(bottom: 10.h),
+                              child: ElevatedButton(
+                                style: AppStyles.introUpButton,
+                                onPressed: () {
+                                  openBottomSheet(context, state.group.id!);
+                                },
+                                child: Text(
+                                  "Ishtirokchi qo’shish",
+                                  style: AppStyles.introButtonText
+                                      .copyWith(color: const Color(0xffFCFCFC)),
+                                ),
+                              ),
+                            )
+                          : const SizedBox.shrink(),
                     ],
                   );
                 }
@@ -292,8 +298,13 @@ class _AddUserToGroupState extends State<AddUserToGroup> {
   }
 }
 
-Widget memberItem(String index, MembersArray data, bool isAdmin,
-    BuildContext context, int userId) {
+Widget memberItem(
+  String index,
+  MembersArray data,
+  bool isAdmin,
+  BuildContext context,
+  int userId,
+) {
   if (isAdmin) {
     return Container(
       margin: EdgeInsets.only(bottom: 10.h),
@@ -332,6 +343,21 @@ Widget memberItem(String index, MembersArray data, bool isAdmin,
                       style: AppStyles.subtitleTextStyle
                           .copyWith(color: AppColors.smsVerColor),
                     ),
+                    Gap(5.h),
+                    data.telegramLink!.isNotEmpty
+                        ? InkWell(
+                            onTap: () {
+                              _launcher(data.telegramLink!);
+                            },
+                            child: Text(
+                              "${data.telegramLink}",
+                              style: AppStyles.subtitleTextStyle.copyWith(
+                                fontSize: 13.sp,
+                                color: AppColors.mainColor,
+                              ),
+                            ),
+                          )
+                        : const SizedBox.shrink(),
                   ],
                 ),
                 Container(
@@ -430,6 +456,16 @@ Widget memberItem(String index, MembersArray data, bool isAdmin,
       ),
     ),
   );
+}
+
+Future<void> _launcher(String? userTelegram) async {
+  final Uri uri = Uri.parse("https://t.me/$userTelegram");
+  if (!await launchUrl(
+    uri,
+    mode: LaunchMode.externalApplication,
+  )) {
+    showToast("Tizimda nosozlik...");
+  }
 }
 
 Future<dynamic> alertDialog(

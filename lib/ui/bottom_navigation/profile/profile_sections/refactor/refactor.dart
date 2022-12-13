@@ -99,6 +99,10 @@ class _RefactorScreenState extends State<RefactorScreen> {
                                     width: 160.w,
                                     clipBehavior: Clip.hardEdge,
                                     decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: AppColors.mainColor,
+                                        width: 2.w,
+                                      ),
                                       borderRadius:
                                           BorderRadius.circular(100.r),
                                     ),
@@ -153,6 +157,7 @@ class _RefactorScreenState extends State<RefactorScreen> {
                                 controller: _changedNameController,
                                 keyboardType: TextInputType.name,
                                 decoration: InputDecoration(
+                                  labelText: "Abiturent F.I.O",
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(16.h),
                                   ),
@@ -169,6 +174,7 @@ class _RefactorScreenState extends State<RefactorScreen> {
                                 controller: _tegLinkController,
                                 keyboardType: TextInputType.name,
                                 decoration: InputDecoration(
+                                  labelText: "Telegram link ",
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(16.h),
                                   ),

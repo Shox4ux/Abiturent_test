@@ -173,7 +173,7 @@ class AppIcons {
   static const String card = "assets/card.png";
   static const String news = "assets/news.png";
   static const String bell = "assets/bell.png";
-    static const String crown = "assets/crown.png";
+  static const String crown = "assets/crown.png";
   static const String bigNews = "assets/big_news.png";
   static const String greenSub = "assets/green_sub.png";
   static const String redSub = "assets/red_sub.png";
@@ -195,6 +195,8 @@ class WarningValues {
   static const String fillBudget = "fillBudget";
   static const String warning = "warning";
   static const String hisobError = "hisobError";
+  static const String tizimError = "tizimError";
+
   static const String internetError = "internetError";
   static const String authError = "authError";
   static const String obunaError = "authError";

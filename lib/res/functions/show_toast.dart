@@ -7,10 +7,10 @@ import '../constants.dart';
 showToast(String message) {
   Fluttertoast.showToast(
     msg: message,
-    gravity: ToastGravity.SNACKBAR,
+    gravity: ToastGravity.CENTER,
     textColor: Colors.white,
     backgroundColor: AppColors.mainColor,
-    fontSize: 12.sp,
+    fontSize: 16.sp,
     toastLength: Toast.LENGTH_SHORT,
   );
 }

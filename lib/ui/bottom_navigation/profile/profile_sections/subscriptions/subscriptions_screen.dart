@@ -22,6 +22,7 @@ class MySubscriptions extends StatefulWidget {
 class _MySubscriptionsState extends State<MySubscriptions> {
   @override
   void initState() {
+    context.read<SubscriptionCubit>().getScripts();
     super.initState();
   }
 
@@ -30,7 +31,7 @@ class _MySubscriptionsState extends State<MySubscriptions> {
     return BlocListener<SubscriptionCubit, SubscriptionState>(
       listener: (context, state) {
         if (state is OnSubscriptionPreview) {
-          Navigator.pushAndRemoveUntil<void>(
+          Navigator.push(
             context,
             MaterialPageRoute<void>(
                 builder: (BuildContext context) => const WaitingScreen(
@@ -39,7 +40,6 @@ class _MySubscriptionsState extends State<MySubscriptions> {
                       buttonText: "",
                       extraText: "",
                     )),
-            (Route<dynamic> route) => false,
           );
         }
       },

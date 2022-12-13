@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:test_app/res/navigation/main_navigation.dart';
-
 import '../../core/block/group_block/group_cubit.dart';
+import '../../core/block/subscription_block/subscription_cubit.dart';
 import '../constants.dart';
 
 class CustomSimpleAppBar extends StatefulWidget {
@@ -16,6 +16,7 @@ class CustomSimpleAppBar extends StatefulWidget {
     required this.iconColor,
     required this.isSimple,
     this.isImportant,
+    this.isScript,
     required this.isIcon,
   }) : super(key: key);
 
@@ -26,6 +27,8 @@ class CustomSimpleAppBar extends StatefulWidget {
   final bool isSimple;
   final bool isIcon;
   bool? isImportant;
+
+  bool? isScript = false;
 
   @override
   State<CustomSimpleAppBar> createState() => _CustomSimpleAppBarState();
@@ -38,40 +41,51 @@ class _CustomSimpleAppBarState extends State<CustomSimpleAppBar> {
         ? Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      if (widget.isSimple && widget.isImportant != null) {
-                        context.read<GroupCubit>().getGroupsByUserId();
-                        Navigator.pushNamed(context, RouteNames.group);
-                        return;
-                      }
-                      if (widget.isSimple) {
-                        Navigator.pop(context);
-                        return;
-                      }
-                      Navigator.pushNamed(
-                        context,
-                        widget.routeText!,
-                      );
-                    },
-                    icon: Image.asset(
-                      AppIcons.arrowBack,
-                      color: widget.iconColor,
-                      height: 24.h,
-                      width: 24.w,
+              Expanded(
+                child: Row(
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        if (widget.isSimple && widget.isImportant != null) {
+                          context.read<GroupCubit>().getGroupsByUserId();
+                          Navigator.pushNamed(context, RouteNames.group);
+                          return;
+                        }
+                        if (widget.isSimple) {
+                          Navigator.popUntil(
+                            context,
+                            (route) => false,
+                          );
+                          return;
+                        }
+                        if (widget.isScript!) {
+                          context.read<SubscriptionCubit>().getScripts();
+                          Navigator.pop(context);
+                          return;
+                        }
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          widget.routeText!,
+                          (route) => false,
+                        );
+                      },
+                      icon: Image.asset(
+                        AppIcons.arrowBack,
+                        color: widget.iconColor,
+                        height: 24.h,
+                        width: 24.w,
+                      ),
                     ),
-                  ),
-                  Gap(10.w),
-                  Expanded(
-                    child: Text(
-                      widget.titleText,
-                      style: widget.style,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  )
-                ],
+                    Gap(10.w),
+                    Expanded(
+                      child: Text(
+                        widget.titleText,
+                        style: widget.style,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    )
+                  ],
+                ),
               ),
               InkWell(
                 onTap: () {

@@ -32,7 +32,6 @@ class _InsideNewsScreenState extends State<InsideNewsScreen> {
               SizedBox(
                 height: 320.h,
                 width: double.maxFinite,
-                //Change here after showing
                 child: FadeInImage.assetNetwork(
                   placeholder: AppIcons.newsError,
                   image: widget.model.imageLink!,

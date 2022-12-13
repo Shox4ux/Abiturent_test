@@ -35,14 +35,16 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void route() async {
     if (await _storage.isLoggedIn()) {
-      Navigator.pushNamed(
+      Navigator.pushNamedAndRemoveUntil(
         context,
         RouteNames.main,
+        (route) => false,
       );
     } else {
-      Navigator.pushNamed(
+      Navigator.pushNamedAndRemoveUntil(
         context,
         RouteNames.intro,
+        (route) => false,
       );
     }
   }

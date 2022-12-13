@@ -54,7 +54,8 @@ class GroupCubit extends Cubit<GroupState> {
       emit(OnGroupAdded(rowData, u.id!));
     } on DioError catch (e) {
       emit(OnError(e.response!.data["message"]));
-    } on SocketException catch (e) {
+      getGroupMembers(groupId);
+    } on SocketException {
       emit(const OnError("Tarmoqda nosozlik"));
     } catch (e) {
       emit(const OnError("Tizimda nosozlik"));

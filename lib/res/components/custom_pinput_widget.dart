@@ -48,62 +48,59 @@ class _PinPutWidgetState extends State<PinPutWidget> {
           fontWeight: FontWeight.w700,
         );
 
-    return FocusTrapArea(
-      focusNode: focusNode,
-      child: GestureDetector(
-        onTap: () {
-          focusNode.requestFocus();
-          print('object');
-        },
-        child: Column(
-          children: [
-            Material(
-              child: SizedBox(
-                height: 40.h,
-                child: Row(
-                  children: [
-                    for (var i = 0; i < widget.lenth; i++)
-                      Row(
-                        children: [
-                          (code.length > i)
-                              ? Text(
-                                  code[i],
-                                  style: style,
-                                )
-                              : Container(
-                                  height: 16.h,
-                                  width: 16.h,
-                                  decoration: const BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: AppColors.gray,
-                                  ),
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).requestFocus(focusNode);
+        print('object');
+      },
+      child: Column(
+        children: [
+          Material(
+            child: SizedBox(
+              height: 40.h,
+              child: Row(
+                children: [
+                  for (var i = 0; i < widget.lenth; i++)
+                    Row(
+                      children: [
+                        (code.length > i)
+                            ? Text(
+                                code[i],
+                                style: style,
+                              )
+                            : Container(
+                                height: 16.h,
+                                width: 16.h,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: AppColors.gray,
                                 ),
-                          SizedBox(width: 16.w),
-                        ],
-                      )
-                  ],
-                ),
+                              ),
+                        SizedBox(width: 16.w),
+                      ],
+                    )
+                ],
               ),
             ),
-            SizedBox(
-              height: 0,
-              child: TextField(
-                autofocus: true,
-                focusNode: focusNode,
-                maxLength: null,
-                minLines: null,
-                maxLines: null,
-                keyboardType: TextInputType.number,
-                onChanged: onChanged,
-                style: const TextStyle(fontSize: 0),
-                decoration: const InputDecoration(
-                  contentPadding: EdgeInsets.zero,
-                  border: InputBorder.none,
-                ),
+          ),
+          SizedBox(
+            height: 0,
+            child: TextField(
+              autofocus: true,
+              focusNode: focusNode,
+              maxLength: null,
+              minLines: null,
+              maxLines: null,
+              keyboardType: TextInputType.number,
+              onChanged: onChanged,
+              style: const TextStyle(fontSize: 0),
+              decoration: const InputDecoration(
+                contentPadding: EdgeInsets.zero,
+                border: InputBorder.none,
               ),
-            )
-          ],
-        ),
+            ),
+          )
+        ],
       ),
     );
   }

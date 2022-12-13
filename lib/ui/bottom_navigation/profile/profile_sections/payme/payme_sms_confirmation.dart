@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:test_app/core/domain/patment_model/card_model.dart';
 import 'package:test_app/res/functions/show_toast.dart';
-import 'package:test_app/res/navigation/main_navigation.dart';
 
 import '../../../../../core/block/payment_cubit/payment_cubit.dart';
 import '../../../../../res/components/custom_card.dart';

@@ -6,6 +6,22 @@ import '../dio/dio_client.dart';
 class TestRepo {
   final _dio = DioClient.getDio();
 
+  Future<Response> getTestPaginationByType(
+    int subId,
+    int typeIndex,
+    int page,
+    int perPage,
+  ) async {
+    final Map<String, dynamic> params = {
+      "id": subId,
+      "page": page,
+      "per_page": perPage,
+      "type": typeIndex,
+    };
+    return await _dio.get(ApiValues.testsBySubIdAndTypeIndex,
+        queryParameters: params);
+  }
+
   Future<Response> getTestsBySubjectId(int subjectId, int typeIndex) async {
     final Map<String, dynamic> params = {"id": subjectId, "type": typeIndex};
     return await _dio.get(ApiValues.testsBySubIdAndTypeIndex,
@@ -23,7 +39,11 @@ class TestRepo {
   }
 
   Future<Response> sendTestAnswer(
-      int questionId, int answerId, int userId, int testListId) async {
+    int questionId,
+    int answerId,
+    int userId,
+    int testListId,
+  ) async {
     var formData = FormData.fromMap({
       "question_id": questionId,
       "answer_id": answerId,

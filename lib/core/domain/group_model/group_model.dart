@@ -75,16 +75,19 @@ class MembersArray {
   String? created;
   String? groupTitle;
   String? subjectTitle;
+  String? telegramLink;
 
-  MembersArray(
-      {this.id,
-      this.userId,
-      this.fullname,
-      this.rating,
-      this.type,
-      this.created,
-      this.groupTitle,
-      this.subjectTitle});
+  MembersArray({
+    this.id,
+    this.userId,
+    this.fullname,
+    this.rating,
+    this.type,
+    this.created,
+    this.groupTitle,
+    this.subjectTitle,
+    this.telegramLink,
+  });
 
   MembersArray.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -95,6 +98,8 @@ class MembersArray {
     created = json['created'];
     groupTitle = json['group_title'];
     subjectTitle = json['subject_title'];
+    subjectTitle = json['subject_title'];
+    telegramLink = json['telegram_link'];
   }
 
   Map<String, dynamic> toJson() {
@@ -107,6 +112,8 @@ class MembersArray {
     data['created'] = created;
     data['group_title'] = groupTitle;
     data['subject_title'] = subjectTitle;
+    data['telegram_link'] = telegramLink;
+
     return data;
   }
 }

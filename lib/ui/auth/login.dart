@@ -51,6 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
           showToast("Muvaffaqiyatli ro'yxattan o'tildi");
           Navigator.of(context).pushNamedAndRemoveUntil(
             RouteNames.main,
+            arguments: 2,
             (Route<dynamic> route) => false,
           );
         }

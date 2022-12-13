@@ -121,15 +121,15 @@ Widget drawerItem(String text, bool isSelected) {
 Widget selected(String text) {
   return Container(
     margin: EdgeInsets.only(bottom: 10.h, right: 30.w),
-    padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-    height: 40.h,
+    padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 5.h),
     width: double.maxFinite,
     decoration: const BoxDecoration(color: AppColors.mainColor),
     child: Text(
       text,
+      textAlign: TextAlign.start,
       style: AppStyles.introButtonText.copyWith(
         color: Colors.white,
-        fontSize: 18.sp,
+        fontSize: 16.sp,
       ),
     ),
   );
@@ -139,13 +139,12 @@ Widget unSelected(String text) {
   return Container(
     margin: EdgeInsets.only(bottom: 10.h, right: 30.w),
     padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-    height: 40.h,
     width: double.maxFinite,
     child: Text(
       text,
       style: AppStyles.introButtonText.copyWith(
         color: Colors.black,
-        fontSize: 18.sp,
+        fontSize: 16.sp,
       ),
     ),
   );

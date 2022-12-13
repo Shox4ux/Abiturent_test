@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import '../constants.dart';
 
-showRetryDialog(BuildContext context, Future function, String topic) {
+showRetryDialog(BuildContext context, Future function, String alertText) {
   return showDialog(
     context: context,
     builder: ((context) => AlertDialog(
-          title: Text(topic),
           actions: [
             TextButton(
               onPressed: () async {
                 function;
               },
-              child: const Text(
-                "Qaytattan",
-                style: TextStyle(
+              child: Text(
+                alertText,
+                style: const TextStyle(
                   color: AppColors.mainColor,
                 ),
               ),

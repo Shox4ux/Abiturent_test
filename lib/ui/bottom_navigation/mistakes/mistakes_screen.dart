@@ -8,56 +8,117 @@ import 'package:test_app/core/helper/repos/test_repo.dart';
 import 'package:test_app/res/components/custom_appbar.dart';
 import 'package:test_app/res/components/custom_dot.dart';
 import 'package:test_app/res/components/custom_drawer.dart';
-import '../../../core/block/subjecy_bloc/subject_cubit.dart';
 import '../../../core/domain/test_model/test_result_model.dart';
 import '../../../res/constants.dart';
+import '../../../res/functions/show_toast.dart';
+import '../subjects/subject_screen.dart';
 
 List<TestResult>? errorList;
 final _repo = TestRepo();
 final _storage = AppStorage();
 
-class MistakesScreen extends StatelessWidget {
+class MistakesScreen extends StatefulWidget {
   const MistakesScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final GlobalKey<ScaffoldState> scaffKey = GlobalKey<ScaffoldState>();
-    final screenWidth = MediaQuery.of(context).size.width;
+  State<MistakesScreen> createState() => _MistakesScreenState();
+}
 
-    Future<List<TestResult>> getErrorList(int subId) async {
-      final uId = await _storage.getUserId();
-      final response = await _repo.getErrorList(uId, subId);
-      errorList = null;
-      if (response.statusCode == 200) {
-        final rowData = response.data as List;
-        final rowtList = rowData.map((e) => TestResult.fromJson(e)).toList();
-        errorList = rowtList;
-        return errorList!;
-      }
+class _MistakesScreenState extends State<MistakesScreen> {
+  @override
+  void initState() {
+    getErrorList(1);
+    super.initState();
+  }
 
+  final GlobalKey<ScaffoldState> scaffKey = GlobalKey<ScaffoldState>();
+
+  Future<List<TestResult>> getErrorList(int subId) async {
+    final uId = await _storage.getUserId();
+    final response = await _repo.getErrorList(uId, subId);
+    errorList = null;
+    if (response.statusCode == 200) {
+      final rowData = response.data as List;
+      final rowtList = rowData.map((e) => TestResult.fromJson(e)).toList();
+      errorList = rowtList;
       return errorList!;
     }
 
+    return errorList!;
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      drawer: CustomDrawer(mainWidth: screenWidth),
+      drawer: CustomDrawer(mainWidth: MediaQuery.of(context).size.width),
       backgroundColor: AppColors.mainColor,
       key: scaffKey,
-      body: SafeArea(
-        child: Column(children: [
-          CustomAppBar(scaffKey: scaffKey),
-          Expanded(
-            child: Container(
-              padding: EdgeInsets.only(top: 20.h, left: 20.w, right: 20.w),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(28.r),
-                  topRight: Radius.circular(28.r),
+      body: WillPopScope(
+        onWillPop: () async {
+          return await onWillPop(context);
+        },
+        child: SafeArea(
+          child: Column(children: [
+            CustomAppBar(scaffKey: scaffKey),
+            Expanded(
+              child: Container(
+                padding: EdgeInsets.only(top: 20.h, left: 20.w, right: 20.w),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(28.r),
+                    topRight: Radius.circular(28.r),
+                  ),
                 ),
-              ),
-              child: BlocBuilder<DrawerCubit, DrawerState>(
-                builder: (context, state) {
-                  if (state is DrawerSubId) {
+                child: BlocBuilder<DrawerCubit, DrawerState>(
+                  builder: (context, state) {
+                    if (state is DrawerSubId) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Xatolar bilan ishlash",
+                            style: AppStyles.introButtonText.copyWith(
+                              color: Colors.black,
+                            ),
+                          ),
+                          Gap(10.h),
+                          FutureBuilder(
+                            future: getErrorList(state.subId),
+                            builder: (context, snapshot) {
+                              if (!snapshot.hasData) {
+                                return const Expanded(
+                                  child:
+                                      Center(child: Text("Iltimos kuting...")),
+                                );
+                              }
+                              return errorList!.isNotEmpty
+                                  ? Expanded(
+                                      child: ListView.builder(
+                                          padding:
+                                              const EdgeInsets.only(bottom: 20),
+                                          itemCount: errorList!.length,
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            return testItem(
+                                              errorList![index],
+                                              errorList![index].answersDetail!,
+                                              errorList![index]
+                                                  .questionContent!,
+                                            );
+                                          }),
+                                    )
+                                  : const Expanded(
+                                      child: Center(
+                                        child: Text(
+                                            "Hozircha bu fan bo'yicha xatolar yo'q..."),
+                                      ),
+                                    );
+                            },
+                          )
+                        ],
+                      );
+                    }
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -69,73 +130,48 @@ class MistakesScreen extends StatelessWidget {
                         ),
                         Gap(10.h),
                         FutureBuilder(
-                          future: getErrorList(state.subId),
+                          future: getErrorList(1),
                           builder: (context, snapshot) {
                             if (!snapshot.hasData) {
-                              return const Center(
-                                child: Text("Hozircha xatolar topilmadi..."),
+                              return const Expanded(
+                                child: Center(
+                                  child: Text("Hozircha xatolar topilmadi..."),
+                                ),
                               );
                             } else {
-                              return Expanded(
-                                child: ListView.builder(
-                                    padding: const EdgeInsets.only(bottom: 20),
-                                    itemCount: errorList!.length,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return testItem(
-                                        errorList![index],
-                                        errorList![index].answersDetail!,
-                                        errorList![index].questionContent!,
-                                      );
-                                    }),
-                              );
+                              return errorList!.isNotEmpty
+                                  ? Expanded(
+                                      child: ListView.builder(
+                                          padding:
+                                              const EdgeInsets.only(bottom: 20),
+                                          itemCount: errorList!.length,
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            return testItem(
+                                              errorList![index],
+                                              errorList![index].answersDetail!,
+                                              errorList![index]
+                                                  .questionContent!,
+                                            );
+                                          }),
+                                    )
+                                  : const Expanded(
+                                      child: Center(
+                                        child: Text(
+                                            "Hozircha bu fan bo'yicha xatolar yo'q..."),
+                                      ),
+                                    );
                             }
                           },
                         )
                       ],
                     );
-                  }
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Xatolar bilan ishlash",
-                        style: AppStyles.introButtonText.copyWith(
-                          color: Colors.black,
-                        ),
-                      ),
-                      Gap(10.h),
-                      FutureBuilder(
-                        future: getErrorList(1),
-                        builder: (context, snapshot) {
-                          if (!snapshot.hasData) {
-                            return const Center(
-                              child: Text("Hozircha xatolar topilmadi..."),
-                            );
-                          } else {
-                            return Expanded(
-                              child: ListView.builder(
-                                  padding: const EdgeInsets.only(bottom: 20),
-                                  itemCount: errorList!.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    return testItem(
-                                      errorList![index],
-                                      errorList![index].answersDetail!,
-                                      errorList![index].questionContent!,
-                                    );
-                                  }),
-                            );
-                          }
-                        },
-                      )
-                    ],
-                  );
-                },
+                  },
+                ),
               ),
             ),
-          ),
-        ]),
+          ]),
+        ),
       ),
     );
   }
@@ -171,7 +207,6 @@ class MistakesScreen extends StatelessWidget {
               ),
               Gap(10.h),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     "Savol #: ${result.questionPrior}",
@@ -180,11 +215,15 @@ class MistakesScreen extends StatelessWidget {
                       fontSize: 14.sp,
                     ),
                   ),
-                  Text(
-                    "Fan #: ${result.subjectName}",
-                    style: AppStyles.subtitleTextStyle.copyWith(
-                      color: AppColors.titleColor,
-                      fontSize: 14.sp,
+                  Gap(10.w),
+                  Expanded(
+                    child: Text(
+                      "Fan #: ${result.subjectName}",
+                      overflow: TextOverflow.ellipsis,
+                      style: AppStyles.subtitleTextStyle.copyWith(
+                        color: AppColors.titleColor,
+                        fontSize: 14.sp,
+                      ),
                     ),
                   ),
                 ],
@@ -253,6 +292,17 @@ class MistakesScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<bool> onWillPop(BuildContext context) {
+    DateTime now = DateTime.now();
+    if (currentBackPressTime == null ||
+        now.difference(currentBackPressTime!) > const Duration(seconds: 2)) {
+      currentBackPressTime = now;
+      showToast("Darturdan chiqich uchun tugmani ikki marta bosing");
+      return Future.value(false);
+    }
+    return Future.value(true);
   }
 
   TextStyle returnStyle(int selectedId, int answerId, int correctId) {

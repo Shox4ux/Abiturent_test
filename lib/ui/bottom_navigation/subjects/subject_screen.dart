@@ -7,8 +7,7 @@ import 'package:test_app/core/domain/test_model/test_model.dart';
 import 'package:test_app/core/helper/repos/test_repo.dart';
 import 'package:test_app/res/components/custom_dot.dart';
 import 'package:test_app/res/components/custom_drawer.dart';
-import 'package:test_app/res/functions/retry_dialog.dart';
-import 'package:test_app/res/navigation/main_navigation.dart';
+import 'package:test_app/res/functions/show_toast.dart';
 import 'package:test_app/ui/test_screens/books.dart';
 
 import '../../../core/block/drawer_cubit/drawer_cubit.dart';
@@ -18,19 +17,17 @@ import '../../../res/components/custom_appbar.dart';
 import '../../test_screens/test.dart';
 
 TestModel? testModel;
+DateTime? currentBackPressTime;
 
 class SubjectsScreen extends StatelessWidget {
   const SubjectsScreen({
     Key? key,
     required this.testType,
   }) : super(key: key);
-
   final int testType;
-
   @override
   Widget build(BuildContext context) {
     final repo = TestRepo();
-
     final GlobalKey<ScaffoldState> scaffKey = GlobalKey<ScaffoldState>();
     final screenWidth = MediaQuery.of(context).size.width;
 
@@ -51,26 +48,90 @@ class SubjectsScreen extends StatelessWidget {
       backgroundColor: AppColors.mainColor,
       key: scaffKey,
       drawer: CustomDrawer(mainWidth: screenWidth),
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CustomAppBar(scaffKey: scaffKey),
-            Expanded(
-              child: Container(
-                width: double.maxFinite,
-                padding: EdgeInsets.only(top: 14.h),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(28.r),
-                      topRight: Radius.circular(28.r),
-                    )),
-                child: BlocBuilder<DrawerCubit, DrawerState>(
-                  builder: (context, state) {
-                    if (state is DrawerSubId) {
+      body: WillPopScope(
+        onWillPop: () async {
+          return await onWillPop(context);
+        },
+        child: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CustomAppBar(scaffKey: scaffKey),
+              Expanded(
+                child: Container(
+                  width: double.maxFinite,
+                  padding: EdgeInsets.only(top: 14.h),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(28.r),
+                        topRight: Radius.circular(28.r),
+                      )),
+                  child: BlocBuilder<DrawerCubit, DrawerState>(
+                    builder: (context, state) {
+                      if (state is DrawerSubId) {
+                        return FutureBuilder(
+                          future: getTestModel(state.subId),
+                          builder: (context, snapshot) {
+                            if (!snapshot.hasData) {
+                              return const Center(
+                                  child: Text("Iltimos kuting..."));
+                            }
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 20.w),
+                                  child: Text(
+                                    "Mashg'ulot uchun testlar",
+                                    style: AppStyles.introButtonText.copyWith(
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                                Gap(10.h),
+                                Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 20.w),
+                                  child: Text(
+                                    testModel!.subjects!.name!,
+                                    style: AppStyles.introButtonText.copyWith(
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                                Gap(10.h),
+                                (testModel!.tests!.isEmpty)
+                                    ? const Expanded(
+                                        child: Center(
+                                          child: Text("Testlar topilmadi"),
+                                        ),
+                                      )
+                                    : Expanded(
+                                        child: ListView.builder(
+                                            padding: EdgeInsets.only(
+                                              bottom: 20.h,
+                                              top: 10.h,
+                                            ),
+                                            itemCount: testModel!.tests!.length,
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              return subjectItem(
+                                                testModel!.tests![index],
+                                                testModel!.books!,
+                                                context,
+                                                (index + 1),
+                                              );
+                                            }),
+                                      ),
+                              ],
+                            );
+                          },
+                        );
+                      }
                       return FutureBuilder(
-                        future: getTestModel(state.subId),
+                        future: getTestModel(1),
                         builder: (context, snapshot) {
                           if (!snapshot.hasData) {
                             return const Center(
@@ -79,16 +140,6 @@ class SubjectsScreen extends StatelessWidget {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 20.w),
-                                child: Text(
-                                  "Mashg'ulot uchun testlar",
-                                  style: AppStyles.introButtonText.copyWith(
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                              Gap(10.h),
                               Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 20.w),
                                 child: Text(
@@ -126,64 +177,34 @@ class SubjectsScreen extends StatelessWidget {
                           );
                         },
                       );
-                    }
-                    return FutureBuilder(
-                      future: getTestModel(1),
-                      builder: (context, snapshot) {
-                        if (!snapshot.hasData) {
-                          return const Center(child: Text("Iltimos kuting..."));
-                        }
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 20.w),
-                              child: Text(
-                                testModel!.subjects!.name!,
-                                style: AppStyles.introButtonText.copyWith(
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-                            Gap(10.h),
-                            (testModel!.tests!.isEmpty)
-                                ? const Expanded(
-                                    child: Center(
-                                      child: Text("Testlar topilmadi"),
-                                    ),
-                                  )
-                                : Expanded(
-                                    child: ListView.builder(
-                                        padding: EdgeInsets.only(
-                                          bottom: 20.h,
-                                          top: 10.h,
-                                        ),
-                                        itemCount: testModel!.tests!.length,
-                                        itemBuilder:
-                                            (BuildContext context, int index) {
-                                          return subjectItem(
-                                              testModel!.tests![index],
-                                              testModel!.books!,
-                                              context,
-                                              (index + 1));
-                                        }),
-                                  ),
-                          ],
-                        );
-                      },
-                    );
-                  },
+                    },
+                  ),
                 ),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );
   }
 
+  Future<bool> onWillPop(BuildContext context) {
+    DateTime now = DateTime.now();
+    if (currentBackPressTime == null ||
+        now.difference(currentBackPressTime!) > const Duration(seconds: 2)) {
+      currentBackPressTime = now;
+      showToast("Darturdan chiqich uchun tugmani ikki marta bosing");
+      return Future.value(false);
+    }
+    return Future.value(true);
+  }
+
   Widget subjectItem(
-      Tests tests, List<Books> books, BuildContext context, int testIndex) {
+    Tests tests,
+    List<Books> books,
+    BuildContext context,
+    int testIndex,
+  ) {
     return Container(
       margin: EdgeInsets.only(bottom: 20.h, left: 20.w, right: 20.w),
       width: 333.w,
@@ -258,15 +279,18 @@ class SubjectsScreen extends StatelessWidget {
                   ),
                 ),
                 Gap(20.w),
+
+                // for (var i = 0; i < testModel!.books!.length; i++)
                 (testModel!.books!.isNotEmpty)
                     ? InkWell(
                         onTap: () {
                           Navigator.push<void>(
                             context,
                             MaterialPageRoute<void>(
-                                builder: (BuildContext context) => BookScreen(
-                                      bookList: books,
-                                    )),
+                              builder: (BuildContext context) => BookScreen(
+                                bookList: books,
+                              ),
+                            ),
                           );
                         },
                         child: Container(

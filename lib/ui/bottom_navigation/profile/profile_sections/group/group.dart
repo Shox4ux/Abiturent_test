@@ -125,22 +125,32 @@ class _GroupScreenState extends State<GroupScreen> {
                       if (state is OnGroupsReceived) {
                         return Column(
                           children: [
-                            Expanded(
-                              child: ListView.builder(
-                                padding: const EdgeInsets.only(bottom: 20),
-                                itemCount: state.groupList.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return InkWell(
-                                      onTap: () {
-                                        context
-                                            .read<GroupCubit>()
-                                            .getGroupMembers(
-                                                state.groupList[index].id!);
+                            state.groupList.isNotEmpty
+                                ? Expanded(
+                                    child: ListView.builder(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 20),
+                                      itemCount: state.groupList.length,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        return InkWell(
+                                            onTap: () {
+                                              context
+                                                  .read<GroupCubit>()
+                                                  .getGroupMembers(state
+                                                      .groupList[index].id!);
+                                            },
+                                            child: groupItem(
+                                                state.groupList[index]));
                                       },
-                                      child: groupItem(state.groupList[index]));
-                                },
-                              ),
-                            ),
+                                    ),
+                                  )
+                                : const Expanded(
+                                    child: Center(
+                                      child: Text(
+                                          "Hozircha guruhlar mavjud emas..."),
+                                    ),
+                                  ),
                             Gap(10.h),
                             ElevatedButton(
                               style: AppStyles.introUpButton,

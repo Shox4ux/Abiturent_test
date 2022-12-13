@@ -26,6 +26,10 @@ class _ResetPassWordState extends State<ResetPassWord> {
   var _isAllFilled = false;
   var _newPassword = "";
   var _confirmation = "";
+
+  var _isObscure1 = true;
+  var _isObscure2 = true;
+
   void _checkFields(BuildContext context) {
     if (_newPassword.length > 5 && _confirmation == _newPassword) {
       setState(() {
@@ -87,6 +91,7 @@ class _ResetPassWordState extends State<ResetPassWord> {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20.w),
                     child: TextField(
+                      obscureText: _isObscure2,
                       onChanged: (value) {
                         setState(() {
                           _newPassword = value;
@@ -94,6 +99,16 @@ class _ResetPassWordState extends State<ResetPassWord> {
                       },
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
+                        suffixIcon: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _isObscure2 = !_isObscure2;
+                            });
+                          },
+                          child: Icon(_isObscure2
+                              ? Icons.visibility_off_outlined
+                              : Icons.visibility_outlined),
+                        ),
                         counter: const SizedBox.shrink(),
                         labelText: "Yangi maxfiy so’zni kiritish",
                         border: OutlineInputBorder(
@@ -113,6 +128,7 @@ class _ResetPassWordState extends State<ResetPassWord> {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16.w),
                     child: TextField(
+                      obscureText: _isObscure1,
                       onChanged: (value) {
                         setState(() {
                           _confirmation = value;
@@ -120,6 +136,16 @@ class _ResetPassWordState extends State<ResetPassWord> {
                       },
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
+                        suffixIcon: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _isObscure1 = !_isObscure1;
+                            });
+                          },
+                          child: Icon(_isObscure1
+                              ? Icons.visibility_off_outlined
+                              : Icons.visibility_outlined),
+                        ),
                         counter: const SizedBox.shrink(),
                         labelText: "Qayta maxfiy so’zni kiritish",
                         border: OutlineInputBorder(

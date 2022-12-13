@@ -7,10 +7,8 @@ import 'package:test_app/ui/bottom_navigation/profile/profile.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/group/add_user_to_group.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/news_screen/inside_news.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/news_screen/news.dart';
-import 'package:test_app/ui/bottom_navigation/profile/profile_sections/payme/payme_info_confirmation.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/payme/payme_screen.dart';
-import 'package:test_app/ui/bottom_navigation/profile/profile_sections/payme/payme_sms_confirmation.dart';
-import 'package:test_app/ui/bottom_navigation/profile/profile_sections/payments/payments.dart';
+import 'package:test_app/ui/bottom_navigation/profile/profile_sections/payment_history/payment_history.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/subscriptions/subscriptions_screen.dart';
 import 'package:test_app/ui/intro/intro.dart';
 import 'package:test_app/ui/main_screen/main_screen.dart';
@@ -26,12 +24,12 @@ class MainNavigation {
     RouteNames.signup: (context) => const SignUpScreen(),
     RouteNames.signin: (context) => const LoginScreen(),
     RouteNames.news: (context) => NewsScreen(),
-    RouteNames.main: (context) => const MainScreen(),
     RouteNames.payme: (context) => const PaymeScreen(),
     RouteNames.forget: (context) => const ForgotPasswordScreen(),
     RouteNames.subscripts: (context) => const MySubscriptions(),
-    RouteNames.budget: (context) => const PaymentsScreen(),
+    RouteNames.budget: (context) => const PaymentHistoryScreen(),
     RouteNames.group: (context) => const GroupScreen(),
+    RouteNames.main: (context) => const MainScreen(2),
     RouteNames.addMembers: (context) => const AddUserToGroup(),
   };
 
@@ -63,6 +61,7 @@ abstract class RouteNames {
   static const smsVerification = 'sms_verification';
   static const news = "news";
   static const group = "group";
+
   static const changePassword = "reset";
   static const payme = "payme";
   static const paymeInfoConfirm = "paymeInfoConfirm";

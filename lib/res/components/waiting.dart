@@ -179,110 +179,112 @@ Widget whenPreview(BuildContext context) {
     builder: (context, state) {
       if (state is OnSubscriptionPreview) {
         return Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              children: [
-                Row(
-                  children: [
-                    Gap(20.h),
-                    CustomSimpleAppBar(
-                      isIcon: false,
-                      titleText: "Obuna bo'lish",
-                      style: AppStyles.introButtonText
-                          .copyWith(color: Colors.black),
-                      iconColor: Colors.black,
-                      isSimple: true,
-                    ),
-                  ],
-                ),
-                Gap(66.h),
-                Expanded(
-                  child: Text("${state.preview.subjectData!.name} fani",
-                      style: AppStyles.smsVerBigTextStyle.copyWith(
-                        fontSize: 32.sp,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.mainColor,
-                      )),
-                ),
-                Gap(11.h),
-                Text("1 oylik obuna narxi",
-                    style: AppStyles.smsVerBigTextStyle.copyWith(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black,
-                    )),
-                Gap(5.h),
-                RichText(
-                  text: TextSpan(
-                    text:
-                        '${numberFormatter(state.preview.subjectData!.price)} ',
-                    style: AppStyles.introButtonText
-                        .copyWith(color: Colors.black, fontSize: 48.sp),
-                    children: <TextSpan>[
-                      TextSpan(
-                          text: 'UZS',
-                          style: AppStyles.introButtonText.copyWith(
-                            color: Colors.black,
-                            fontSize: 32.sp,
-                          )),
-                    ],
+            Expanded(
+              child: Column(
+                children: [
+                  CustomSimpleAppBar(
+                    isIcon: false,
+                    titleText: "Obuna bo'lish",
+                    style:
+                        AppStyles.introButtonText.copyWith(color: Colors.black),
+                    iconColor: Colors.black,
+                    isSimple: false,
+                    routeText: RouteNames.main,
                   ),
-                ),
-                Gap(24.h),
-                Container(
-                  width: 310.w,
-                  height: 12.h,
-                  decoration: BoxDecoration(
-                    color: AppColors.mainColor,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(
-                        20.r,
-                      ),
-                    ),
-                  ),
-                ),
-                Gap(32.h),
-                Container(
-                  height: 66.h,
-                  width: 314.w,
-                  decoration: BoxDecoration(
-                    color: Colors.red,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(24.r),
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        AppIcons.warning,
-                        height: 24.h,
-                        width: 24.w,
-                        scale: 3,
-                      ),
-                      Gap(12.w),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Amal qilish muddati:",
-                            style: AppStyles.introButtonText.copyWith(
-                              color: Colors.white,
+                  Gap(66.h),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Text("${state.preview.subjectData!.name} fani",
+                            textAlign: TextAlign.center,
+                            style: AppStyles.smsVerBigTextStyle.copyWith(
+                              fontSize: 32.sp,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.mainColor,
+                            )),
+                        Gap(11.h),
+                        Text("1 oylik obuna narxi",
+                            style: AppStyles.smsVerBigTextStyle.copyWith(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                            )),
+                        Gap(5.h),
+                        RichText(
+                          text: TextSpan(
+                            text:
+                                '${numberFormatter(state.preview.subjectData!.price)} ',
+                            style: AppStyles.introButtonText
+                                .copyWith(color: Colors.black, fontSize: 48.sp),
+                            children: <TextSpan>[
+                              TextSpan(
+                                  text: 'UZS',
+                                  style: AppStyles.introButtonText.copyWith(
+                                    color: Colors.black,
+                                    fontSize: 32.sp,
+                                  )),
+                            ],
+                          ),
+                        ),
+                        Gap(24.h),
+                        Container(
+                          width: 310.w,
+                          height: 12.h,
+                          decoration: BoxDecoration(
+                            color: AppColors.mainColor,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(
+                                20.r,
+                              ),
                             ),
                           ),
-                          Text(
-                            "${state.preview.startDay} - ${state.preview.endDay}",
-                            style: AppStyles.introButtonText.copyWith(
-                              color: Colors.white,
+                        ),
+                        Gap(32.h),
+                        Container(
+                          height: 66.h,
+                          width: 314.w,
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(24.r),
                             ),
-                          )
-                        ],
-                      )
-                    ],
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                AppIcons.warning,
+                                height: 24.h,
+                                width: 24.w,
+                                scale: 3,
+                              ),
+                              Gap(12.w),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Amal qilish muddati:",
+                                    style: AppStyles.introButtonText.copyWith(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  Text(
+                                    "${state.preview.startDay} - ${state.preview.endDay}",
+                                    style: AppStyles.introButtonText.copyWith(
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                ],
+                              )
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                )
-              ],
+                ],
+              ),
             ),
             BlocBuilder<SubscriptionCubit, SubscriptionState>(
               builder: (context, state) {
@@ -517,25 +519,24 @@ Widget whenWaiting(BuildContext context) {
 }
 
 Widget whenError(
-    BuildContext context, String errorText, String buttonText, String status) {
+  BuildContext context,
+  String errorText,
+  String buttonText,
+  String status,
+) {
   return Column(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
       Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Row(
-            children: [
-              Gap(20.h),
-              CustomSimpleAppBar(
-                isIcon: false,
-                titleText: "Orqaga qaytish",
-                style: AppStyles.introButtonText.copyWith(color: Colors.black),
-                iconColor: Colors.black,
-                isSimple: false,
-                routeText: RouteNames.main,
-              ),
-            ],
+          CustomSimpleAppBar(
+            isIcon: false,
+            titleText: "Orqaga qaytish",
+            style: AppStyles.introButtonText.copyWith(color: Colors.black),
+            iconColor: Colors.black,
+            isSimple: true,
+            routeText: RouteNames.main,
           ),
           Gap(76.h),
           Container(
