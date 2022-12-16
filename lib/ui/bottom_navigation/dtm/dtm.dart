@@ -42,7 +42,6 @@ class _DtmScreenState extends State<DtmScreen>
   @override
   void dispose() {
     _animationController!.dispose();
-
     super.dispose();
   }
 
@@ -109,7 +108,8 @@ class _DtmScreenState extends State<DtmScreen>
                           builder: (context, snapshot) {
                             if (!snapshot.hasData) {
                               return const Center(
-                                  child: Text("Iltimos kuting..."));
+                                child: Text("Iltimos kuting..."),
+                              );
                             }
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
