@@ -77,7 +77,7 @@ class Tests {
   int? status;
   String? statusText;
   int? questionsCount;
-  int? percent;
+  num? percent;
 
   Tests(
       {this.id,

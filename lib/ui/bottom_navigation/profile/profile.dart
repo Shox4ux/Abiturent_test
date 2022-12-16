@@ -367,117 +367,134 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget menu(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            InkWell(
-              onTap: () {
-                setState(() {
-                  isStats = true;
-                });
-              },
-              child: Image.asset(
-                AppIcons.sim,
-                scale: 3,
+    return Expanded(
+      child: Column(
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              InkWell(
+                onTap: () {
+                  setState(() {
+                    isStats = true;
+                  });
+                },
+                child: Image.asset(
+                  AppIcons.sim,
+                  scale: 3,
+                ),
+              ),
+            ],
+          ),
+          Gap(5.h),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Container(
+                    width: 331.w,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20.r),
+                    ),
+                    child: Column(children: [
+                      InkWell(
+                        onTap: () async {
+                          setState(() {
+                            isInSubs = true;
+                          });
+
+                          context.read<PaymentCubit>().getPaymentHistory();
+                        },
+                        child: rowItem(
+                            AppIcons.purplePocket, "Mening hisoblarim", false),
+                      ),
+                      spacer(),
+                      InkWell(
+                        onTap: () {
+                          Navigator.push<void>(
+                            context,
+                            MaterialPageRoute<void>(
+                              builder: (BuildContext context) =>
+                                  RefactorScreen(user: user!),
+                            ),
+                          );
+                        },
+                        child: rowItem(AppIcons.edit, "Tahrirlash", false),
+                      ),
+                      spacer(),
+                      InkWell(
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            RouteNames.news,
+                          );
+                        },
+                        child: rowItem(AppIcons.gallery, "Yangiliklar", false),
+                      ),
+                      spacer(),
+                      InkWell(
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            RouteNames.subscripts,
+                          );
+
+                          context.read<SubscriptionCubit>().getScripts();
+                        },
+                        child: rowItem(
+                            AppIcons.purpleDone, "Mening obunalarim", false),
+                      ),
+                      spacer(),
+                      InkWell(
+                        onTap: () {
+                          Navigator.pushNamed(context, RouteNames.group);
+                          context.read<GroupCubit>().getGroupsByUserId();
+                        },
+                        child: rowItem(
+                            AppIcons.purpleDone, "Mening guruhlarim", false),
+                      ),
+                      spacer(),
+                      InkWell(
+                        onTap: () async {
+                          if (await context
+                              .read<PaymentCubit>()
+                              .isConfirmed()) {
+                            context.read<PaymentCubit>().getCards();
+                            Navigator.push<void>(
+                              context,
+                              MaterialPageRoute<void>(
+                                builder: (BuildContext context) =>
+                                    const PaymeInfoConfirmation(
+                                  null,
+                                  isConfirmed: true,
+                                ),
+                              ),
+                            );
+                          } else {
+                            Navigator.pushNamed(context, RouteNames.payme);
+                          }
+                        },
+                        child: rowItem(
+                            AppIcons.payme, "Hisobni to’ldirish", false),
+                      ),
+                      spacer(),
+                      InkWell(
+                        onTap: () {
+                          logOutBottomSheet(context);
+                        },
+                        child:
+                            rowItem(AppIcons.logout, "Tizimdan chiqish", true),
+                      ),
+                    ]),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
-        Gap(5.h),
-        Container(
-          width: 331.w,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20.r),
           ),
-          child: Column(children: [
-            InkWell(
-              onTap: () async {
-                setState(() {
-                  isInSubs = true;
-                });
-
-                context.read<PaymentCubit>().getPaymentHistory();
-              },
-              child: rowItem(AppIcons.purplePocket, "Mening hisoblarim", false),
-            ),
-            spacer(),
-            InkWell(
-              onTap: () {
-                Navigator.push<void>(
-                  context,
-                  MaterialPageRoute<void>(
-                    builder: (BuildContext context) =>
-                        RefactorScreen(user: user!),
-                  ),
-                );
-              },
-              child: rowItem(AppIcons.edit, "Tahrirlash", false),
-            ),
-            spacer(),
-            InkWell(
-              onTap: () {
-                Navigator.pushNamed(
-                  context,
-                  RouteNames.news,
-                );
-              },
-              child: rowItem(AppIcons.gallery, "Yangiliklar", false),
-            ),
-            spacer(),
-            InkWell(
-              onTap: () {
-                Navigator.pushNamed(
-                  context,
-                  RouteNames.subscripts,
-                );
-
-                context.read<SubscriptionCubit>().getScripts();
-              },
-              child: rowItem(AppIcons.purpleDone, "Mening obunalarim", false),
-            ),
-            spacer(),
-            InkWell(
-              onTap: () {
-                Navigator.pushNamed(context, RouteNames.group);
-                context.read<GroupCubit>().getGroupsByUserId();
-              },
-              child: rowItem(AppIcons.purpleDone, "Mening guruhlarim", false),
-            ),
-            spacer(),
-            InkWell(
-              onTap: () async {
-                if (await context.read<PaymentCubit>().isConfirmed()) {
-                  context.read<PaymentCubit>().getCards();
-                  Navigator.push<void>(
-                    context,
-                    MaterialPageRoute<void>(
-                      builder: (BuildContext context) =>
-                          const PaymeInfoConfirmation(
-                        null,
-                        isConfirmed: true,
-                      ),
-                    ),
-                  );
-                } else {
-                  Navigator.pushNamed(context, RouteNames.payme);
-                }
-              },
-              child: rowItem(AppIcons.payme, "Hisobni to’ldirish", false),
-            ),
-            spacer(),
-            InkWell(
-              onTap: () {
-                logOutBottomSheet(context);
-              },
-              child: rowItem(AppIcons.logout, "Tizimdan chiqish", true),
-            ),
-          ]),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

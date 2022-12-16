@@ -135,49 +135,54 @@ Widget unSubedItem(SubscriptionModel scriptItem, BuildContext context) {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(top: 8.h),
-                child: CustomDot(
-                  hight: 15.h,
-                  width: 15.w,
-                  color: AppColors.mainColor,
-                ),
-              ),
-              Gap(10.w),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "${scriptItem.subjectName}",
-                    style: AppStyles.subtitleTextStyle.copyWith(
-                      color: Colors.black,
-                      overflow: TextOverflow.clip,
-                    ),
+          Expanded(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(top: 8.h),
+                  child: CustomDot(
+                    hight: 15.h,
+                    width: 15.w,
+                    color: AppColors.mainColor,
                   ),
-                  Row(
+                ),
+                Gap(10.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Obuna narxi:",
-                        style: AppStyles.subtitleTextStyle
-                            .copyWith(fontSize: 13.sp),
-                      ),
-                      Gap(10.w),
-                      Text(
-                        "${numberFormatter(scriptItem.subjectPrice)} UZS",
-                        style: AppStyles.introButtonText.copyWith(
-                          fontSize: 14.sp,
-                          color: Colors.red,
+                        "${scriptItem.subjectName}",
+                        style: AppStyles.subtitleTextStyle.copyWith(
+                          color: Colors.black,
                         ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            "Obuna narxi:",
+                            style: AppStyles.subtitleTextStyle
+                                .copyWith(fontSize: 13.sp),
+                          ),
+                          Gap(10.w),
+                          Text(
+                            "${numberFormatter(scriptItem.subjectPrice)} UZS",
+                            style: AppStyles.introButtonText.copyWith(
+                              fontSize: 14.sp,
+                              color: Colors.red,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
-              ),
-            ],
+                ),
+              ],
+            ),
           ),
           InkWell(
             onTap: () {

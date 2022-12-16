@@ -11,10 +11,12 @@ import '../../helper/repos/subject_repo.dart';
 part 'drawer_state.dart';
 
 class DrawerCubit extends Cubit<DrawerState> {
-  DrawerCubit() : super(DrawerInitial());
+  DrawerCubit() : super(DrawerInitial()) {
+    getSubs();
+  }
   final _repo = SubjectRepo();
 
-  int? testType;
+  // int? testType;
 
   void saveSubId(int id) {
     emit(DrawerSubId(id));
@@ -28,13 +30,23 @@ class DrawerCubit extends Cubit<DrawerState> {
       final response = await _repo.getSubjects();
       final rowData = response.data as List;
       final rowList = rowData.map((e) => SubjectModel.fromJson(e)).toList();
-      emit(OnDrawerSubsReceived(rowList));
+      final newState = DrawerSubjectsLoadedState(index: 0, subList: rowList);
+      emit(newState);
+      // emit(OnDrawerSubsReceived(rowList));
     } on SocketException catch (e) {
       emit(const OnDrawerError("Tarmoqda nosozlik"));
     } on DioError catch (e) {
       emit(OnDrawerError(e.response!.data["message"]));
     } catch (e) {
       emit(OnDrawerError(e.toString()));
+    }
+  }
+
+  void chooseSubject(int index) {
+    if (state is DrawerSubjectsLoadedState) {
+      final oldState = (state as DrawerSubjectsLoadedState);
+      final newState = oldState.copyWith(index: index);
+      emit(newState);
     }
   }
 }

@@ -68,9 +68,10 @@ class SubjectsScreen extends StatelessWidget {
                     )),
                 child: BlocBuilder<DrawerCubit, DrawerState>(
                   builder: (context, state) {
-                    if (state is DrawerSubId) {
+                    if (state is DrawerSubjectsLoadedState) {
+                      final id = state.subList[state.index].id ?? 1;
                       return FutureBuilder(
-                        future: getTestModel(state.subId),
+                        future: getTestModel(id),
                         builder: (context, snapshot) {
                           if (!snapshot.hasData) {
                             return const Center(

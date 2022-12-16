@@ -45,64 +45,60 @@ class _CustomDrawerState extends State<CustomDrawer> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-        width: widget.mainWidth * 0.7,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Gap(50.h),
-            Container(
-              padding: EdgeInsets.only(left: 20.w),
-              alignment: Alignment.centerLeft,
-              height: 50.h,
-              width: double.maxFinite,
-              decoration: const BoxDecoration(
-                color: AppColors.mainColor,
-              ),
-              child: Text(
-                "Fanlar",
-                style: AppStyles.introButtonText.copyWith(
-                  fontSize: 24.sp,
-                  color: Colors.white,
-                ),
+      width: widget.mainWidth * 0.7,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Gap(50.h),
+          Container(
+            padding: EdgeInsets.only(left: 20.w),
+            alignment: Alignment.centerLeft,
+            height: 50.h,
+            width: double.maxFinite,
+            decoration: const BoxDecoration(
+              color: AppColors.mainColor,
+            ),
+            child: Text(
+              "Fanlar",
+              style: AppStyles.introButtonText.copyWith(
+                fontSize: 24.sp,
+                color: Colors.white,
               ),
             ),
-            Gap(20.h),
-            FutureBuilder(
-              future: getSubs(),
-              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                if (!snapshot.hasData) {
-                  return const Center(
-                    child: Text("Iltimos kuting"),
-                  );
-                }
-
-                return BlocBuilder<IndexCubit, int?>(
-                  builder: (context, state) {
-                    // context.read<IndexCubit>().checkDrawerIndex();
-                    return Column(
-                      children: [
-                        for (int i = 0; i < list.length; i++)
-                          GestureDetector(
-                            onTap: () {
-                              context.read<IndexCubit>().setUp(i);
-                              context
-                                  .read<DrawerCubit>()
-                                  .saveSubId(list[i].id!);
-                              Navigator.pop(context);
-                            },
-                            child: drawerItem(
-                              list[i].name!,
-                              _decider(state, i),
-                            ),
-                          )
-                      ],
-                    );
-                  },
+          ),
+          Gap(20.h),
+          BlocBuilder<DrawerCubit, DrawerState>(
+            builder: (context, state) {
+              if (state is DrawerSubjectsLoadedState) {
+                final subjects = state.subList;
+                final selectedItem = state.index;
+                return Column(
+                  children: [
+                    for (int i = 0; i < subjects.length; i++)
+                      GestureDetector(
+                        onTap: () {
+                          context.read<DrawerCubit>().chooseSubject(i);
+                          Navigator.pop(context);
+                        },
+                        child: drawerItem(
+                          subjects[i].name!,
+                          _decider(selectedItem, i),
+                        ),
+                      )
+                  ],
                 );
-              },
-            ),
-          ],
-        ));
+              }
+              if (state is DrawerInitial || state is OnDrawerProgress) {
+                return const Center(
+                  child: CircularProgressIndicator.adaptive(),
+                );
+              }
+              return Container();
+            },
+          ),
+        ],
+      ),
+    );
   }
 }
 
