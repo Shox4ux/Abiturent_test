@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:sms_user_consent/sms_user_consent.dart';
 import 'package:test_app/res/constants.dart';
 
 class PinPutWidget extends StatefulWidget {
@@ -24,10 +25,38 @@ class PinPutWidget extends StatefulWidget {
 class _PinPutWidgetState extends State<PinPutWidget> {
   var focusNode = FocusNode();
   String code = '';
+  late SmsUserConsent smsUserConsent;
+
+  @override
+  void initState() {
+    super.initState();
+    smsUserConsent = SmsUserConsent(
+      phoneNumberListener: () => setState(() {}),
+      smsListener: () => setState(
+        () {
+          code = smsUserConsent.receivedSms ?? "";
+          if (code.length > 6) {
+            var result = "";
+            for (var j = 0; j < code.length; j++) {
+              if (double.tryParse(code[j]) != null) {
+                result += code[j];
+              }
+            }
+            code = result;
+            if (code.length == 6) {
+              focusNode.unfocus();
+            }
+          }
+        },
+      ),
+    );
+    smsUserConsent.requestSms();
+  }
 
   @override
   void dispose() {
     focusNode.dispose();
+    smsUserConsent.dispose();
     super.dispose();
   }
 
@@ -48,62 +77,58 @@ class _PinPutWidgetState extends State<PinPutWidget> {
           fontWeight: FontWeight.w700,
         );
 
-    return FocusTrapArea(
-      focusNode: focusNode,
-      child: GestureDetector(
-        onTap: () {
-          focusNode.requestFocus();
-          print('object');
-        },
-        child: Column(
-          children: [
-            Material(
-              child: SizedBox(
-                height: 40.h,
-                child: Row(
-                  children: [
-                    for (var i = 0; i < widget.lenth; i++)
-                      Row(
-                        children: [
-                          (code.length > i)
-                              ? Text(
-                                  code[i],
-                                  style: style,
-                                )
-                              : Container(
-                                  height: 16.h,
-                                  width: 16.h,
-                                  decoration: const BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: AppColors.gray,
-                                  ),
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).requestFocus(focusNode);
+      },
+      child: Column(
+        children: [
+          Material(
+            child: SizedBox(
+              height: 40.h,
+              child: Row(
+                children: [
+                  for (var i = 0; i < widget.lenth; i++)
+                    Row(
+                      children: [
+                        (code.length > i)
+                            ? Text(
+                                code[i],
+                                style: style,
+                              )
+                            : Container(
+                                height: 16.h,
+                                width: 16.h,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: AppColors.gray,
                                 ),
-                          SizedBox(width: 16.w),
-                        ],
-                      )
-                  ],
-                ),
+                              ),
+                        SizedBox(width: 16.w),
+                      ],
+                    )
+                ],
               ),
             ),
-            SizedBox(
-              height: 0,
-              child: TextField(
-                autofocus: true,
-                focusNode: focusNode,
-                maxLength: null,
-                minLines: null,
-                maxLines: null,
-                keyboardType: TextInputType.number,
-                onChanged: onChanged,
-                style: const TextStyle(fontSize: 0),
-                decoration: const InputDecoration(
-                  contentPadding: EdgeInsets.zero,
-                  border: InputBorder.none,
-                ),
+          ),
+          SizedBox(
+            height: 0,
+            child: TextField(
+              autofocus: true,
+              focusNode: focusNode,
+              maxLength: null,
+              minLines: null,
+              maxLines: null,
+              keyboardType: TextInputType.number,
+              onChanged: onChanged,
+              style: const TextStyle(fontSize: 0),
+              decoration: const InputDecoration(
+                contentPadding: EdgeInsets.zero,
+                border: InputBorder.none,
               ),
-            )
-          ],
-        ),
+            ),
+          )
+        ],
       ),
     );
   }
