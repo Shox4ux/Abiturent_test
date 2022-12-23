@@ -17,13 +17,11 @@ import 'package:test_app/ui/bottom_navigation/profile/profile_sections/refactor/
 import 'package:test_app/ui/main_screen/main_screen.dart';
 
 import '../../../core/block/auth_block/auth_cubit.dart';
-import '../../../core/block/index_cubit/index_cubit.dart';
 import '../../../core/helper/repos/user_repo.dart';
 import '../../../res/enum.dart';
 import '../../../res/navigation/main_navigation.dart';
 
 UserInfo? user;
-final _s = AppStorage();
 final _repo = UserRepo();
 List<StatModel>? stats;
 
@@ -40,24 +38,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool isInSubs = false;
   bool isStats = false;
 
-  Future<UserInfo> getUserData() async {
-    final e = await _s.getUserInfo();
-    if (e.id != null) {
-      final rowData = await _repo.getUserProfile(e.id!);
-      if (rowData.statusCode == 200) {
-        final y = UserInfo.fromJson(rowData.data);
-        user = y;
-        return user!;
-      }
-      return user!;
-    }
-    return user!;
-  }
-
-  Future<List<StatModel>> getStatistics() async {
+  Future<List<StatModel>> getStatistics(int? userId) async {
     try {
-      if (user!.id != null) {
-        final response = await _repo.getStats(user!.id!);
+      if (userId != null) {
+        final response = await _repo.getStats(userId);
 
         if (response.statusCode == 200) {
           final rowData = response.data as List;
@@ -69,7 +53,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       }
       return stats!;
     } catch (e) {
-      print(e);
       return stats!;
     }
   }
@@ -99,23 +82,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
           },
           child: SafeArea(
             child: Padding(
-                padding: EdgeInsets.all(20.w),
-                child: FutureBuilder(
-                  future: getUserData(),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData) {
-                      return const Center(
-                        child: Text("Iltimos kuting..."),
-                      );
-                    }
-                    return BlocBuilder<AuthCubit, AuthState>(
-                      builder: (context, state) {
-                        if (state is OnAuthProgress) {
-                          return const Center(
-                            child: CircularProgressIndicator(
-                                color: AppColors.mainColor),
-                          );
-                        }
+              padding: EdgeInsets.all(20.w),
+              child: BlocBuilder<AuthCubit, AuthState>(
+                builder: (context, state) {
+                  return BlocBuilder<AuthCubit, AuthState>(
+                    builder: (context, state) {
+                      if (state is OnAuthProgress) {
+                        return const Center(
+                          child: CircularProgressIndicator.adaptive(),
+                        );
+                      }
+                      if (state is UserActive) {
+                        final userData = state.userInfo;
                         return Column(
                           children: [
                             Row(
@@ -127,7 +105,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       context,
                                       MaterialPageRoute<void>(
                                         builder: (BuildContext context) =>
-                                            RefactorScreen(user: user!),
+                                            RefactorScreen(user: userData),
                                       ),
                                     );
                                   },
@@ -140,7 +118,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           BorderRadius.circular(100.r),
                                     ),
                                     child: FadeInImage.assetNetwork(
-                                      image: user!.image!,
+                                      image: userData.image!,
                                       fit: BoxFit.cover,
                                       imageErrorBuilder:
                                           (context, error, stackTrace) => Icon(
@@ -159,7 +137,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        "ID #${user!.id}",
+                                        "ID #${userData.id}",
                                         style: AppStyles.subtitleTextStyle
                                             .copyWith(
                                           fontSize: 14.sp,
@@ -167,7 +145,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         ),
                                       ),
                                       Text(
-                                        "${user!.fullname}",
+                                        "${userData.fullname}",
                                         overflow: TextOverflow.visible,
                                         style: AppStyles.introButtonText
                                             .copyWith(
@@ -248,8 +226,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 fontSize: 14.sp),
                                         children: [
                                           TextSpan(
-                                            text:
-                                                numberFormatter(user!.balance),
+                                            text: numberFormatter(
+                                                userData.balance),
                                             style: AppStyles.introButtonText
                                                 .copyWith(
                                                     color: Colors.white,
@@ -264,7 +242,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             Gap(20.h),
                             FutureBuilder(
-                              future: getStatistics(),
+                              future: getStatistics(userData.id),
                               builder: (context, snapshot) {
                                 if (!snapshot.hasData) {
                                   return const Center(
@@ -278,10 +256,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             )
                           ],
                         );
-                      },
-                    );
-                  },
-                )),
+                      }
+                      return const Center(
+                        child: CircularProgressIndicator.adaptive(),
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
           ),
         ),
       ),
@@ -302,12 +285,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         itemBuilder: (context, index) {
           return InkWell(
               onTap: () {
-                context.read<DrawerCubit>().saveSubId(
-                      statList[index].subjectId!,
-                    );
-                context
-                    .read<IndexCubit>()
-                    .setUp(statList[index].subjectId! - 1);
+                context.read<DrawerCubit>().chooseSubject(index);
                 Navigator.push(
                   context,
                   MaterialPageRoute(

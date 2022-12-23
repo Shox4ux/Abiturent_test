@@ -38,9 +38,7 @@ class AuthDenied extends AuthState {
 class AuthOnSMS extends AuthState {
   final int id;
   final String phoneNumber;
-
   const AuthOnSMS({required this.id, required this.phoneNumber});
-
   @override
   List<Object> get props => [phoneNumber, id];
 }

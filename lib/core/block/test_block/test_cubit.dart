@@ -13,19 +13,7 @@ class TestCubit extends Cubit<TestState> {
   TestCubit() : super(TestInitial());
   final _repo = TestRepo();
   final _storage = AppStorage();
-
   final perPage = 10;
-
-  // Future<void> getTestsBySubIdAndType(int subId, int typeIndex) async {
-  //   emit(OnTestProgress());
-  //   try {
-  //     final response = await _repo.getTestsBySubjectId(subId, typeIndex);
-  // final allTestData = TestModel.fromJson(response.data);
-  //     emit(OnTestSuccess(allTestData));
-  //   } catch (e) {
-  //     emit(OnTestError(e.toString()));
-  //   }
-  // }
 
   Future<void> getTestBySubIdWithPagination(
       int subId, int type, int page) async {
@@ -34,7 +22,18 @@ class TestCubit extends Cubit<TestState> {
       final response =
           await _repo.getTestPaginationByType(subId, type, page, perPage);
       final allTestData = TestModel.fromJson(response.data);
-      emit(OnTestSuccess(allTestData));
+
+      if (page > 1) {
+        await _goFurther(allTestData.tests!);
+      }
+
+      emit(
+        OnTestSuccess(
+          subjectData: allTestData.subjects!,
+          testList: allTestData.tests!,
+          bookList: allTestData.books!,
+        ),
+      );
     } on DioError catch (e) {
       emit(OnTestError(e.response!.data["message"]));
     } on SocketException {
@@ -42,6 +41,12 @@ class TestCubit extends Cubit<TestState> {
     } catch (e) {
       emit(const OnTestError("Tizimda nosozlik"));
     }
+  }
+
+  Future<void> _goFurther(List<Tests> extraTestList) async {
+    final oldState = (state as OnTestSuccess);
+    final newState = oldState.copyWith(extraTestList);
+    emit(newState);
   }
 
   Future<void> getTestById(int testId) async {
@@ -91,8 +96,6 @@ class TestCubit extends Cubit<TestState> {
       final rowList = response.data as List;
       final resultList = rowList.map((e) => TestResult.fromJson(e)).toList();
       emit(OnTestCompleted(resultList));
-
-      // emit(OnTestInnerSuccess(test));
     } on DioError catch (e) {
       emit(OnTestError(e.response!.data["message"]));
     } on SocketException catch (e) {
@@ -108,11 +111,15 @@ class TestCubit extends Cubit<TestState> {
     try {
       final response = await _repo.getErrorList(u.id!, subId);
       final rowList = response.data as List;
+
+      if (rowList.isEmpty) {
+        print("no errors");
+      }
       final errortList = rowList.map((e) => TestResult.fromJson(e)).toList();
       emit(OnReceivedErrorResult(errortList));
     } on DioError catch (e) {
       emit(OnTestError(e.response!.data["message"]));
-    } on SocketException catch (e) {
+    } on SocketException {
       emit(const OnTestError("Tarmoqda nosozlik"));
     } catch (e) {
       emit(OnTestError(e.toString()));

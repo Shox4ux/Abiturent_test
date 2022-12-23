@@ -13,11 +13,11 @@ class OnUserProgress extends UserState {}
 
 class OnUserUpdated extends UserState {}
 
-class OnSuccess extends UserState {
-  final List<UserInfo> list;
-  const OnSuccess({required this.list});
+class OnUsersRatingReceived extends UserState {
+  final RatingModel ratingModel;
+  const OnUsersRatingReceived({required this.ratingModel});
   @override
-  List<Object> get props => [list];
+  List<Object> get props => [ratingModel];
 }
 
 class OnError extends UserState {

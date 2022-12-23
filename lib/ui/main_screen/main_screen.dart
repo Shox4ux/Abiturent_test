@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:test_app/core/block/test_block/test_cubit.dart';
 import '../../res/constants.dart';
@@ -48,12 +49,14 @@ class _MainScreenState extends State<MainScreen> {
           onTap: (int index) async {
             setState(() {
               selectedIndex = index;
-              print(selectedIndex);
             });
 
-            if (index == 2) {
-              print("Profile");
-              // await _cubit.updateProfile();
+            if (index == 0) {
+              // const initialSubjectId = 1;
+              // const ordinaryTestType = 1;
+              // const initialPage = 1;
+              // await context.read<TestCubit>().getTestBySubIdWithPagination(
+              //     initialSubjectId, ordinaryTestType, initialPage);
             }
 
             if (index == 3) {

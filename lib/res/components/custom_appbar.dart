@@ -55,9 +55,10 @@ class _CustomAppBarState extends State<CustomAppBar> {
   Widget build(BuildContext context) {
     return BlocBuilder<DrawerCubit, DrawerState>(
       builder: (context, state) {
-        if (state is DrawerSubId) {
+        if (state is DrawerSubjectsLoadedState) {
+          final CSI = state.index + 1;
           return FutureBuilder(
-            future: getUserRatingData(state.subId),
+            future: getUserRatingData(CSI),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return customAppBar(widget.scaffKey, context, "0", "0");

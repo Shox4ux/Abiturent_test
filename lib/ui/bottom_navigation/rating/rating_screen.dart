@@ -1,53 +1,24 @@
-import 'dart:io';
-
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:test_app/core/domain/user_model/rating_model.dart';
-import 'package:test_app/core/helper/repos/user_repo.dart';
 import 'package:test_app/res/components/custom_drawer.dart';
 import 'package:test_app/res/functions/show_toast.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../core/block/drawer_cubit/drawer_cubit.dart';
+import '../../../core/block/rating_cubit/rating_cubit.dart';
 import '../../../res/constants.dart';
 import '../../../res/components/custom_appbar.dart';
-import '../subjects/subject_screen.dart';
-
-RatingModel? ratingModel;
+import '../../../res/functions/will_pop_function.dart';
 
 class RatingScreen extends StatefulWidget {
   const RatingScreen({Key? key}) : super(key: key);
-
   @override
   State<RatingScreen> createState() => _RatingScreenState();
 }
 
 class _RatingScreenState extends State<RatingScreen> {
-  final _repo = UserRepo();
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  Future<RatingModel> callUserRating(int subId) async {
-    try {
-      final response = await _repo.getUsersRatings(subId);
-      final rowData = RatingModel.fromJson(response.data);
-      ratingModel = rowData;
-      return ratingModel!;
-    } on SocketException catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.message),
-        ),
-      );
-    }
-    return ratingModel!;
-  }
-
   @override
   Widget build(BuildContext context) {
     final GlobalKey<ScaffoldState> scaffKey = GlobalKey<ScaffoldState>();
@@ -62,153 +33,109 @@ class _RatingScreenState extends State<RatingScreen> {
           return await onWillPop(context);
         },
         child: SafeArea(
-          child: Column(children: [
-            CustomAppBar(scaffKey: scaffKey),
-            Expanded(
-              child: Container(
-                width: double.maxFinite,
-                padding: EdgeInsets.only(top: 20.h, left: 20.w, right: 20.w),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(28.r),
-                    topRight: Radius.circular(28.r),
-                  ),
-                ),
-                child: BlocBuilder<DrawerCubit, DrawerState>(
-                  builder: (context, state) {
-                    if (state is DrawerSubId) {
-                      return FutureBuilder(
-                        future: callUserRating(state.subId),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<dynamic> snapshot) {
-                          if (!snapshot.hasData) {
-                            return const Center(
-                                child: Text("Iltimos kuting..."));
-                          }
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Umumiy reyting",
-                                style: AppStyles.introButtonText.copyWith(
-                                  color: Colors.black,
+          child: Expanded(
+            child: Column(children: [
+              CustomAppBar(scaffKey: scaffKey),
+              BlocBuilder<DrawerCubit, DrawerState>(
+                builder: (context, state) {
+                  if (state is DrawerSubjectsLoadedState) {
+                    final currentSubjectId = state.index + 2;
+                    context
+                        .read<RatingCubit>()
+                        .callUserRating(currentSubjectId);
+                  }
+                  return Expanded(
+                    child: Container(
+                      width: double.maxFinite,
+                      padding:
+                          EdgeInsets.only(top: 20.h, left: 20.w, right: 20.w),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(28.r),
+                          topRight: Radius.circular(28.r),
+                        ),
+                      ),
+                      child: BlocBuilder<RatingCubit, RatingState>(
+                        builder: (context, state) {
+                          if (state is OnRatingReceived) {
+                            final ratingData = state.ratingModel;
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Umumiy reyting",
+                                  style: AppStyles.introButtonText.copyWith(
+                                    color: Colors.black,
+                                  ),
                                 ),
-                              ),
-                              Row(
-                                children: [
-                                  Image.asset(
-                                    AppIcons.medlFilled,
-                                    width: 24.w,
-                                    height: 24.h,
-                                  ),
-                                  Gap(10.h),
-                                  Expanded(
-                                    child: Text(
-                                      "${ratingModel!.subjectText} fani",
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style:
-                                          AppStyles.subtitleTextStyle.copyWith(
-                                        color: Colors.black,
-                                        fontSize: 16.sp,
-                                      ),
+                                Row(
+                                  children: [
+                                    Image.asset(
+                                      AppIcons.medlFilled,
+                                      width: 24.w,
+                                      height: 24.h,
                                     ),
-                                  ),
-                                ],
-                              ),
-                              Gap(18.h),
-                              ratingModel!.rating!.isNotEmpty
-                                  ? Expanded(
-                                      child: ListView.builder(
-                                          padding:
-                                              const EdgeInsets.only(bottom: 20),
-                                          itemCount:
-                                              ratingModel!.rating!.length,
-                                          itemBuilder: (BuildContext context,
-                                              int index) {
-                                            return ratingItem("${index + 1}",
-                                                ratingModel!.rating![index]);
-                                          }),
-                                    )
-                                  : const Expanded(
-                                      child: Center(
-                                        child: Text(
-                                          "Hozircha ishtirokchilar mavjud emas...",
+                                    Gap(10.h),
+                                    Expanded(
+                                      child: Text(
+                                        "${ratingData.subjectText} fani",
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: AppStyles.subtitleTextStyle
+                                            .copyWith(
+                                          color: Colors.black,
+                                          fontSize: 16.sp,
                                         ),
                                       ),
                                     ),
-                            ],
+                                  ],
+                                ),
+                                Gap(18.h),
+                                Expanded(
+                                  child: ListView.builder(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 20),
+                                      itemCount: ratingData.rating!.length,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        return ratingItem("${index + 1}",
+                                            ratingData.rating![index]);
+                                      }),
+                                )
+                              ],
+                            );
+                          }
+                          if (state is OnRatingEmpty) {
+                            return const Expanded(
+                              child: Center(
+                                child: Text(
+                                  "Hozircha ishtirokchilar mavjud emas...",
+                                ),
+                              ),
+                            );
+                          }
+
+                          if (state is OnRatingProgress) {
+                            return const Expanded(
+                              child: Center(
+                                child: CircularProgressIndicator.adaptive(),
+                              ),
+                            );
+                          }
+                          return const Expanded(
+                            child: Center(
+                              child: CircularProgressIndicator.adaptive(),
+                            ),
                           );
                         },
-                      );
-                    }
-                    return FutureBuilder(
-                      future: callUserRating(1),
-                      builder: (BuildContext context,
-                          AsyncSnapshot<dynamic> snapshot) {
-                        if (!snapshot.hasData) {
-                          return const Center(child: Text("Iltimos kuting..."));
-                        }
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Umumiy reyting",
-                              style: AppStyles.introButtonText.copyWith(
-                                color: Colors.black,
-                              ),
-                            ),
-                            Row(
-                              children: [
-                                Image.asset(
-                                  AppIcons.medlFilled,
-                                  width: 24.w,
-                                  height: 24.h,
-                                ),
-                                Gap(10.h),
-                                Expanded(
-                                  child: Text(
-                                    "${ratingModel!.subjectText} fani",
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: AppStyles.subtitleTextStyle.copyWith(
-                                      color: Colors.black,
-                                      fontSize: 16.sp,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Gap(18.h),
-                            ratingModel!.rating!.isNotEmpty
-                                ? Expanded(
-                                    child: ListView.builder(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 20),
-                                        itemCount: ratingModel!.rating!.length,
-                                        itemBuilder:
-                                            (BuildContext context, int index) {
-                                          return ratingItem("${index + 1}",
-                                              ratingModel!.rating![index]);
-                                        }),
-                                  )
-                                : const Expanded(
-                                    child: Center(
-                                      child: Text(
-                                        "Hozircha ishtirokchilar mavjud emas...",
-                                      ),
-                                    ),
-                                  ),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                ),
+                      ),
+                    ),
+                  );
+                },
               ),
-            ),
-          ]),
+            ]),
+          ),
         ),
       ),
     );
@@ -291,17 +218,6 @@ class _RatingScreenState extends State<RatingScreen> {
       ),
     );
   }
-}
-
-Future<bool> onWillPop(BuildContext context) {
-  DateTime now = DateTime.now();
-  if (currentBackPressTime == null ||
-      now.difference(currentBackPressTime!) > const Duration(seconds: 2)) {
-    currentBackPressTime = now;
-    showToast("Darturdan chiqich uchun tugmani ikki marta bosing");
-    return Future.value(false);
-  }
-  return Future.value(true);
 }
 
 Future<void> _launcher(String? userTelegram) async {

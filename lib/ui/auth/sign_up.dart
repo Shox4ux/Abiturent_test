@@ -3,15 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:test_app/res/constants.dart';
 import 'package:test_app/res/functions/show_toast.dart';
 import 'package:test_app/ui/auth/sms_verification.dart';
-
 import '../../core/block/auth_block/auth_cubit.dart';
 import '../../res/components/custom_simple_appbar.dart';
 import '../../res/navigation/main_navigation.dart';
-import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -21,40 +18,14 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  // final _textFormat = MaskTextInputFormatter(mask: '## ### ## ##');
   final formKey = GlobalKey<FormState>();
   bool _isChecked = false;
   bool _isObscure = false;
   bool _isAllFilled = false;
-  bool validatePassword(String pass) {
-    String _password = pass.trim();
-    if (_password.length > 5) {
-      setState(() {
-        pass_strength = 0;
-      });
-      return false;
-    } else if (_password.length >= 1 && _password.length < 6) {
-      setState(() {
-        pass_strength = 1 / 2;
-      });
-      return false;
-    } else if (_password.length >= 6) {
-      setState(() {
-        pass_strength = 1;
-      });
-      return true;
-    } else {
-      return false;
-    }
-  }
-
   var _fulnameC = "";
   var _phoneC = "";
   var _passwordC = "";
   final TextEditingController _controller = TextEditingController();
-  final TextStyle _textStyle = TextStyle();
-  final _formKey = GlobalKey<FormState>();
-  double pass_strength = 0;
 
   checkFields() {
     if (_fulnameC.isNotEmpty && _phoneC.isNotEmpty && _passwordC.length > 5) {
@@ -84,6 +55,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               listener: (context, state) {
                 if (state is AuthOnSMS) {
                   showToast("Muvaffaqiyatli ro'yxattan o'tildi");
+
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -143,7 +115,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16.w),
                     child: TextField(
-                      // inputFormatters: [_textFormat],
                       maxLength: 9,
                       onChanged: (value) {
                         setState(() {
@@ -282,7 +253,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             }
                             return ElevatedButton(
                               style: AppStyles.introUpButton,
-                              onPressed: () {
+                              onPressed: () async {
                                 context
                                     .read<AuthCubit>()
                                     .authSignUp(_fulnameC, _phoneC, _passwordC);

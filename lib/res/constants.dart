@@ -244,12 +244,14 @@ class ApiValues {
   static const String getGroupByUserId = "user-group/index";
 //Tests
   static const String testsBySubIdAndTypeIndex = "test/index";
+
+  static const int ordinaryTestType = 1;
+  static const int dtmTestType = 0;
 }
 
 class AppStorageConstants {
   static const String tokenKey = "token";
   static const String paymeKey = "paymeKey";
-
   static const String userKey = "user";
   static const String drawerIndexKey = "index_key";
   static const String passwordKey = "password";

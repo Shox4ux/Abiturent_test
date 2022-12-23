@@ -2,7 +2,6 @@ part of 'test_cubit.dart';
 
 abstract class TestState extends Equatable {
   const TestState();
-
   @override
   List<Object> get props => [];
 }
@@ -16,7 +15,6 @@ class OnTestProgress extends TestState {
 
 class OnTestCompleted extends TestState {
   final List<TestResult> resultTest;
-
   const OnTestCompleted(this.resultTest);
   @override
   List<Object> get props => [resultTest];
@@ -24,24 +22,38 @@ class OnTestCompleted extends TestState {
 
 class OnReceivedErrorResult extends TestState {
   final List<TestResult> errorList;
-
   const OnReceivedErrorResult(this.errorList);
-
   @override
   List<Object> get props => [errorList];
 }
 
 class OnTestSuccess extends TestState {
-  final TestModel testModel;
+  final Subjects subjectData;
+  final List<Tests> testList;
+  final List<Books> bookList;
 
-  const OnTestSuccess(this.testModel);
+  const OnTestSuccess({
+    required this.subjectData,
+    required this.testList,
+    required this.bookList,
+  });
+
+  OnTestSuccess copyWith(List<Tests>? newTestList) {
+    if (newTestList!.isNotEmpty) {
+      testList.addAll(newTestList);
+    }
+    return OnTestSuccess(
+        subjectData: subjectData, testList: testList, bookList: bookList);
+  }
+
+  _checkList() {}
+
   @override
-  List<Object> get props => [testModel];
+  List<Object> get props => [subjectData, testList, bookList];
 }
 
 class OnTestInnerSuccess extends TestState {
   final InnerTestModel innerTest;
-
   const OnTestInnerSuccess(this.innerTest);
   @override
   List<Object> get props => [innerTest];
@@ -49,7 +61,6 @@ class OnTestInnerSuccess extends TestState {
 
 class OnTestError extends TestState {
   final String error;
-
   const OnTestError(this.error);
   @override
   List<Object> get props => [error];
@@ -57,9 +68,7 @@ class OnTestError extends TestState {
 
 class OnCelebrate extends TestState {
   final int testListId;
-
   const OnCelebrate(this.testListId);
-
   @override
   List<Object> get props => [testListId];
 }

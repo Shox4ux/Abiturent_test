@@ -9,34 +9,23 @@ abstract class DrawerState extends Equatable {
 
 class DrawerInitial extends DrawerState {}
 
-class DrawerSubId extends DrawerState {
-  final int subId;
-  const DrawerSubId(this.subId);
-  @override
-  List<Object> get props => [subId];
-}
-
-class DrawerIndex extends DrawerState {
+class DrawerSubjectsLoadedState extends DrawerState {
   final int index;
-  const DrawerIndex(this.index);
+  final List<SubjectModel> subjectList;
+  const DrawerSubjectsLoadedState(this.index, this.subjectList);
   @override
-  List<Object> get props => [index];
+  List<Object> get props => [index, subjectList];
+
+  DrawerSubjectsLoadedState copyWith(int? index) {
+    return DrawerSubjectsLoadedState(index ?? this.index, subjectList);
+  }
 }
 
 class OnDrawerProgress extends DrawerState {}
 
-class OnDrawerSubsReceived extends DrawerState {
-  final List<SubjectModel> subList;
-  const OnDrawerSubsReceived(this.subList);
-  @override
-  List<Object> get props => [subList];
-}
-
 class OnDrawerError extends DrawerState {
   final String error;
-
   const OnDrawerError(this.error);
-
   @override
   List<Object> get props => [error];
 }

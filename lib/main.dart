@@ -5,14 +5,15 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:test_app/core/block/auth_block/auth_cubit.dart';
 import 'package:test_app/core/block/group_block/group_cubit.dart';
 import 'package:test_app/core/block/index_cubit/index_cubit.dart';
+import 'package:test_app/core/block/mistakes_cubit/mistakes_cubit.dart';
 import 'package:test_app/core/block/news_bloc/cubit/news_cubit.dart';
 import 'package:test_app/core/block/payment_cubit/payment_cubit.dart';
+import 'package:test_app/core/block/rating_cubit/rating_cubit.dart';
 import 'package:test_app/core/block/test_block/test_cubit.dart';
 import 'package:test_app/res/navigation/main_navigation.dart';
 import 'package:test_app/ui/splash/splash.dart';
 import 'core/block/book_cubit/book_cubit.dart';
 import 'core/block/drawer_cubit/drawer_cubit.dart';
-import 'core/block/subjecy_bloc/subject_cubit.dart';
 import 'core/block/subscription_block/subscription_cubit.dart';
 import 'core/block/user_block/user_cubit.dart';
 
@@ -42,9 +43,6 @@ class MyApp extends StatelessWidget {
           create: (context) => BookCubit(),
         ),
         BlocProvider(
-          create: (context) => SubjectCubit(),
-        ),
-        BlocProvider(
           create: (context) => UserCubit(),
         ),
         BlocProvider(
@@ -55,6 +53,12 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => TestCubit(),
+        ),
+        BlocProvider(
+          create: (context) => RatingCubit(),
+        ),
+        BlocProvider(
+          create: (context) => MistakesCubit(),
         ),
         BlocProvider(
           create: (context) => SubscriptionCubit(),

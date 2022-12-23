@@ -1,11 +1,6 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gap/gap.dart';
-import 'package:test_app/core/block/auth_block/auth_cubit.dart';
-import 'package:test_app/core/block/test_block/test_cubit.dart';
-import 'package:test_app/core/block/user_block/user_cubit.dart';
 import 'package:test_app/core/helper/database/app_storage.dart';
 import 'package:test_app/res/constants.dart';
 import 'package:test_app/res/navigation/main_navigation.dart';
@@ -26,7 +21,6 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   final _storage = AppStorage();
-  final _cubit = UserCubit();
 
   startTimer() async {
     var duration = const Duration(seconds: 3);
@@ -35,12 +29,14 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void route() async {
     if (await _storage.isLoggedIn()) {
+      // ignore: use_build_context_synchronously
       Navigator.pushNamedAndRemoveUntil(
         context,
         RouteNames.main,
         (route) => false,
       );
     } else {
+      // ignore: use_build_context_synchronously
       Navigator.pushNamedAndRemoveUntil(
         context,
         RouteNames.intro,

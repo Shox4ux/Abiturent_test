@@ -101,9 +101,4 @@ class AppStorage {
     var prefs = await SharedPreferences.getInstance();
     return prefs.getInt(AppStorageConstants.drawerIndexKey);
   }
-
-  Future<void> clearDrawerIndex() async {
-    var prefs = await SharedPreferences.getInstance();
-    prefs.remove(AppStorageConstants.drawerIndexKey);
-  }
 }

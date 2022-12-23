@@ -10,10 +10,6 @@ import 'package:test_app/core/helper/repos/subject_repo.dart';
 import 'package:test_app/res/constants.dart';
 
 import '../../core/block/drawer_cubit/drawer_cubit.dart';
-import '../../core/block/index_cubit/index_cubit.dart';
-
-List<SubjectModel> list = [];
-final _repo = SubjectRepo();
 
 class CustomDrawer extends StatefulWidget {
   const CustomDrawer({Key? key, required this.mainWidth}) : super(key: key);
@@ -24,85 +20,73 @@ class CustomDrawer extends StatefulWidget {
 }
 
 class _CustomDrawerState extends State<CustomDrawer> {
-  Future<List<SubjectModel>> getSubs() async {
-    try {
-      final response = await _repo.getSubjects();
-      final rowData = response.data as List;
-      final rowList = rowData.map((e) => SubjectModel.fromJson(e)).toList();
-      list.clear();
-      list.addAll(rowList);
-      return list;
-    } on SocketException catch (e) {
-      print(e.message);
-    } on DioError catch (e) {
-      print(e.response!.data["message"]);
-    } catch (e) {
-      print(e);
-    }
-    return list;
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Drawer(
+    return SafeArea(
+      child: Drawer(
         width: widget.mainWidth * 0.7,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Gap(50.h),
-            Container(
-              padding: EdgeInsets.only(left: 20.w),
-              alignment: Alignment.centerLeft,
-              height: 50.h,
-              width: double.maxFinite,
-              decoration: const BoxDecoration(
-                color: AppColors.mainColor,
-              ),
-              child: Text(
-                "Fanlar",
-                style: AppStyles.introButtonText.copyWith(
-                  fontSize: 24.sp,
-                  color: Colors.white,
+        child: Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: EdgeInsets.only(left: 20.w),
+                alignment: Alignment.centerLeft,
+                height: 50.h,
+                width: double.maxFinite,
+                decoration: const BoxDecoration(
+                  color: AppColors.mainColor,
+                ),
+                child: Text(
+                  "Fanlar",
+                  style: AppStyles.introButtonText.copyWith(
+                    fontSize: 24.sp,
+                    color: Colors.white,
+                  ),
                 ),
               ),
-            ),
-            Gap(20.h),
-            FutureBuilder(
-              future: getSubs(),
-              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                if (!snapshot.hasData) {
-                  return const Center(
-                    child: Text("Iltimos kuting"),
-                  );
-                }
+              Gap(20.h),
+              BlocBuilder<DrawerCubit, DrawerState>(
+                builder: (context, state) {
+                  if (state is DrawerInitial || state is OnDrawerProgress) {
+                    return const Expanded(
+                      child: Center(
+                        child: CircularProgressIndicator.adaptive(),
+                      ),
+                    );
+                  }
+                  if (state is DrawerSubjectsLoadedState) {
+                    final selectedIndex = state.index;
+                    final subjectList = state.subjectList;
 
-                return BlocBuilder<IndexCubit, int?>(
-                  builder: (context, state) {
-                    // context.read<IndexCubit>().checkDrawerIndex();
-                    return Column(
-                      children: [
-                        for (int i = 0; i < list.length; i++)
-                          GestureDetector(
+                    return Expanded(
+                      child: ListView.builder(
+                        itemCount: subjectList.length,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
                             onTap: () {
-                              context.read<IndexCubit>().setUp(i);
-                              context
-                                  .read<DrawerCubit>()
-                                  .saveSubId(list[i].id!);
+                              context.read<DrawerCubit>().chooseSubject(index);
                               Navigator.pop(context);
                             },
                             child: drawerItem(
-                              list[i].name!,
-                              _decider(state, i),
+                              subjectList[index].name!,
+                              _decider(selectedIndex, index),
                             ),
-                          )
-                      ],
+                          );
+                        },
+                      ),
                     );
-                  },
-                );
-              },
-            ),
-          ],
-        ));
+                  }
+                  return const Center(
+                    child: Text("Horizcha buyer bo'sh"),
+                  );
+                },
+              )
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 

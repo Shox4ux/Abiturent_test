@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:test_app/core/block/test_block/test_cubit.dart';
 import 'package:test_app/core/domain/test_model/test_model.dart';
-import 'package:test_app/core/helper/repos/test_repo.dart';
 import 'package:test_app/res/components/custom_dot.dart';
 import 'package:test_app/res/components/custom_drawer.dart';
 import 'package:test_app/res/functions/show_toast.dart';
@@ -12,17 +11,16 @@ import 'package:test_app/ui/test_screens/books.dart';
 import '../../../core/block/drawer_cubit/drawer_cubit.dart';
 import '../../../res/constants.dart';
 import '../../../res/components/custom_appbar.dart';
+import '../../../res/functions/will_pop_function.dart';
 import '../../test_screens/test.dart';
 
-TestModel? testModel;
-DateTime? currentBackPressTime;
-final repo = TestRepo();
 final GlobalKey<ScaffoldState> scaffKey = GlobalKey<ScaffoldState>();
-var currentPage = 1;
-const perPage = 10;
+var _currentPage = 1;
+int? _currentSubjectId;
 final _scrollController = ScrollController();
-final _repo = TestRepo();
-var currentSubId = 1;
+final _cubit = TestCubit();
+
+var _isLoading = false;
 
 class SubjectsScreen extends StatefulWidget {
   const SubjectsScreen({
@@ -38,27 +36,32 @@ class SubjectsScreen extends StatefulWidget {
 class _SubjectsScreenState extends State<SubjectsScreen> {
   @override
   void initState() {
-    super.initState();
     _scrollController.addListener(() {
-      _scroollListener();
+      print("at the end");
+      // if (_scrollController.position.maxScrollExtent ==
+      //     _scrollController.offset) {
+      //   _currentPage = _currentPage + 1;
+      //   _fetchData();
+      // }
     });
+
+    super.initState();
   }
 
-  Future<TestModel?> _getTestsBySubIdWithPagination(int subId) async {
-    try {
-      final response =
-          await _repo.getTestPaginationByType(subId, 1, currentPage, perPage);
-      testModel = TestModel.fromJson(response.data);
-      return testModel;
-    } catch (e) {
-      return testModel = null;
-    }
+  _fetchData() async {
+    await _cubit.getTestBySubIdWithPagination(
+      _currentSubjectId!,
+      ApiValues.ordinaryTestType,
+      _currentPage,
+    );
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-
     return Scaffold(
       backgroundColor: AppColors.mainColor,
       key: scaffKey,
@@ -72,162 +75,174 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CustomAppBar(scaffKey: scaffKey),
-              Expanded(
-                child: Container(
-                  width: double.maxFinite,
-                  padding: EdgeInsets.only(top: 14.h),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(28.r),
-                      topRight: Radius.circular(28.r),
-                    ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20.w),
-                        child: Text(
-                          "Mashg'ulot uchun testlar",
-                          style: AppStyles.introButtonText.copyWith(
-                            color: Colors.black,
-                          ),
+              BlocBuilder<DrawerCubit, DrawerState>(
+                builder: (context, state) {
+                  if (state is DrawerSubjectsLoadedState) {
+                    _currentSubjectId = state.index + 2;
+                    _currentPage = 1;
+                    context.read<TestCubit>().getTestBySubIdWithPagination(
+                          _currentSubjectId!,
+                          ApiValues.ordinaryTestType,
+                          _currentPage,
+                        );
+                  }
+                  return Expanded(
+                    child: Container(
+                      width: double.maxFinite,
+                      padding: EdgeInsets.only(top: 14.h),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(28.r),
+                          topRight: Radius.circular(28.r),
                         ),
                       ),
-                      Gap(10.h),
-                      BlocBuilder<DrawerCubit, DrawerState>(
-                        builder: (context, state) {
-                          if (state is DrawerSubId) {
-                            currentSubId = state.subId;
-                            print(currentSubId);
-                            return FutureBuilder(
-                              future:
-                                  _getTestsBySubIdWithPagination(state.subId),
-                              builder: (context, snapshot) {
-                                if (!snapshot.hasData) {
-                                  return const Center(
-                                    child: Text("Iltimos kuting..."),
-                                  );
-                                }
-                                return Column(
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 20.w),
-                                      child: Text(
-                                        testModel!.subjects!.name!,
-                                        style:
-                                            AppStyles.introButtonText.copyWith(
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                    ),
-                                    Gap(10.h),
-                                    (testModel!.tests!.isEmpty)
-                                        ? const Expanded(
-                                            child: Center(
-                                              child: Text("Testlar topilmadi"),
-                                            ),
-                                          )
-                                        : Expanded(
-                                            child: ListView.builder(
-                                              controller: _scrollController,
-                                              padding: EdgeInsets.only(
-                                                bottom: 20.h,
-                                                top: 10.h,
-                                              ),
-                                              itemCount:
-                                                  testModel!.tests!.length,
-                                              itemBuilder:
-                                                  (BuildContext context,
-                                                      int index) {
-                                                return subjectItem(
-                                                  testModel!.tests![index],
-                                                  testModel!.books!,
-                                                  context,
-                                                  (index + 1),
-                                                );
-                                              },
-                                            ),
-                                          ),
-                                  ],
-                                );
-                              },
-                            );
-                          }
-                          return FutureBuilder(
-                            future: _getTestsBySubIdWithPagination(1),
-                            builder: (context, snapshot) {
-                              if (!snapshot.hasData) {
-                                return const Center(
-                                  child: Text("Iltimos kuting..."),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 20.w),
+                            child: Text(
+                              "Mashg'ulot uchun testlar",
+                              style: AppStyles.introButtonText.copyWith(
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          BlocBuilder<TestCubit, TestState>(
+                            builder: (context, state) {
+                              if (state is OnTestProgress) {
+                                return const Expanded(
+                                  child: Center(
+                                    child: CircularProgressIndicator.adaptive(),
+                                  ),
                                 );
                               }
-                              return Column(
-                                children: [
-                                  Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 20.w),
-                                    child: Text(
-                                      testModel!.subjects!.name!,
-                                      style: AppStyles.introButtonText.copyWith(
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  ),
-                                  Gap(10.h),
-                                  (testModel!.tests!.isEmpty)
-                                      ? const Expanded(
-                                          child: Center(
-                                            child: Text("Testlar topilmadi"),
-                                          ),
-                                        )
-                                      : Expanded(
-                                          child: ListView.builder(
-                                            controller: _scrollController,
-                                            padding: EdgeInsets.only(
-                                              bottom: 20.h,
-                                              top: 10.h,
-                                            ),
-                                            itemCount: testModel!.tests!.length,
-                                            itemBuilder: (BuildContext context,
-                                                int index) {
-                                              return subjectItem(
-                                                testModel!.tests![index],
-                                                testModel!.books!,
-                                                context,
-                                                (index + 1),
-                                              );
-                                            },
+                              if (state is OnTestSuccess) {
+                                final subjectData = state.subjectData;
+                                final bookList = state.bookList;
+                                final testList = state.testList;
+
+                                return Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 20.w, vertical: 10.h),
+                                        child: Text(
+                                          subjectData.name!,
+                                          style: AppStyles.introButtonText
+                                              .copyWith(
+                                            color: Colors.black,
                                           ),
                                         ),
-                                ],
-                              );
+                                      ),
+                                      Gap(10.h),
+                                      (testList.isEmpty)
+                                          ? const Expanded(
+                                              child: Center(
+                                                child:
+                                                    Text("Testlar topilmadi"),
+                                              ),
+                                            )
+                                          : Expanded(
+                                              child: ListView.builder(
+                                                controller: _scrollController,
+                                                padding: EdgeInsets.only(
+                                                  bottom: 20.h,
+                                                  top: 10.h,
+                                                ),
+                                                itemCount: testList.length + 1,
+                                                itemBuilder:
+                                                    (BuildContext context,
+                                                        int index) {
+                                                  if (index < testList.length) {
+                                                    return subjectItem(
+                                                      testList[index],
+                                                      bookList,
+                                                      context,
+                                                      (index + 1),
+                                                    );
+                                                  } else {
+                                                    return _isLoading
+                                                        ? const Center(
+                                                            child:
+                                                                CircularProgressIndicator
+                                                                    .adaptive(),
+                                                          )
+                                                        : Padding(
+                                                            padding: EdgeInsets
+                                                                .symmetric(
+                                                                    horizontal:
+                                                                        20.w),
+                                                            child:
+                                                                ElevatedButton(
+                                                              style: AppStyles
+                                                                  .introUpButton,
+                                                              onPressed: () {
+                                                                _currentPage =
+                                                                    _currentPage +
+                                                                        1;
+                                                                setState(() {
+                                                                  _isLoading =
+                                                                      true;
+                                                                });
+                                                                _fetchData();
+                                                              },
+                                                              child: Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Image.asset(
+                                                                    AppIcons
+                                                                        .down,
+                                                                    scale: 3,
+                                                                    color: Colors
+                                                                        .white,
+                                                                  ),
+                                                                  Gap(10.w),
+                                                                  Text(
+                                                                    "Ko’proq testlar",
+                                                                    style: AppStyles
+                                                                        .introButtonText
+                                                                        .copyWith(
+                                                                      color: Colors
+                                                                          .white,
+                                                                    ),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          );
+                                                  }
+                                                },
+                                              ),
+                                            ),
+                                    ],
+                                  ),
+                                );
+                              }
+
+                              return const Expanded(
+                                  child: Center(
+                                child: Text("Iltimos kuting..."),
+                              ));
                             },
-                          );
-                        },
-                      )
-                    ],
-                  ),
-                ),
+                          )
+                        ],
+                      ),
+                    ),
+                  );
+                },
               )
             ],
           ),
         ),
       ),
     );
-  }
-
-  Future<bool> onWillPop(BuildContext context) {
-    DateTime now = DateTime.now();
-    if (currentBackPressTime == null ||
-        now.difference(currentBackPressTime!) > const Duration(seconds: 2)) {
-      currentBackPressTime = now;
-      showToast("Darturdan chiqich uchun tugmani ikki marta bosing");
-      return Future.value(false);
-    }
-    return Future.value(true);
   }
 
   Widget subjectItem(
@@ -306,9 +321,7 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
                   ),
                 ),
                 Gap(20.w),
-
-                // for (var i = 0; i < testModel!.books!.length; i++)
-                (testModel!.books!.isNotEmpty)
+                (books.isNotEmpty)
                     ? InkWell(
                         onTap: () {
                           Navigator.push<void>(
@@ -380,15 +393,5 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
         )
       ]),
     );
-  }
-
-  void _scroollListener() {
-    if (_scrollController.position.pixels ==
-        _scrollController.position.maxScrollExtent) {
-      currentPage = currentPage + 1;
-      _getTestsBySubIdWithPagination(currentSubId);
-    } else {
-      print("object scroll");
-    }
   }
 }

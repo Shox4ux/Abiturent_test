@@ -1,15 +1,13 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:pinput/pinput.dart';
 import 'package:test_app/res/functions/show_toast.dart';
 import 'package:test_app/ui/auth/reset_password.dart';
-
 import 'package:test_app/res/components/custom_pinput_widget.dart';
 import 'package:test_app/res/components/waiting.dart';
-
 import '../../core/block/auth_block/auth_cubit.dart';
 import '../../res/constants.dart';
 import '../../res/components/custom_simple_appbar.dart';
@@ -33,8 +31,6 @@ class SmsVerificationScreen extends StatefulWidget {
 class _SmsVerificationScreenState extends State<SmsVerificationScreen>
     with TickerProviderStateMixin {
   var _pinCode = "";
-  late AnimationController _controller;
-
   var _isTime = false;
   var _isFilled = false;
 
@@ -168,7 +164,7 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen>
                     style: AppStyles.smsVerBigTextStyle,
                   ),
                   Gap(12.h),
-                  PinPutWidget(
+                  CustomPinPutWidget(
                     lenth: 6,
                     onChanged: (value) {
                       if (value.length == 6) {
@@ -182,6 +178,12 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen>
                       }
                       _pinCode = value;
                     },
+                  ),
+                  Gap(15.h),
+                  Card(
+                    child: Pinput(
+                      length: 4,
+                    ),
                   ),
                   Gap(15.h),
                   Text(

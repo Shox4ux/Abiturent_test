@@ -7,11 +7,7 @@ class TestRepo {
   final _dio = DioClient.getDio();
 
   Future<Response> getTestPaginationByType(
-    int subId,
-    int typeIndex,
-    int page,
-    int perPage,
-  ) async {
+      int subId, int typeIndex, int page, int perPage) async {
     final Map<String, dynamic> params = {
       "id": subId,
       "page": page,

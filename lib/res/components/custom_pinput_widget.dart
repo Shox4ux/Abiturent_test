@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:test_app/res/constants.dart';
+import 'package:pinput/pinput.dart';
 
-class PinPutWidget extends StatefulWidget {
-  const PinPutWidget({
+import '../constants.dart';
+
+class CustomPinPutWidget extends StatefulWidget {
+  const CustomPinPutWidget({
     super.key,
     required this.lenth,
     required this.onChanged,
@@ -18,16 +20,23 @@ class PinPutWidget extends StatefulWidget {
   final Size? selectedPinSize;
 
   @override
-  State<PinPutWidget> createState() => _PinPutWidgetState();
+  State<CustomPinPutWidget> createState() => _CustomPinPutWidgetState();
 }
 
-class _PinPutWidgetState extends State<PinPutWidget> {
+class _CustomPinPutWidgetState extends State<CustomPinPutWidget> {
   var focusNode = FocusNode();
   String code = '';
+  final _pinputController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   void dispose() {
     focusNode.dispose();
+    _pinputController.dispose();
     super.dispose();
   }
 
@@ -55,51 +64,58 @@ class _PinPutWidgetState extends State<PinPutWidget> {
       },
       child: Column(
         children: [
-          Material(
-            child: SizedBox(
-              height: 40.h,
-              child: Row(
-                children: [
-                  for (var i = 0; i < widget.lenth; i++)
-                    Row(
-                      children: [
-                        (code.length > i)
-                            ? Text(
-                                code[i],
-                                style: style,
-                              )
-                            : Container(
-                                height: 16.h,
-                                width: 16.h,
-                                decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: AppColors.gray,
-                                ),
-                              ),
-                        SizedBox(width: 16.w),
-                      ],
-                    )
-                ],
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Material(
+                child: SizedBox(
+                  height: 40.h,
+                  child: Row(
+                    children: [
+                      for (var i = 0; i < widget.lenth; i++)
+                        Row(
+                          children: [
+                            (code.length > i)
+                                ? Text(
+                                    code[i],
+                                    style: style,
+                                  )
+                                : Container(
+                                    height: 16.h,
+                                    width: 16.h,
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: AppColors.gray,
+                                    ),
+                                  ),
+                            SizedBox(width: 16.w),
+                          ],
+                        )
+                    ],
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
-          SizedBox(
-            height: 0,
-            child: TextField(
-              autofocus: true,
-              focusNode: focusNode,
-              maxLength: null,
-              minLines: null,
-              maxLines: null,
-              keyboardType: TextInputType.number,
-              onChanged: onChanged,
-              style: const TextStyle(fontSize: 0),
-              decoration: const InputDecoration(
-                contentPadding: EdgeInsets.zero,
-                border: InputBorder.none,
-              ),
-            ),
-          )
+          // Pinput(
+          //   length: 1,
+          //   autofocus: true,
+          //   focusNode: focusNode,
+          //   keyboardType: TextInputType.number,
+          //   onChanged: onChanged,
+          //   // defaultPinTheme: const PinTheme(
+          //   //   height: null,
+          //   //   width: null,
+          //   //   margin: null,
+          //   //   padding: null,
+          //   //   textStyle: TextStyle(fontSize: 0),
+          //   // ),
+          //   // style: const TextStyle(fontSize: 0),
+          //   // decoration: const InputDecoration(
+          //   //   contentPadding: EdgeInsets.zero,
+          //   //   border: InputBorder.none,
+          //   // ),
+          // )
         ],
       ),
     );
