@@ -15,7 +15,7 @@ class AuthCubit extends Cubit<AuthState> {
   final _storage = AppStorage();
   final _urepo = UserRepo();
   AuthCubit() : super(AuthInitial()) {
-    getUserData();
+    // getUserData();
   }
   final userInActive = 8;
 

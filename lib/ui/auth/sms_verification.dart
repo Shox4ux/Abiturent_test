@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:pinput/pinput.dart';
 import 'package:test_app/res/functions/show_toast.dart';
 import 'package:test_app/ui/auth/reset_password.dart';
 import 'package:test_app/res/components/custom_pinput_widget.dart';
@@ -67,6 +66,12 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen>
     super.initState();
 
     startTimer();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    stopTimer();
   }
 
   void startTimer() {
@@ -164,26 +169,14 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen>
                     style: AppStyles.smsVerBigTextStyle,
                   ),
                   Gap(12.h),
-                  CustomPinPutWidget(
+                  PinPutWidget(
+                    context: context,
                     lenth: 6,
                     onChanged: (value) {
-                      if (value.length == 6) {
-                        setState(() {
-                          _isFilled = true;
-                        });
-                      } else {
-                        setState(() {
-                          _isFilled = false;
-                        });
-                      }
-                      _pinCode = value;
+                      setState(() {
+                        _pinCode = value;
+                      });
                     },
-                  ),
-                  Gap(15.h),
-                  Card(
-                    child: Pinput(
-                      length: 4,
-                    ),
                   ),
                   Gap(15.h),
                   Text(
@@ -194,7 +187,7 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen>
                   ),
                   Gap(10.h),
                   Text(
-                    "Bizning telegon +998${widget.phone.substring(0, 2)} *** ** ${widget.phone.substring(7, 9)} raqamingizga sms-kod xabarnomasini jo’natdik.",
+                    "Biz +998${widget.phone.substring(0, 2)} *** ** ${widget.phone.substring(7, 9)} telefon raqamiga sms-kod xabarnomasini jo’natdik.",
                     style: AppStyles.subtitleTextStyle.copyWith(
                       color: Colors.black,
                     ),

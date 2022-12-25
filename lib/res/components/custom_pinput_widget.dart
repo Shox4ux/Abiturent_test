@@ -1,52 +1,70 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pinput/pinput.dart';
+import 'package:sms_user_consent/sms_user_consent.dart';
+import 'package:test_app/res/constants.dart';
 
-import '../constants.dart';
-
-class CustomPinPutWidget extends StatefulWidget {
-  const CustomPinPutWidget({
+class PinPutWidget extends StatefulWidget {
+  const PinPutWidget({
     super.key,
     required this.lenth,
     required this.onChanged,
     this.selectedPinSize,
     this.style,
     this.unselectedPinSize,
+    required this.context,
   });
   final int lenth;
   final ValueChanged<String> onChanged;
   final TextStyle? style;
   final Size? unselectedPinSize;
   final Size? selectedPinSize;
+  final BuildContext context;
 
   @override
-  State<CustomPinPutWidget> createState() => _CustomPinPutWidgetState();
+  State<PinPutWidget> createState() => _PinPutWidgetState();
 }
 
-class _CustomPinPutWidgetState extends State<CustomPinPutWidget> {
+class _PinPutWidgetState extends State<PinPutWidget> {
   var focusNode = FocusNode();
   String code = '';
-  final _pinputController = TextEditingController();
+  final _pinController = TextEditingController();
+  late SmsUserConsent smsUserConsent;
 
   @override
   void initState() {
     super.initState();
+    smsUserConsent = SmsUserConsent(
+      phoneNumberListener: () => setState(() {}),
+      smsListener: () => setState(
+        () {
+          code = smsUserConsent.receivedSms ?? "";
+          if (code.length > 6) {
+            var result = "";
+            for (var j = 0; j < code.length; j++) {
+              if (double.tryParse(code[j]) != null) {
+                result += code[j];
+              }
+            }
+            code = result;
+            if (code.length == 6) {
+              focusNode.unfocus();
+            }
+            widget.onChanged(code);
+            _pinController.setText(code);
+          }
+        },
+      ),
+    );
+    smsUserConsent.requestSms();
   }
 
   @override
   void dispose() {
     focusNode.dispose();
-    _pinputController.dispose();
+    smsUserConsent.dispose();
+    _pinController.dispose();
     super.dispose();
-  }
-
-  void onChanged(String value) {
-    code = value;
-    setState(() {});
-    if (value.length == widget.lenth) {
-      focusNode.unfocus();
-    }
-    widget.onChanged(value);
   }
 
   @override
@@ -60,62 +78,55 @@ class _CustomPinPutWidgetState extends State<CustomPinPutWidget> {
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).requestFocus(focusNode);
-        print('object');
+        print("object");
       },
       child: Column(
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Material(
-                child: SizedBox(
-                  height: 40.h,
-                  child: Row(
-                    children: [
-                      for (var i = 0; i < widget.lenth; i++)
-                        Row(
-                          children: [
-                            (code.length > i)
-                                ? Text(
-                                    code[i],
-                                    style: style,
-                                  )
-                                : Container(
-                                    height: 16.h,
-                                    width: 16.h,
-                                    decoration: const BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: AppColors.gray,
-                                    ),
-                                  ),
-                            SizedBox(width: 16.w),
-                          ],
-                        )
-                    ],
-                  ),
-                ),
+          Material(
+            child: SizedBox(
+              height: 40.h,
+              child: Row(
+                children: [
+                  for (var i = 0; i < widget.lenth; i++)
+                    Row(
+                      children: [
+                        (code.length > i)
+                            ? Text(
+                                code[i],
+                                style: style,
+                              )
+                            : Container(
+                                height: 16.h,
+                                width: 16.h,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: AppColors.gray,
+                                ),
+                              ),
+                        SizedBox(width: 16.w),
+                      ],
+                    )
+                ],
               ),
-            ],
+            ),
           ),
-          // Pinput(
-          //   length: 1,
-          //   autofocus: true,
-          //   focusNode: focusNode,
-          //   keyboardType: TextInputType.number,
-          //   onChanged: onChanged,
-          //   // defaultPinTheme: const PinTheme(
-          //   //   height: null,
-          //   //   width: null,
-          //   //   margin: null,
-          //   //   padding: null,
-          //   //   textStyle: TextStyle(fontSize: 0),
-          //   // ),
-          //   // style: const TextStyle(fontSize: 0),
-          //   // decoration: const InputDecoration(
-          //   //   contentPadding: EdgeInsets.zero,
-          //   //   border: InputBorder.none,
-          //   // ),
-          // )
+          SizedBox(
+            height: 0,
+            child: TextField(
+              controller: _pinController,
+              autofocus: true,
+              focusNode: focusNode,
+              maxLength: null,
+              minLines: null,
+              maxLines: null,
+              keyboardType: TextInputType.number,
+              style: const TextStyle(fontSize: 0),
+              decoration: const InputDecoration(
+                contentPadding: EdgeInsets.zero,
+                border: InputBorder.none,
+              ),
+            ),
+          )
         ],
       ),
     );
