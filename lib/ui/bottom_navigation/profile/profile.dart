@@ -260,7 +260,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       ),
                                     );
                                   }
-                                  return body(stats!);
+                                  return Expanded(child: body(stats!));
                                 },
                               )
                             ],
@@ -283,29 +283,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget statistics(List<StatModel> statList) {
     if (statList.isEmpty) {
-      return const Expanded(
-        child: Center(
-          child: Text("Fanlarga obuna bo'linmagan..."),
-        ),
+      return const Center(
+        child: Text("Fanlarga obuna bo'linmagan..."),
       );
     }
-    return Expanded(
-      child: ListView.builder(
-        itemCount: statList.length,
-        itemBuilder: (context, index) {
-          return InkWell(
-              onTap: () {
-                context.read<DrawerCubit>().chooseSubject(index);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const MainScreen(0),
-                  ),
-                );
-              },
-              child: statisticsItem(statList[index]));
-        },
-      ),
+    return ListView.builder(
+      itemCount: statList.length,
+      itemBuilder: (context, index) {
+        return InkWell(
+            onTap: () {
+              context.read<DrawerCubit>().chooseSubject(index);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const MainScreen(0),
+                ),
+              );
+            },
+            child: statisticsItem(statList[index]));
+      },
     );
   }
 
@@ -317,78 +313,75 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget subs() {
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              InkWell(
-                onTap: () {
-                  setState(() {
-                    isInSubs = false;
-                  });
-                },
-                child: Image.asset(
-                  AppIcons.sim,
-                  scale: 3,
-                ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            InkWell(
+              onTap: () {
+                setState(() {
+                  isInSubs = false;
+                });
+              },
+              child: Image.asset(
+                AppIcons.sim,
+                scale: 3,
               ),
-              Gap(10.w),
-              Text(
-                "Mening hisoblarim",
-                style: AppStyles.introButtonText.copyWith(
-                  color: Colors.black,
-                ),
+            ),
+            Gap(10.w),
+            Text(
+              "Mening hisoblarim",
+              style: AppStyles.introButtonText.copyWith(
+                color: Colors.black,
               ),
-            ],
-          ),
-          Gap(9.h),
-          Expanded(
-            child: BlocBuilder<PaymentCubit, PaymentState>(
-              builder: (context, state) {
-                if (state is OnPayHistoryError) {
-                  return Center(
-                    child: Text(state.error),
-                  );
-                }
-                if (state is OnPayHistoryProgress) {
-                  return const Center(
-                    child:
-                        CircularProgressIndicator(color: AppColors.mainColor),
-                  );
-                }
+            ),
+          ],
+        ),
+        Gap(9.h),
+        Expanded(
+          child: BlocBuilder<PaymentCubit, PaymentState>(
+            builder: (context, state) {
+              if (state is OnPayHistoryError) {
+                return Center(
+                  child: Text(state.error),
+                );
+              }
+              if (state is OnPayHistoryProgress) {
+                return const Center(
+                  child: CircularProgressIndicator(color: AppColors.mainColor),
+                );
+              }
 
-                if (state is OnPayHistoryReceived) {
-                  return ListView.separated(
-                    padding: EdgeInsets.only(
-                        bottom: 20.h, top: 10.h, right: 10.w, left: 10.w),
-                    itemCount: state.list.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      if (state.list[index].type == 2) {
-                        return Padding(
-                            padding: EdgeInsets.only(bottom: 5.h),
-                            child: bonusHistoryItem(state.list[index]));
-                      }
-                      if (state.list[index].type == 1) {
-                        return Padding(
-                            padding: EdgeInsets.only(bottom: 5.h),
-                            child: outHistoryItem(state.list[index]));
-                      }
+              if (state is OnPayHistoryReceived) {
+                return ListView.separated(
+                  padding: EdgeInsets.only(
+                      bottom: 20.h, top: 10.h, right: 10.w, left: 10.w),
+                  itemCount: state.list.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    if (state.list[index].type == 2) {
                       return Padding(
                           padding: EdgeInsets.only(bottom: 5.h),
-                          child: inHistoryItem(state.list[index]));
-                    },
-                    separatorBuilder: (context, index) => SizedBox(height: 6.h),
-                  );
-                }
+                          child: bonusHistoryItem(state.list[index]));
+                    }
+                    if (state.list[index].type == 1) {
+                      return Padding(
+                          padding: EdgeInsets.only(bottom: 5.h),
+                          child: outHistoryItem(state.list[index]));
+                    }
+                    return Padding(
+                        padding: EdgeInsets.only(bottom: 5.h),
+                        child: inHistoryItem(state.list[index]));
+                  },
+                  separatorBuilder: (context, index) => SizedBox(height: 6.h),
+                );
+              }
 
-                return const Center(child: Text("Hozircha bu oyna bo'sh"));
-              },
-            ),
+              return const Center(child: Text("Hozircha bu oyna bo'sh"));
+            },
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -413,99 +406,106 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ],
         ),
         Gap(5.h),
-        Container(
-          width: 331.w,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20.r),
-          ),
-          child: SingleChildScrollView(
-            child: Column(children: [
-              InkWell(
-                onTap: () async {
-                  setState(() {
-                    isInSubs = true;
-                  });
+        Expanded(
+            child: ListView(
+          children: [
+            Container(
+              width: 331.w,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20.r),
+              ),
+              child: SingleChildScrollView(
+                child: Column(children: [
+                  InkWell(
+                    onTap: () async {
+                      setState(() {
+                        isInSubs = true;
+                      });
 
-                  context.read<PaymentCubit>().getPaymentHistory();
-                },
-                child:
-                    rowItem(AppIcons.purplePocket, "Mening hisoblarim", false),
-              ),
-              spacer(),
-              InkWell(
-                onTap: () {
-                  Navigator.push<void>(
-                    context,
-                    MaterialPageRoute<void>(
-                      builder: (BuildContext context) =>
-                          RefactorScreen(user: user!),
-                    ),
-                  );
-                },
-                child: rowItem(AppIcons.edit, "Tahrirlash", false),
-              ),
-              spacer(),
-              InkWell(
-                onTap: () {
-                  Navigator.pushNamed(
-                    context,
-                    RouteNames.news,
-                  );
-                },
-                child: rowItem(AppIcons.gallery, "Yangiliklar", false),
-              ),
-              spacer(),
-              InkWell(
-                onTap: () {
-                  Navigator.pushNamed(
-                    context,
-                    RouteNames.subscripts,
-                  );
-
-                  // context.read<SubscriptionCubit>().getScripts();
-                },
-                child: rowItem(AppIcons.purpleDone, "Mening obunalarim", false),
-              ),
-              spacer(),
-              InkWell(
-                onTap: () {
-                  Navigator.pushNamed(context, RouteNames.group);
-                  context.read<GroupCubit>().getGroupsByUserId();
-                },
-                child: rowItem(AppIcons.purpleDone, "Mening guruhlarim", false),
-              ),
-              spacer(),
-              InkWell(
-                onTap: () async {
-                  if (await context.read<PaymentCubit>().isConfirmed()) {
-                    context.read<PaymentCubit>().getCards();
-                    Navigator.push<void>(
-                      context,
-                      MaterialPageRoute<void>(
-                        builder: (BuildContext context) =>
-                            const PaymeInfoConfirmation(
-                          null,
-                          isConfirmed: true,
+                      context.read<PaymentCubit>().getPaymentHistory();
+                    },
+                    child: rowItem(
+                        AppIcons.purplePocket, "Mening hisoblarim", false),
+                  ),
+                  spacer(),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push<void>(
+                        context,
+                        MaterialPageRoute<void>(
+                          builder: (BuildContext context) =>
+                              RefactorScreen(user: user!),
                         ),
-                      ),
-                    );
-                  } else {
-                    Navigator.pushNamed(context, RouteNames.payme);
-                  }
-                },
-                child: rowItem(AppIcons.payme, "Hisobni to’ldirish", false),
+                      );
+                    },
+                    child: rowItem(AppIcons.edit, "Tahrirlash", false),
+                  ),
+                  spacer(),
+                  InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        RouteNames.news,
+                      );
+                    },
+                    child: rowItem(AppIcons.gallery, "Yangiliklar", false),
+                  ),
+                  spacer(),
+                  InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        RouteNames.subscripts,
+                      );
+
+                      // context.read<SubscriptionCubit>().getScripts();
+                    },
+                    child: rowItem(
+                        AppIcons.purpleDone, "Mening obunalarim", false),
+                  ),
+                  spacer(),
+                  InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(context, RouteNames.group);
+                      context.read<GroupCubit>().getGroupsByUserId();
+                    },
+                    child: rowItem(
+                        AppIcons.purpleDone, "Mening guruhlarim", false),
+                  ),
+                  spacer(),
+                  InkWell(
+                    onTap: () async {
+                      if (await context.read<PaymentCubit>().isConfirmed()) {
+                        context.read<PaymentCubit>().getCards();
+                        Navigator.push<void>(
+                          context,
+                          MaterialPageRoute<void>(
+                            builder: (BuildContext context) =>
+                                const PaymeInfoConfirmation(
+                              null,
+                              isConfirmed: true,
+                            ),
+                          ),
+                        );
+                      } else {
+                        Navigator.pushNamed(context, RouteNames.payme);
+                      }
+                    },
+                    child: rowItem(AppIcons.payme, "Hisobni to’ldirish", false),
+                  ),
+                  spacer(),
+                  InkWell(
+                    onTap: () {
+                      logOutBottomSheet(context);
+                    },
+                    child: rowItem(AppIcons.logout, "Tizimdan chiqish", true),
+                  ),
+                ]),
               ),
-              spacer(),
-              InkWell(
-                onTap: () {
-                  logOutBottomSheet(context);
-                },
-                child: rowItem(AppIcons.logout, "Tizimdan chiqish", true),
-              ),
-            ]),
-          ),
-        ),
+            ),
+          ],
+        ))
       ],
     );
   }

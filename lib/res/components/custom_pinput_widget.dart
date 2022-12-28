@@ -59,6 +59,12 @@ class _PinPutWidgetState extends State<PinPutWidget> {
     smsUserConsent.requestSms();
   }
 
+  void changeCode(String value) {
+    code = value;
+    widget.onChanged(code);
+    setState(() {});
+  }
+
   @override
   void dispose() {
     focusNode.dispose();
@@ -78,7 +84,6 @@ class _PinPutWidgetState extends State<PinPutWidget> {
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).requestFocus(focusNode);
-        print("object");
       },
       child: Column(
         children: [
@@ -115,6 +120,7 @@ class _PinPutWidgetState extends State<PinPutWidget> {
             child: TextField(
               controller: _pinController,
               autofocus: true,
+              onChanged: changeCode,
               focusNode: focusNode,
               maxLength: null,
               minLines: null,

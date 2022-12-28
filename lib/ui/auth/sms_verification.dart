@@ -82,7 +82,7 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen>
   // Step 4
   void stopTimer() {
     if (countdownTimer != null) {
-      setState(() => countdownTimer!.cancel());
+      countdownTimer!.cancel();
     }
   }
 
@@ -103,6 +103,24 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen>
         myDuration = Duration(seconds: seconds);
       }
     });
+  }
+
+  void sendMessage() {
+    final phoneNumber = '998${widget.phone}';
+    final id = widget.id;
+    if (widget.fromWhere == RouteNames.forget) {
+      context.read<AuthCubit>().checkResetPassword(
+            id,
+            phoneNumber,
+            _pinCode,
+          );
+    } else {
+      context.read<AuthCubit>().checkSmsCode(
+            id,
+            phoneNumber,
+            _pinCode,
+          );
+    }
   }
 
   @override
@@ -173,9 +191,8 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen>
                     context: context,
                     lenth: 6,
                     onChanged: (value) {
-                      setState(() {
-                        _pinCode = value;
-                      });
+                      _pinCode = value;
+                      _checkFields();
                     },
                   ),
                   Gap(15.h),
@@ -231,21 +248,7 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen>
                             }
                             return ElevatedButton(
                               style: AppStyles.introUpButton,
-                              onPressed: () {
-                                if (widget.fromWhere == RouteNames.forget) {
-                                  context.read<AuthCubit>().checkResetPassword(
-                                        widget.id,
-                                        widget.phone,
-                                        _pinCode,
-                                      );
-                                } else {
-                                  context.read<AuthCubit>().checkSmsCode(
-                                        widget.id,
-                                        widget.phone,
-                                        _pinCode,
-                                      );
-                                }
-                              },
+                              onPressed: sendMessage,
                               child: Text(
                                 "Tasdiqlash",
                                 style: AppStyles.introButtonText

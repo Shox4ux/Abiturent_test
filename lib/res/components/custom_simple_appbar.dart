@@ -52,10 +52,7 @@ class _CustomSimpleAppBarState extends State<CustomSimpleAppBar> {
                           return;
                         }
                         if (widget.isSimple) {
-                          Navigator.popUntil(
-                            context,
-                            (route) => false,
-                          );
+                          Navigator.pop(context);
                           return;
                         }
                         if (widget.isScript!) {

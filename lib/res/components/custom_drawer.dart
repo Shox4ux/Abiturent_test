@@ -22,67 +22,73 @@ class CustomDrawer extends StatefulWidget {
 class _CustomDrawerState extends State<CustomDrawer> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Drawer(
-        width: widget.mainWidth * 0.7,
-        child: Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: EdgeInsets.only(left: 20.w),
-                alignment: Alignment.centerLeft,
-                height: 50.h,
-                width: double.maxFinite,
-                decoration: const BoxDecoration(
-                  color: AppColors.mainColor,
-                ),
-                child: Text(
-                  "Fanlar",
-                  style: AppStyles.introButtonText.copyWith(
-                    fontSize: 24.sp,
-                    color: Colors.white,
+    return Drawer(
+      width: widget.mainWidth * 0.7,
+      child: ColoredBox(
+        color: AppColors.mainColor,
+        child: SafeArea(
+          child: ColoredBox(
+            color: Colors.white,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding: EdgeInsets.only(left: 20.w),
+                  alignment: Alignment.centerLeft,
+                  height: 50.h,
+                  width: double.maxFinite,
+                  decoration: const BoxDecoration(
+                    color: AppColors.mainColor,
+                  ),
+                  child: Text(
+                    "Fanlar",
+                    style: AppStyles.introButtonText.copyWith(
+                      fontSize: 24.sp,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
-              ),
-              Gap(20.h),
-              BlocBuilder<DrawerCubit, DrawerState>(
-                builder: (context, state) {
-                  if (state is DrawerInitial || state is OnDrawerProgress) {
-                    return const Expanded(
-                      child: Center(
-                        child: CircularProgressIndicator.adaptive(),
-                      ),
-                    );
-                  }
-                  if (state is DrawerSubjectsLoadedState) {
-                    final selectedIndex = state.index;
-                    final subjectList = state.subjectList;
+                Gap(20.h),
+                BlocBuilder<DrawerCubit, DrawerState>(
+                  builder: (context, state) {
+                    if (state is DrawerInitial || state is OnDrawerProgress) {
+                      return const Expanded(
+                        child: Center(
+                          child: CircularProgressIndicator.adaptive(),
+                        ),
+                      );
+                    }
+                    if (state is DrawerSubjectsLoadedState) {
+                      final selectedIndex = state.index;
+                      final subjectList = state.subjectList;
 
-                    return Expanded(
-                      child: ListView.builder(
-                        itemCount: subjectList.length,
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () {
-                              context.read<DrawerCubit>().chooseSubject(index);
-                              Navigator.pop(context);
-                            },
-                            child: drawerItem(
-                              subjectList[index].name!,
-                              _decider(selectedIndex, index),
-                            ),
-                          );
-                        },
-                      ),
+                      return Expanded(
+                        child: ListView.builder(
+                          itemCount: subjectList.length,
+                          itemBuilder: (context, index) {
+                            return GestureDetector(
+                              onTap: () {
+                                context
+                                    .read<DrawerCubit>()
+                                    .chooseSubject(index);
+                                Navigator.pop(context);
+                              },
+                              child: drawerItem(
+                                subjectList[index].name!,
+                                _decider(selectedIndex, index),
+                              ),
+                            );
+                          },
+                        ),
+                      );
+                    }
+                    return const Center(
+                      child: Text("Horizcha buyer bo'sh"),
                     );
-                  }
-                  return const Center(
-                    child: Text("Horizcha buyer bo'sh"),
-                  );
-                },
-              )
-            ],
+                  },
+                )
+              ],
+            ),
           ),
         ),
       ),

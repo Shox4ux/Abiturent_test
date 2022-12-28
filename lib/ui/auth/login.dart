@@ -81,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   padding: EdgeInsets.only(left: 16.w),
                   child: CustomSimpleAppBar(
                     isIcon: false,
-                    isSimple: false,
+                    isSimple: true,
                     titleText: "Tizimga kirish",
                     routeText: RouteNames.intro,
                     style: AppStyles.introButtonText.copyWith(
@@ -129,7 +129,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         _password = value;
                       });
                     },
-                    keyboardType: TextInputType.number,
+                    keyboardType: TextInputType.text,
                     obscureText: isObscure,
                     decoration: InputDecoration(
                       counter: const SizedBox.shrink(),

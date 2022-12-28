@@ -78,7 +78,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     padding: EdgeInsets.only(left: 16.w),
                     child: CustomSimpleAppBar(
                       isIcon: false,
-                      isSimple: false,
+                      isSimple: true,
                       titleText: "Ro’yhatdan o’tish",
                       routeText: RouteNames.intro,
                       style: AppStyles.introButtonText.copyWith(
@@ -147,7 +147,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     child: TextField(
                       controller: _controller,
-                      keyboardType: TextInputType.number,
+                      keyboardType: TextInputType.text,
                       onChanged: (value) {
                         setState(() {
                           _passwordC = value;
