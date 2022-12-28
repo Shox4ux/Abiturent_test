@@ -56,7 +56,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
     return BlocBuilder<DrawerCubit, DrawerState>(
       builder: (context, state) {
         if (state is DrawerSubjectsLoadedState) {
-          final CSI = state.index + 1;
+          final CSI = state.index + 2;
           return FutureBuilder(
             future: getUserRatingData(CSI),
             builder: (context, snapshot) {

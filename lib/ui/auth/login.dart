@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:test_app/res/components/waiting.dart';
 import 'package:test_app/res/navigation/main_navigation.dart';
 
 import '../../core/block/auth_block/auth_cubit.dart';
@@ -57,6 +58,17 @@ class _LoginScreenState extends State<LoginScreen> {
         }
         if (state is AuthDenied) {
           showToast(state.error);
+        }
+        if (state is OnAuthBlocked) {
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => WaitingScreen(
+                      status: WarningValues.authError,
+                      extraText: "",
+                      alertText: state.message,
+                      buttonText: "Operatorga yuzlanish")),
+              (route) => false);
         }
       },
       child: Scaffold(

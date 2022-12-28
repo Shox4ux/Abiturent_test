@@ -36,6 +36,7 @@ class AppStorage {
   Future<UserInfo> getUserInfo() async {
     var prefs = await SharedPreferences.getInstance();
     final data = prefs.getString(AppStorageConstants.userKey);
+
     return UserInfo.fromJson(jsonDecode(data!));
   }
 

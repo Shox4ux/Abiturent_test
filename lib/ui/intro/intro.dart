@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:test_app/res/constants.dart';
 import 'package:test_app/res/models/intro_data.dart';
-
 import '../../res/components/custom_dot_indicators.dart';
 import '../../res/navigation/main_navigation.dart';
 

@@ -21,6 +21,7 @@ class RatingScreen extends StatefulWidget {
 class _RatingScreenState extends State<RatingScreen> {
   @override
   Widget build(BuildContext context) {
+    var currentSubjectId = 0;
     final GlobalKey<ScaffoldState> scaffKey = GlobalKey<ScaffoldState>();
     final screenWidth = MediaQuery.of(context).size.width;
 
@@ -39,7 +40,7 @@ class _RatingScreenState extends State<RatingScreen> {
               BlocBuilder<DrawerCubit, DrawerState>(
                 builder: (context, state) {
                   if (state is DrawerSubjectsLoadedState) {
-                    final currentSubjectId = state.index + 2;
+                    currentSubjectId = state.index + 2;
                     context
                         .read<RatingCubit>()
                         .callUserRating(currentSubjectId);

@@ -15,6 +15,13 @@ class OnAuthProgress extends AuthState {}
 
 class OnAuthTime extends AuthState {}
 
+class OnAuthBlocked extends AuthState {
+  final String message;
+  const OnAuthBlocked({required this.message});
+  @override
+  List<Object> get props => [message];
+}
+
 class UserActive extends AuthState {
   final UserInfo userInfo;
   const UserActive({required this.userInfo});

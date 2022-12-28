@@ -21,6 +21,7 @@ class MistakesScreen extends StatefulWidget {
 
 class _MistakesScreenState extends State<MistakesScreen> {
   final GlobalKey<ScaffoldState> scaffKey = GlobalKey<ScaffoldState>();
+  var _currentSubjectId = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,11 +39,10 @@ class _MistakesScreenState extends State<MistakesScreen> {
               BlocBuilder<DrawerCubit, DrawerState>(
                 builder: (context, state) {
                   if (state is DrawerSubjectsLoadedState) {
-                    final currentSubjectId = state.index + 2;
-
+                    _currentSubjectId = state.index + 2;
                     context
                         .read<MistakesCubit>()
-                        .getErrorList(currentSubjectId);
+                        .getErrorList(_currentSubjectId);
                   }
                   return Expanded(
                     child: Container(

@@ -15,22 +15,25 @@ class AuthCubit extends Cubit<AuthState> {
   final _storage = AppStorage();
   final _urepo = UserRepo();
   AuthCubit() : super(AuthInitial()) {
-    // getUserData();
+    getUserData();
   }
-  final userInActive = 8;
+//  userInActive = 8;
+  final userBlocked = 9;
 
   Future<void> getUserData() async {
     emit(OnAuthProgress());
     try {
       final userOldData = await _storage.getUserInfo();
-      final rowData = await _urepo.getUserProfile(userOldData.id!);
 
-      final userData = UserInfo.fromJson(rowData.data);
-      if (userData.status == userInActive) {
-        emit(LogedOut());
-      } else {
-        emit(UserActive(userInfo: userData));
+      if (userOldData == null) {
+        return;
       }
+      final rowData = await _urepo.getUserProfile(userOldData.id!);
+      final userData = UserInfo.fromJson(rowData.data);
+
+      if (userData.status == userBlocked) {}
+
+      emit(UserActive(userInfo: userData));
     } on DioError catch (e) {
       emit(
           AuthDenied(error: e.response?.data["message"] ?? "Tizimda nosozlik"));
@@ -97,6 +100,9 @@ class AuthCubit extends Cubit<AuthState> {
       print(userData.fullname);
       emit(UserActive(userInfo: userData));
     } on DioError catch (e) {
+      if (e.response?.statusCode == 400) {
+        emit(OnAuthBlocked(message: e.message));
+      }
       emit(
           AuthDenied(error: e.response?.data["message"] ?? "Tizimda nosozlik"));
     } on SocketException {

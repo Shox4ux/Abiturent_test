@@ -11,14 +11,10 @@ class DioClient {
     );
     dio.interceptors.add(RetryInterceptor(
       dio: dio,
-      logPrint: print,
-      retries: 5,
+      logPrint: (message) => print(message),
+      retries: 1,
       retryDelays: const [
-        Duration(seconds: 10),
-        Duration(seconds: 10),
-        Duration(seconds: 10),
-        Duration(seconds: 10),
-        Duration(seconds: 10),
+        Duration(seconds: 1),
       ],
     ));
     return dio;
