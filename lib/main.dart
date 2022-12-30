@@ -2,20 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:test_app/core/block/auth_block/auth_cubit.dart';
-import 'package:test_app/core/block/group_block/group_cubit.dart';
-import 'package:test_app/core/block/index_cubit/index_cubit.dart';
-import 'package:test_app/core/block/mistakes_cubit/mistakes_cubit.dart';
-import 'package:test_app/core/block/news_bloc/cubit/news_cubit.dart';
-import 'package:test_app/core/block/payment_cubit/payment_cubit.dart';
-import 'package:test_app/core/block/rating_cubit/rating_cubit.dart';
-import 'package:test_app/core/block/test_block/test_cubit.dart';
+import 'package:test_app/core/bloc/app_bar_cubit/app_bar_cubit.dart';
+import 'package:test_app/core/bloc/test_cubit/test_cubit.dart';
 import 'package:test_app/res/navigation/main_navigation.dart';
 import 'package:test_app/ui/splash/splash.dart';
-import 'core/block/book_cubit/book_cubit.dart';
-import 'core/block/drawer_cubit/drawer_cubit.dart';
-import 'core/block/subscription_block/subscription_cubit.dart';
-import 'core/block/user_block/user_cubit.dart';
+import 'core/bloc/auth_cubit/auth_cubit.dart';
+import 'core/bloc/book_cubit/book_cubit.dart';
+import 'core/bloc/drawer_cubit/drawer_cubit.dart';
+import 'core/bloc/group_cubit/group_cubit.dart';
+import 'core/bloc/inner_test_cubit/inside_test_cubit.dart';
+import 'core/bloc/mistakes_cubit/mistakes_cubit.dart';
+import 'core/bloc/news_cubit/news_cubit.dart';
+import 'core/bloc/payment_cubit/payment_cubit.dart';
+import 'core/bloc/rating_cubit/rating_cubit.dart';
+import 'core/bloc/subscription_cubit/subscription_cubit.dart';
+import 'core/bloc/user_cubit/user_cubit.dart';
 
 void main() async {
   await Hive.initFlutter();
@@ -34,10 +35,13 @@ class MyApp extends StatelessWidget {
           create: (context) => AuthCubit(),
         ),
         BlocProvider(
-          create: (context) => NewsCubit(),
+          create: (context) => AppBarCubit(),
         ),
         BlocProvider(
-          create: (context) => IndexCubit(),
+          create: (context) => InnerTestCubit(),
+        ),
+        BlocProvider(
+          create: (context) => NewsCubit(),
         ),
         BlocProvider(
           create: (context) => BookCubit(),

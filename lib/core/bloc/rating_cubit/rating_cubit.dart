@@ -3,6 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:test_app/core/helper/repos/user_repo.dart';
+import '../../domain/user_model/common_rating.dart';
 import '../../domain/user_model/rating_model.dart';
 part 'rating_state.dart';
 
@@ -16,7 +17,7 @@ class RatingCubit extends Cubit<RatingState> {
       final response = await _repo.getUsersRatings(subjectId);
       final rowData = RatingModel.fromJson(response.data);
       if (rowData.rating!.isEmpty) {
-        emit(OnRatingEmpty());
+        emit(OnRatingEmpty(rowData));
         return;
       }
       emit(OnRatingReceived(rowData));

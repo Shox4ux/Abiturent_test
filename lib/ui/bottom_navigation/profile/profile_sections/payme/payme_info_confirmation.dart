@@ -3,13 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:pattern_formatter/numeric_formatter.dart';
-import 'package:test_app/core/block/payment_cubit/payment_cubit.dart';
 import 'package:test_app/res/constants.dart';
 import 'package:test_app/res/functions/show_toast.dart';
 import 'package:test_app/res/navigation/main_navigation.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/payme/payme_sms_confirmation.dart';
 import 'package:url_launcher/link.dart';
 
+import '../../../../../core/bloc/payment_cubit/payment_cubit.dart';
 import '../../../../../res/components/custom_card.dart';
 import '../../../../../res/components/custom_simple_appbar.dart';
 

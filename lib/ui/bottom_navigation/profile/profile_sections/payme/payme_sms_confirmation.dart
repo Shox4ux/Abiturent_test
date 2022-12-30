@@ -4,8 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:test_app/core/domain/patment_model/card_model.dart';
 import 'package:test_app/res/functions/show_toast.dart';
-
-import '../../../../../core/block/payment_cubit/payment_cubit.dart';
+import '../../../../../core/bloc/payment_cubit/payment_cubit.dart';
 import '../../../../../res/components/custom_card.dart';
 import '../../../../../res/components/custom_simple_appbar.dart';
 import '../../../../../res/components/waiting.dart';
@@ -44,10 +43,6 @@ class _PaymeSmsConfirmationState extends State<PaymeSmsConfirmation> {
           if (state is OnCardDeleted) {
             showToast(state.message);
           }
-          // if (state is OnMadePayment) {
-          //   Navigator.pushNamedAndRemoveUntil(
-          //       context, RouteNames.main, (route) => false);
-          // }
         },
         builder: (context, state) {
           if (state is OnMadePayment) {

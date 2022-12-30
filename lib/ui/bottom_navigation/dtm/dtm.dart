@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:test_app/core/bloc/inner_test_cubit/inside_test_cubit.dart';
 import 'package:test_app/res/constants.dart';
 import 'package:test_app/res/components/custom_appbar.dart';
 import 'package:test_app/res/components/custom_drawer.dart';
 import 'package:test_app/ui/test_screens/test.dart';
-import '../../../core/block/drawer_cubit/drawer_cubit.dart';
-import '../../../core/block/test_block/test_cubit.dart';
+import '../../../core/bloc/drawer_cubit/drawer_cubit.dart';
+import '../../../core/bloc/test_cubit/test_cubit.dart';
 import '../../../core/domain/test_model/test_model.dart';
 import '../../../core/helper/repos/test_repo.dart';
 import '../../../res/functions/will_pop_function.dart';
@@ -16,9 +17,7 @@ import '../../../res/painter.dart';
 int? _currentSubjectId;
 
 class DtmScreen extends StatefulWidget {
-  const DtmScreen({
-    Key? key,
-  }) : super(key: key);
+  const DtmScreen({Key? key}) : super(key: key);
   @override
   State<DtmScreen> createState() => _DtmScreenState();
 }
@@ -75,100 +74,91 @@ class _DtmScreenState extends State<DtmScreen>
             builder: (context, state) {
               if (state is DrawerSubjectsLoadedState) {
                 _currentSubjectId = state.index + 2;
-
                 context.read<TestCubit>().getTestBySubIdWithPagination(
-                    _currentSubjectId!, dtmTestType, currentPage);
+                    subId: _currentSubjectId!,
+                    type: ApiValues.dtmTestType,
+                    page: currentPage);
               }
-              return Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CustomAppBar(scaffKey: scaffKey),
-                    Expanded(
-                      child: Container(
-                        width: double.maxFinite,
-                        padding: EdgeInsets.only(top: 14.h),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(28.r),
-                              topRight: Radius.circular(28.r),
-                            )),
-                        child: BlocBuilder<TestCubit, TestState>(
-                            builder: (context, state) {
-                          if (state is OnTestProgress) {
-                            return const Expanded(
-                              child: Center(
-                                child: CircularProgressIndicator.adaptive(),
-                              ),
-                            );
-                          }
-                          if (state is OnTestSuccess) {
-                            final subjectData = state.subjectData;
-                            final testList = state.testList;
-                            final bookList = state.bookList;
-
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 20.w),
-                                  child: Text(
-                                    "DTM testlar",
-                                    style: AppStyles.introButtonText.copyWith(
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                                Gap(10.h),
-                                Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 20.w),
-                                  child: Text(
-                                    subjectData.name!,
-                                    style: AppStyles.introButtonText.copyWith(
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                                Gap(10.h),
-                                (testList.isEmpty)
-                                    ? const Expanded(
-                                        child: Center(
-                                            child: Text("Testlar topilmadi")),
-                                      )
-                                    : Expanded(
-                                        child: GridView.builder(
-                                          gridDelegate:
-                                              const SliverGridDelegateWithFixedCrossAxisCount(
-                                                  crossAxisCount: 2),
-                                          itemCount: testList.length,
-                                          itemBuilder: (BuildContext context,
-                                              int index) {
-                                            return gridItem(context,
-                                                testList[index], (index + 1));
-                                          },
-                                        ),
-                                      ),
-                              ],
-                            );
-                          }
-                          return const Expanded(
-                            child: Center(
-                              child: CircularProgressIndicator.adaptive(),
-                            ),
-                          );
-                        }),
-                      ),
-                    )
-                  ],
-                ),
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CustomAppBar(scaffKey: scaffKey),
+                  Expanded(
+                    child: Container(
+                      width: double.maxFinite,
+                      padding: EdgeInsets.only(top: 14.h),
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(28.r),
+                            topRight: Radius.circular(28.r),
+                          )),
+                      child: BlocBuilder<TestCubit, TestState>(
+                          builder: (context, state) {
+                        if (state is OnTestSuccess) {
+                          final subjectData = state.subjectData;
+                          final testList = state.testList;
+                          return _onDtmTest(subjectData, testList);
+                        }
+                        if (state is OnTestProgress) {
+                          return _onProgress();
+                        }
+                        return _onProgress();
+                      }),
+                    ),
+                  )
+                ],
               );
             },
           ),
         ),
       ),
+    );
+  }
+
+  Widget _onProgress() {
+    return const Center(
+      child: CircularProgressIndicator.adaptive(),
+    );
+  }
+
+  Column _onDtmTest(Subjects subjectData, List<Tests> testList) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
+          child: Text(
+            "DTM testlar",
+            style: AppStyles.introButtonText.copyWith(
+              color: Colors.black,
+            ),
+          ),
+        ),
+        Gap(10.h),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
+          child: Text(
+            subjectData.name!,
+            style: AppStyles.introButtonText.copyWith(
+              color: Colors.black,
+            ),
+          ),
+        ),
+        Gap(10.h),
+        (testList.isEmpty)
+            ? const Flexible(child: Center(child: Text("Testlar topilmadi")))
+            : Expanded(
+                child: GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2),
+                  itemCount: testList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return gridItem(context, testList[index], (index + 1));
+                  },
+                ),
+              ),
+      ],
     );
   }
 
@@ -185,7 +175,7 @@ class _DtmScreenState extends State<DtmScreen>
                     questionCount: tests.questionsCount!,
                   )),
         );
-        context.read<TestCubit>().getTestById(tests.id!);
+        context.read<InnerTestCubit>().getTestById(tests.id!);
       },
       child: Column(
         children: [

@@ -3,14 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
-import 'package:test_app/core/domain/test_model/test_inner_model.dart';
-import 'package:test_app/res/constants.dart';
-import 'package:test_app/res/components/custom_dot.dart';
-import 'package:test_app/res/components/waiting.dart';
-
-import '../../core/block/test_block/test_cubit.dart';
+import '../../core/bloc/inner_test_cubit/inside_test_cubit.dart';
+import '../../core/bloc/subscription_cubit/subscription_cubit.dart';
+import '../../core/domain/test_model/test_inner_model.dart';
 import '../../core/domain/test_model/test_result_model.dart';
+import '../../res/components/custom_dot.dart';
 import '../../res/components/custom_simple_appbar.dart';
+import '../../res/constants.dart';
 import '../../res/navigation/main_navigation.dart';
 
 class TestScreen extends StatefulWidget {
@@ -40,30 +39,20 @@ class _TestScreenState extends State<TestScreen> {
     return Scaffold(
       backgroundColor: AppColors.mainColor,
       body: SafeArea(
-        child: BlocConsumer<TestCubit, TestState>(
-          listener: (context, state) {
-            if (state is OnTestError) {
-              Navigator.push(
-                context,
-                MaterialPageRoute<void>(
-                    builder: (BuildContext context) => WaitingScreen(
-                          status: WarningValues.obunaError,
-                          alertText: state.error,
-                          extraText: "",
-                          buttonText: "Obunalar oynasiga o'tish",
-                        )),
-              );
-            }
-          },
+        child: BlocBuilder<InnerTestCubit, InsideTestState>(
           builder: (context, state) {
+            if (state is OnInnerTestError) {
+              return whenError(context, state.error, "Obunalar oynasiga o'tish",
+                  WarningValues.obunaError);
+            }
             if (state is OnTestInnerSuccess) {
               return onInnerTest(state, context);
             }
 
-            if (state is OnCelebrate) {
+            if (state is OnInnerTestCelebrate) {
               return onTestCelebration(state, context);
             }
-            if (state is OnTestCompleted) {
+            if (state is OnInnerTestCompleted) {
               return onTestEnd();
             }
             return const Center(
@@ -74,6 +63,79 @@ class _TestScreenState extends State<TestScreen> {
           },
         ),
       ),
+    );
+  }
+
+  Widget whenError(BuildContext context, String errorText, String buttonText,
+      String status) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            CustomSimpleAppBar(
+              isIcon: false,
+              titleText: "Orqaga qaytish",
+              style: AppStyles.introButtonText.copyWith(color: Colors.black),
+              iconColor: Colors.black,
+              isSimple: true,
+              routeText: RouteNames.main,
+            ),
+            Gap(76.h),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 32.w),
+              width: 180.w,
+              height: 180.h,
+              child: Image.asset(
+                AppIcons.errorImg,
+              ),
+            ),
+            Gap(18.h),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              child: Text(
+                errorText,
+                textAlign: TextAlign.center,
+                style: AppStyles.smsVerBigTextStyle.copyWith(
+                  fontSize: 24.sp,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
+        ),
+        Padding(
+          padding: EdgeInsets.only(bottom: 24.h),
+          child: ElevatedButton(
+            style: AppStyles.introUpButton,
+            onPressed: () {
+              if (status == WarningValues.hisobError) {
+                Navigator.of(context).pushNamed(
+                  RouteNames.payme,
+                );
+                return;
+              }
+              if (status == WarningValues.obunaError) {
+                context.read<SubscriptionCubit>().getScripts();
+                Navigator.of(context).pushNamed(
+                  RouteNames.subscripts,
+                );
+                return;
+              }
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                RouteNames.signin,
+                (Route<dynamic> route) => false,
+              );
+            },
+            child: Text(
+              buttonText,
+              style: AppStyles.introButtonText
+                  .copyWith(color: const Color(0xffFCFCFC)),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -100,9 +162,9 @@ class _TestScreenState extends State<TestScreen> {
                 topRight: Radius.circular(28.r),
               ),
             ),
-            child: BlocBuilder<TestCubit, TestState>(
+            child: BlocBuilder<InnerTestCubit, InsideTestState>(
               builder: (context, state) {
-                if (state is OnTestCompleted) {
+                if (state is OnInnerTestCompleted) {
                   return Column(
                     children: [
                       Gap(20.h),
@@ -136,7 +198,7 @@ class _TestScreenState extends State<TestScreen> {
     );
   }
 
-  Expanded onTestCelebration(OnCelebrate state, BuildContext context) {
+  Expanded onTestCelebration(OnInnerTestCelebrate state, BuildContext context) {
     return Expanded(
       child: Container(
         width: double.maxFinite,
@@ -163,14 +225,16 @@ class _TestScreenState extends State<TestScreen> {
                   fontWeight: FontWeight.w600,
                 )),
             Gap(271.h),
-            (state is OnTestProgress)
+            (state is OnInnerTestProgress)
                 ? const CircularProgressIndicator(
                     color: AppColors.mainColor,
                   )
                 : ElevatedButton(
                     style: AppStyles.introUpButton,
                     onPressed: () {
-                      context.read<TestCubit>().getResults(state.testListId);
+                      context
+                          .read<InnerTestCubit>()
+                          .getResults(state.testListId);
                     },
                     child: Text(
                       "Natijalarni ko'rish",
@@ -282,7 +346,7 @@ class _TestScreenState extends State<TestScreen> {
                             setState(() {
                               _questionNumber = _questionNumber + 1;
                             });
-                            context.read<TestCubit>().sendTestAnswer(
+                            context.read<InnerTestCubit>().sendTestAnswer(
                                   state.innerTest.id!,
                                   state.innerTest
                                       .answers![_selectedAnswerIndex!].id!,

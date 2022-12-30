@@ -5,8 +5,7 @@ import 'package:gap/gap.dart';
 import 'package:test_app/res/components/custom_simple_appbar.dart';
 import 'package:test_app/res/constants.dart';
 import 'package:test_app/res/functions/show_toast.dart';
-
-import '../../core/block/book_cubit/book_cubit.dart';
+import '../../core/bloc/book_cubit/book_cubit.dart';
 import '../../core/domain/test_model/test_model.dart';
 
 class BookScreen extends StatefulWidget {
@@ -96,10 +95,6 @@ class _BookScreenState extends State<BookScreen> {
             },
             builder: (context, state) {
               if (state is OnProgress) {
-                // return Center(
-                //   child: Text("${state.progress.floor()}%"),
-                // );
-
                 return CircularProgressIndicator(
                   valueColor: const AlwaysStoppedAnimation<Color>(
                     AppColors.mainColor,

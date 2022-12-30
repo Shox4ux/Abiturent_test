@@ -6,7 +6,7 @@ import 'package:gap/gap.dart';
 import 'package:test_app/res/constants.dart';
 import 'package:test_app/res/functions/show_toast.dart';
 import 'package:test_app/ui/auth/sms_verification.dart';
-import '../../core/block/auth_block/auth_cubit.dart';
+import '../../core/bloc/auth_cubit/auth_cubit.dart';
 import '../../res/components/custom_simple_appbar.dart';
 import '../../res/navigation/main_navigation.dart';
 
@@ -27,12 +27,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   var _passwordC = "";
   final TextEditingController _controller = TextEditingController();
 
-  checkFields() {
+  void _checkFields() {
     if (_fulnameC.isNotEmpty && _phoneC.isNotEmpty && _passwordC.length > 5) {
-      print(_fulnameC);
-      print(_phoneC);
-      print(_passwordC);
-
       setState(() {
         _isAllFilled = true;
       });
@@ -45,7 +41,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    checkFields();
+    _checkFields();
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -92,6 +88,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     padding: EdgeInsets.symmetric(horizontal: 16.w),
                     child: TextField(
                       onChanged: (value) {
+                        _checkFields();
                         setState(() {
                           _fulnameC = value;
                         });
@@ -117,6 +114,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     child: TextField(
                       maxLength: 9,
                       onChanged: (value) {
+                        _checkFields();
                         setState(() {
                           _phoneC = value;
                         });
@@ -149,6 +147,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       controller: _controller,
                       keyboardType: TextInputType.text,
                       onChanged: (value) {
+                        _checkFields();
                         setState(() {
                           _passwordC = value;
                         });

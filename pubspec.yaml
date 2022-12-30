@@ -63,6 +63,7 @@ dependencies:
   dio_smart_retry: ^1.4.0
   pinput: ^2.2.19
   sms_user_consent: ^0.1.0
+  infinite_scroll_pagination: ^3.2.0
 
 
 

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:test_app/core/block/test_block/test_cubit.dart';
 import '../../res/constants.dart';
 import '../bottom_navigation/dtm/dtm.dart';
 import '../bottom_navigation/mistakes/mistakes_screen.dart';
@@ -22,8 +20,6 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int selectedIndex = 2;
-  final _cubit = TestCubit();
-
   @override
   void initState() {
     super.initState();
@@ -50,18 +46,6 @@ class _MainScreenState extends State<MainScreen> {
             setState(() {
               selectedIndex = index;
             });
-
-            if (index == 0) {
-              // const initialSubjectId = 1;
-              // const ordinaryTestType = 1;
-              // const initialPage = 1;
-              // await context.read<TestCubit>().getTestBySubIdWithPagination(
-              //     initialSubjectId, ordinaryTestType, initialPage);
-            }
-
-            if (index == 3) {
-              await _cubit.getErrorResult(1);
-            }
           },
           currentIndex: selectedIndex,
           showSelectedLabels: true,

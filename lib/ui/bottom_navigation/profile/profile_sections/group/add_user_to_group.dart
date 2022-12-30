@@ -1,12 +1,10 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:gap/gap.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../../../../core/block/group_block/group_cubit.dart';
+import '../../../../../core/bloc/group_cubit/group_cubit.dart';
 import '../../../../../core/domain/group_model/group_model.dart';
 import '../../../../../res/constants.dart';
 import '../../../../../res/components/custom_simple_appbar.dart';

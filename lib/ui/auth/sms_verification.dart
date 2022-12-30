@@ -7,7 +7,7 @@ import 'package:test_app/res/functions/show_toast.dart';
 import 'package:test_app/ui/auth/reset_password.dart';
 import 'package:test_app/res/components/custom_pinput_widget.dart';
 import 'package:test_app/res/components/waiting.dart';
-import '../../core/block/auth_block/auth_cubit.dart';
+import '../../core/bloc/auth_cubit/auth_cubit.dart';
 import '../../res/constants.dart';
 import '../../res/components/custom_simple_appbar.dart';
 import '../../res/navigation/main_navigation.dart';
@@ -64,14 +64,13 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen>
   @override
   void initState() {
     super.initState();
-
     startTimer();
   }
 
   @override
   void dispose() {
     super.dispose();
-    stopTimer();
+    countdownTimer!.cancel();
   }
 
   void startTimer() {
@@ -82,7 +81,9 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen>
   // Step 4
   void stopTimer() {
     if (countdownTimer != null) {
-      countdownTimer!.cancel();
+      setState(() {
+        countdownTimer!.cancel();
+      });
     }
   }
 

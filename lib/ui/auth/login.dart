@@ -3,11 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:test_app/res/components/waiting.dart';
 import 'package:test_app/res/navigation/main_navigation.dart';
-
-import '../../core/block/auth_block/auth_cubit.dart';
+import '../../core/bloc/auth_cubit/auth_cubit.dart';
 import '../../res/constants.dart';
 import '../../res/components/custom_simple_appbar.dart';
 import '../../res/functions/show_toast.dart';
@@ -32,7 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void checkFields() {
-    if (_password.isNotEmpty && _phoneNumber.isNotEmpty) {
+    if (_password.length > 5 && _phoneNumber.isNotEmpty) {
       setState(() {
         _isAllfilled = true;
       });
@@ -97,6 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     textInputAction: TextInputAction.next,
                     maxLength: 9,
                     onChanged: (value) {
+                      checkFields();
                       setState(() {
                         _phoneNumber = value;
                       });
@@ -125,6 +124,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: TextField(
                     textInputAction: TextInputAction.done,
                     onChanged: (value) {
+                      checkFields();
+
                       setState(() {
                         _password = value;
                       });

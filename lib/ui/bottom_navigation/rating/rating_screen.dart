@@ -6,8 +6,8 @@ import 'package:test_app/core/domain/user_model/rating_model.dart';
 import 'package:test_app/res/components/custom_drawer.dart';
 import 'package:test_app/res/functions/show_toast.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../../core/block/drawer_cubit/drawer_cubit.dart';
-import '../../../core/block/rating_cubit/rating_cubit.dart';
+import '../../../core/bloc/drawer_cubit/drawer_cubit.dart';
+import '../../../core/bloc/rating_cubit/rating_cubit.dart';
 import '../../../res/constants.dart';
 import '../../../res/components/custom_appbar.dart';
 import '../../../res/functions/will_pop_function.dart';
@@ -61,74 +61,15 @@ class _RatingScreenState extends State<RatingScreen> {
                         builder: (context, state) {
                           if (state is OnRatingReceived) {
                             final ratingData = state.ratingModel;
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Umumiy reyting",
-                                  style: AppStyles.introButtonText.copyWith(
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                Row(
-                                  children: [
-                                    Image.asset(
-                                      AppIcons.medlFilled,
-                                      width: 24.w,
-                                      height: 24.h,
-                                    ),
-                                    Gap(10.h),
-                                    Expanded(
-                                      child: Text(
-                                        "${ratingData.subjectText} fani",
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: AppStyles.subtitleTextStyle
-                                            .copyWith(
-                                          color: Colors.black,
-                                          fontSize: 16.sp,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Gap(18.h),
-                                Expanded(
-                                  child: ListView.builder(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 20),
-                                      itemCount: ratingData.rating!.length,
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        return ratingItem("${index + 1}",
-                                            ratingData.rating![index]);
-                                      }),
-                                )
-                              ],
-                            );
+                            return _onRating(ratingData);
                           }
                           if (state is OnRatingEmpty) {
-                            return const Expanded(
-                              child: Center(
-                                child: Text(
-                                  "Hozircha ishtirokchilar mavjud emas...",
-                                ),
-                              ),
-                            );
+                            return _onRatingEmpty(state.ratingModel);
                           }
-
                           if (state is OnRatingProgress) {
-                            return const Expanded(
-                              child: Center(
-                                child: CircularProgressIndicator.adaptive(),
-                              ),
-                            );
+                            return _onProgress();
                           }
-                          return const Expanded(
-                            child: Center(
-                              child: CircularProgressIndicator.adaptive(),
-                            ),
-                          );
+                          return _onProgress();
                         },
                       ),
                     ),
@@ -139,6 +80,100 @@ class _RatingScreenState extends State<RatingScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Expanded _onProgress() {
+    return const Expanded(
+      child: Center(
+        child: CircularProgressIndicator.adaptive(),
+      ),
+    );
+  }
+
+  Widget _onRatingEmpty(RatingModel ratingData) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Umumiy reyting",
+          style: AppStyles.introButtonText.copyWith(
+            color: Colors.black,
+          ),
+        ),
+        Row(
+          children: [
+            Image.asset(
+              AppIcons.medlFilled,
+              width: 24.w,
+              height: 24.h,
+            ),
+            Gap(10.h),
+            Expanded(
+              child: Text(
+                "${ratingData.subjectText} fani",
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppStyles.subtitleTextStyle.copyWith(
+                  color: Colors.black,
+                  fontSize: 16.sp,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const Expanded(
+          child: Center(
+            child: Text(
+              "Hozircha ishtirokchilar mavjud emas...",
+            ),
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget _onRating(RatingModel ratingData) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Umumiy reyting",
+          style: AppStyles.introButtonText.copyWith(
+            color: Colors.black,
+          ),
+        ),
+        Row(
+          children: [
+            Image.asset(
+              AppIcons.medlFilled,
+              width: 24.w,
+              height: 24.h,
+            ),
+            Gap(10.h),
+            Expanded(
+              child: Text(
+                "${ratingData.subjectText} fani",
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppStyles.subtitleTextStyle.copyWith(
+                  color: Colors.black,
+                  fontSize: 16.sp,
+                ),
+              ),
+            ),
+          ],
+        ),
+        Gap(18.h),
+        Expanded(
+          child: ListView.builder(
+              padding: const EdgeInsets.only(bottom: 20),
+              itemCount: ratingData.rating!.length,
+              itemBuilder: (BuildContext context, int index) {
+                return ratingItem("${index + 1}", ratingData.rating![index]);
+              }),
+        )
+      ],
     );
   }
 

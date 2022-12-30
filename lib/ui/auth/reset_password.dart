@@ -5,10 +5,8 @@ import 'package:gap/gap.dart';
 import 'package:test_app/res/components/custom_simple_appbar.dart';
 import 'package:test_app/res/components/waiting.dart';
 import 'package:test_app/res/functions/show_toast.dart';
-
-import '../../core/block/auth_block/auth_cubit.dart';
+import '../../core/bloc/auth_cubit/auth_cubit.dart';
 import '../../res/constants.dart';
-import '../../res/navigation/main_navigation.dart';
 
 class ResetPassWord extends StatefulWidget {
   const ResetPassWord({
@@ -30,7 +28,7 @@ class _ResetPassWordState extends State<ResetPassWord> {
   var _isObscure1 = true;
   var _isObscure2 = true;
 
-  void _checkFields(BuildContext context) {
+  void _checkFields() {
     if (_newPassword.length > 5 && _confirmation == _newPassword) {
       setState(() {
         _isAllFilled = true;
@@ -44,7 +42,7 @@ class _ResetPassWordState extends State<ResetPassWord> {
 
   @override
   Widget build(BuildContext context) {
-    _checkFields(context);
+    _checkFields();
 
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
@@ -93,11 +91,13 @@ class _ResetPassWordState extends State<ResetPassWord> {
                     child: TextField(
                       obscureText: _isObscure2,
                       onChanged: (value) {
+                        _checkFields();
+
                         setState(() {
                           _newPassword = value;
                         });
                       },
-                      keyboardType: TextInputType.number,
+                      keyboardType: TextInputType.text,
                       decoration: InputDecoration(
                         suffixIcon: GestureDetector(
                           onTap: () {
@@ -130,11 +130,12 @@ class _ResetPassWordState extends State<ResetPassWord> {
                     child: TextField(
                       obscureText: _isObscure1,
                       onChanged: (value) {
+                        _checkFields();
                         setState(() {
                           _confirmation = value;
                         });
                       },
-                      keyboardType: TextInputType.number,
+                      keyboardType: TextInputType.text,
                       decoration: InputDecoration(
                         suffixIcon: GestureDetector(
                           onTap: () {

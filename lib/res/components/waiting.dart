@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:test_app/res/constants.dart';
 import 'package:test_app/res/functions/number_formatter.dart';
-import '../../core/block/subscription_block/subscription_cubit.dart';
+import '../../core/bloc/subscription_cubit/subscription_cubit.dart';
 import 'custom_simple_appbar.dart';
 import '../navigation/main_navigation.dart';
 
@@ -523,11 +522,7 @@ Widget whenWaiting(BuildContext context) {
 }
 
 Widget whenError(
-  BuildContext context,
-  String errorText,
-  String buttonText,
-  String status,
-) {
+    BuildContext context, String errorText, String buttonText, String status) {
   return Column(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [

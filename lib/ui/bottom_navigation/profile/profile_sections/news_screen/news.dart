@@ -6,8 +6,6 @@ import 'package:test_app/core/domain/news_models/main_news_model.dart';
 import 'package:test_app/core/helper/repos/news_repo.dart';
 import 'package:test_app/res/components/custom_simple_appbar.dart';
 import 'package:test_app/res/navigation/main_navigation.dart';
-
-import '../../../../../core/block/news_bloc/cubit/news_cubit.dart';
 import '../../../../../res/constants.dart';
 
 List<MainNewsModel> list = [];

@@ -1,18 +1,17 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:test_app/core/block/user_block/user_cubit.dart';
 import 'package:test_app/core/domain/user_model/user_model.dart';
 import 'package:test_app/res/components/custom_simple_appbar.dart';
 import 'package:test_app/res/constants.dart';
 import 'package:test_app/res/functions/show_toast.dart';
 import 'package:test_app/res/navigation/main_navigation.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile.dart';
+import '../../../../../core/bloc/user_cubit/user_cubit.dart';
 
 class RefactorScreen extends StatefulWidget {
   const RefactorScreen({super.key, required this.user});

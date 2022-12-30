@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:test_app/core/block/payment_cubit/payment_cubit.dart';
 import 'package:test_app/res/constants.dart';
 import 'package:test_app/res/functions/number_formatter.dart';
+import '../../core/bloc/payment_cubit/payment_cubit.dart';
 import '../../core/domain/patment_model/card_model.dart';
 
 class CustomCard extends StatelessWidget {

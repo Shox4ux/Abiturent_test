@@ -11,7 +11,7 @@ class TestRepo {
     final Map<String, dynamic> params = {
       "id": subId,
       "page": page,
-      "per_page": perPage,
+      "per-page": perPage,
       "type": typeIndex,
     };
     return await _dio.get(ApiValues.testsBySubIdAndTypeIndex,

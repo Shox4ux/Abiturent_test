@@ -4,10 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:test_app/core/domain/subscription_model/subscription_model.dart';
 import 'package:test_app/res/components/custom_dot.dart';
-
-import '../../../../../core/block/subscription_block/subscription_cubit.dart';
-import '../../../../../res/constants.dart';
+import '../../../../../core/bloc/subscription_cubit/subscription_cubit.dart';
 import '../../../../../res/components/custom_simple_appbar.dart';
+import '../../../../../res/constants.dart';
 import '../../../../../res/navigation/main_navigation.dart';
 import '../../../../../res/components/waiting.dart';
 import '../../../../../res/functions/number_formatter.dart';

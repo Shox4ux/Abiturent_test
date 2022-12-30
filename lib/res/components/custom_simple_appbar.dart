@@ -3,22 +3,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:test_app/res/navigation/main_navigation.dart';
-import '../../core/block/group_block/group_cubit.dart';
-import '../../core/block/subscription_block/subscription_cubit.dart';
+import '../../core/bloc/group_cubit/group_cubit.dart';
+import '../../core/bloc/subscription_cubit/subscription_cubit.dart';
 import '../constants.dart';
 
-class CustomSimpleAppBar extends StatefulWidget {
-  CustomSimpleAppBar({
-    Key? key,
-    required this.titleText,
-    this.routeText,
-    required this.style,
-    required this.iconColor,
-    required this.isSimple,
-    this.isImportant,
-    this.isScript,
-    required this.isIcon,
-  }) : super(key: key);
+class CustomSimpleAppBar extends StatelessWidget {
+  CustomSimpleAppBar(
+      {Key? key,
+      required this.titleText,
+      this.routeText,
+      required this.style,
+      required this.iconColor,
+      required this.isSimple,
+      this.isImportant,
+      this.isScript,
+      required this.isIcon})
+      : super(key: key);
 
   final String titleText;
   String? routeText;
@@ -31,13 +31,8 @@ class CustomSimpleAppBar extends StatefulWidget {
   bool? isScript = false;
 
   @override
-  State<CustomSimpleAppBar> createState() => _CustomSimpleAppBarState();
-}
-
-class _CustomSimpleAppBarState extends State<CustomSimpleAppBar> {
-  @override
   Widget build(BuildContext context) {
-    return widget.isIcon
+    return isIcon
         ? Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -46,29 +41,29 @@ class _CustomSimpleAppBarState extends State<CustomSimpleAppBar> {
                   children: [
                     IconButton(
                       onPressed: () {
-                        if (widget.isSimple && widget.isImportant != null) {
+                        if (isSimple && isImportant != null) {
                           context.read<GroupCubit>().getGroupsByUserId();
                           Navigator.pushNamed(context, RouteNames.group);
                           return;
                         }
-                        if (widget.isSimple) {
+                        if (isSimple) {
                           Navigator.pop(context);
                           return;
                         }
-                        if (widget.isScript!) {
+                        if (isScript!) {
                           context.read<SubscriptionCubit>().getScripts();
                           Navigator.pop(context);
                           return;
                         }
                         Navigator.pushNamedAndRemoveUntil(
                           context,
-                          widget.routeText!,
+                          routeText!,
                           (route) => false,
                         );
                       },
                       icon: Image.asset(
                         AppIcons.arrowBack,
-                        color: widget.iconColor,
+                        color: iconColor,
                         height: 24.h,
                         width: 24.w,
                       ),
@@ -76,8 +71,8 @@ class _CustomSimpleAppBarState extends State<CustomSimpleAppBar> {
                     Gap(10.w),
                     Expanded(
                       child: Text(
-                        widget.titleText,
-                        style: widget.style,
+                        titleText,
+                        style: style,
                         overflow: TextOverflow.ellipsis,
                       ),
                     )
@@ -103,23 +98,23 @@ class _CustomSimpleAppBarState extends State<CustomSimpleAppBar> {
             children: [
               IconButton(
                 onPressed: () {
-                  if (widget.isSimple && widget.isImportant != null) {
+                  if (isSimple && isImportant != null) {
                     context.read<GroupCubit>().getGroupsByUserId();
                     Navigator.pushNamed(context, RouteNames.group);
                     return;
                   }
-                  if (widget.isSimple) {
+                  if (isSimple) {
                     Navigator.pop(context);
                     return;
                   }
                   Navigator.pushNamed(
                     context,
-                    widget.routeText!,
+                    routeText!,
                   );
                 },
                 icon: Image.asset(
                   AppIcons.arrowBack,
-                  color: widget.iconColor,
+                  color: iconColor,
                   height: 24.h,
                   width: 24.w,
                 ),
@@ -127,8 +122,8 @@ class _CustomSimpleAppBarState extends State<CustomSimpleAppBar> {
               Gap(10.w),
               Expanded(
                 child: Text(
-                  widget.titleText,
-                  style: widget.style,
+                  titleText,
+                  style: style,
                   overflow: TextOverflow.ellipsis,
                 ),
               )

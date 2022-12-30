@@ -5,7 +5,7 @@ import 'package:gap/gap.dart';
 import 'package:pattern_formatter/numeric_formatter.dart';
 import 'package:test_app/res/functions/show_toast.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/payme/payme_info_confirmation.dart';
-import '../../../../../core/block/payment_cubit/payment_cubit.dart';
+import '../../../../../core/bloc/payment_cubit/payment_cubit.dart';
 import '../../../../../res/components/custom_simple_appbar.dart';
 import '../../../../../res/constants.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';

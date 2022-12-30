@@ -5,8 +5,7 @@ import 'package:gap/gap.dart';
 import 'package:test_app/res/functions/show_toast.dart';
 import 'package:test_app/ui/auth/sms_verification.dart';
 import 'package:test_app/res/navigation/main_navigation.dart';
-
-import '../../core/block/auth_block/auth_cubit.dart';
+import '../../core/bloc/auth_cubit/auth_cubit.dart';
 import '../../res/constants.dart';
 import '../../res/components/custom_simple_appbar.dart';
 
