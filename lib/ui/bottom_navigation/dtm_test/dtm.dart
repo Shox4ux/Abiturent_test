@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:test_app/core/bloc/dtm_cubit/dtm_cubit.dart';
 import 'package:test_app/core/bloc/inner_test_cubit/inside_test_cubit.dart';
 import 'package:test_app/res/constants.dart';
 import 'package:test_app/res/components/custom_appbar.dart';
 import 'package:test_app/res/components/custom_drawer.dart';
-import 'package:test_app/ui/test_screens/test.dart';
+import 'package:test_app/ui/bottom_navigation/training_tests/test_screens/test.dart';
 import '../../../core/bloc/drawer_cubit/drawer_cubit.dart';
 import '../../../core/bloc/test_cubit/test_cubit.dart';
 import '../../../core/domain/test_model/test_model.dart';
@@ -30,7 +31,6 @@ class _DtmScreenState extends State<DtmScreen>
   Animation<double>? animation;
   final maxProgress = 80.0;
   final dtmTestType = 0;
-  var currentPage = 1;
 
   @override
   void initState() {
@@ -52,6 +52,12 @@ class _DtmScreenState extends State<DtmScreen>
       ..addListener(() {});
   }
 
+  Future<void> _startPagination() async {
+    await context
+        .read<DtmCubit>()
+        .getDtmTestBySubIdWithPagination(_currentSubjectId!);
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_animationController != null) {
@@ -70,46 +76,48 @@ class _DtmScreenState extends State<DtmScreen>
           return await onWillPop(context);
         },
         child: SafeArea(
-          child: BlocBuilder<DrawerCubit, DrawerState>(
-            builder: (context, state) {
-              if (state is DrawerSubjectsLoadedState) {
-                _currentSubjectId = state.index + 2;
-                context.read<TestCubit>().getTestBySubIdWithPagination(
-                    subId: _currentSubjectId!,
-                    type: ApiValues.dtmTestType,
-                    page: currentPage);
-              }
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CustomAppBar(scaffKey: scaffKey),
-                  Expanded(
-                    child: Container(
-                      width: double.maxFinite,
-                      padding: EdgeInsets.only(top: 14.h),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(28.r),
-                            topRight: Radius.circular(28.r),
-                          )),
-                      child: BlocBuilder<TestCubit, TestState>(
-                          builder: (context, state) {
-                        if (state is OnTestSuccess) {
-                          final subjectData = state.subjectData;
-                          final testList = state.testList;
-                          return _onDtmTest(subjectData, testList);
-                        }
-                        if (state is OnTestProgress) {
-                          return _onProgress();
-                        }
-                        return _onProgress();
-                      }),
-                    ),
-                  )
-                ],
-              );
+          child: RefreshIndicator(
+            onRefresh: () async {
+              await _startPagination();
             },
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CustomAppBar(scaffKey: scaffKey),
+                BlocBuilder<DrawerCubit, DrawerState>(
+                  builder: (context, state) {
+                    if (state is DrawerSubjectsLoadedState) {
+                      _currentSubjectId = state.index + 2;
+                      _startPagination();
+                    }
+                    return Expanded(
+                      child: Container(
+                        width: double.maxFinite,
+                        padding: EdgeInsets.only(top: 14.h),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(28.r),
+                              topRight: Radius.circular(28.r),
+                            )),
+                        child: BlocBuilder<DtmCubit, DtmState>(
+                            builder: (context, state) {
+                          if (state is OnDtmTestReceived) {
+                            final subjectData = state.subjectData;
+                            final testList = state.testList;
+                            return _onDtmTest(subjectData, testList);
+                          }
+                          if (state is OnDtmTestProgress) {
+                            return _onProgress();
+                          }
+                          return _onProgress();
+                        }),
+                      ),
+                    );
+                  },
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -122,47 +130,81 @@ class _DtmScreenState extends State<DtmScreen>
     );
   }
 
-  Column _onDtmTest(Subjects subjectData, List<Tests> testList) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: Text(
-            "DTM testlar",
-            style: AppStyles.introButtonText.copyWith(
-              color: Colors.black,
-            ),
-          ),
-        ),
-        Gap(10.h),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: Text(
-            subjectData.name!,
-            style: AppStyles.introButtonText.copyWith(
-              color: Colors.black,
-            ),
-          ),
-        ),
-        Gap(10.h),
-        (testList.isEmpty)
-            ? const Flexible(child: Center(child: Text("Testlar topilmadi")))
-            : Expanded(
-                child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2),
-                  itemCount: testList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return gridItem(context, testList[index], (index + 1));
-                  },
-                ),
+  Widget _onDtmTest(Subjects subjectData, List<Tests> testList) {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            child: Text(
+              "DTM testlar",
+              style: AppStyles.introButtonText.copyWith(
+                color: Colors.black,
               ),
-      ],
+            ),
+          ),
+          Gap(10.h),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            child: Text(
+              subjectData.name!,
+              style: AppStyles.introButtonText.copyWith(
+                color: Colors.black,
+              ),
+            ),
+          ),
+          Gap(10.h),
+          (testList.isEmpty)
+              ? const Flexible(child: Center(child: Text("Testlar topilmadi")))
+              : Expanded(
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: GridView.builder(
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2),
+                            itemCount: testList.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return gridItem(testList[index], (index + 1));
+                            }),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20.w),
+                        child: ElevatedButton(
+                          style: AppStyles.introUpButton,
+                          onPressed: () async {
+                            await _startPagination();
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                AppIcons.down,
+                                scale: 3,
+                                color: Colors.white,
+                              ),
+                              Gap(10.w),
+                              Text(
+                                "Ko’proq testlar",
+                                style: AppStyles.introButtonText.copyWith(
+                                  color: Colors.white,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+        ],
+      ),
     );
   }
 
-  Widget gridItem(BuildContext context, Tests tests, int testIndex) {
+  Widget gridItem(Tests tests, int testIndex) {
     return GestureDetector(
       onTap: () {
         Navigator.push(

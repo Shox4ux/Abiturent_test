@@ -13,6 +13,8 @@ class OnTestProgress extends TestState {
   List<Object> get props => [];
 }
 
+class OnPaginationLoading extends TestState {}
+
 class OnTestInnerSuccess extends TestState {
   final InnerTestModel innerTest;
   const OnTestInnerSuccess(this.innerTest);
@@ -44,19 +46,19 @@ class OnTestCompleted extends TestState {
 class OnTestSuccess extends TestState {
   final Subjects subjectData;
   final List<Tests> testList;
-  final List<Books> bookList;
 
   const OnTestSuccess({
     required this.subjectData,
     required this.testList,
-    required this.bookList,
   });
 
   OnTestSuccess copyWith(List<Tests>? newTestList) {
     return OnTestSuccess(
-        subjectData: subjectData, testList: newTestList!, bookList: bookList);
+      subjectData: subjectData,
+      testList: newTestList!,
+    );
   }
 
   @override
-  List<Object> get props => [subjectData, testList, bookList];
+  List<Object> get props => [subjectData, testList];
 }

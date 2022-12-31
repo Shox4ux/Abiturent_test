@@ -3,14 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
-import '../../core/bloc/inner_test_cubit/inside_test_cubit.dart';
-import '../../core/bloc/subscription_cubit/subscription_cubit.dart';
-import '../../core/domain/test_model/test_inner_model.dart';
-import '../../core/domain/test_model/test_result_model.dart';
-import '../../res/components/custom_dot.dart';
-import '../../res/components/custom_simple_appbar.dart';
-import '../../res/constants.dart';
-import '../../res/navigation/main_navigation.dart';
+import '../../../../core/bloc/inner_test_cubit/inside_test_cubit.dart';
+import '../../../../core/bloc/subscription_cubit/subscription_cubit.dart';
+import '../../../../core/domain/test_model/test_inner_model.dart';
+import '../../../../core/domain/test_model/test_result_model.dart';
+import '../../../../res/components/custom_dot.dart';
+import '../../../../res/components/custom_simple_appbar.dart';
+import '../../../../res/constants.dart';
+import '../../../../res/navigation/main_navigation.dart';
 
 class TestScreen extends StatefulWidget {
   const TestScreen({

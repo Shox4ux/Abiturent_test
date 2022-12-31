@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../res/constants.dart';
-import '../bottom_navigation/dtm/dtm.dart';
+import '../bottom_navigation/dtm_test/dtm.dart';
 import '../bottom_navigation/mistakes/mistakes_screen.dart';
 import '../bottom_navigation/profile/profile.dart';
 import '../bottom_navigation/rating/rating_screen.dart';
-import '../bottom_navigation/subjects/subject_screen.dart';
+import '../bottom_navigation/training_tests/subject_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen(
@@ -29,9 +29,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     final screens = [
-      SubjectsScreen(
-        testType: selectedIndex,
-      ),
+      const SubjectsScreen(),
       const DtmScreen(),
       const ProfileScreen(),
       const MistakesScreen(),

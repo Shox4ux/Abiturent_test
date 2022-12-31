@@ -33,48 +33,57 @@ class _MistakesScreenState extends State<MistakesScreen> {
           return await onWillPop(context);
         },
         child: SafeArea(
-          child: Column(children: [
-            CustomAppBar(scaffKey: scaffKey),
-            BlocBuilder<DrawerCubit, DrawerState>(
-              builder: (context, state) {
-                if (state is DrawerSubjectsLoadedState) {
-                  _currentSubjectId = state.index + 2;
-                  context.read<MistakesCubit>().getErrorList(_currentSubjectId);
-                }
-                return Flexible(
-                  child: Container(
-                    padding:
-                        EdgeInsets.only(top: 20.h, left: 20.w, right: 20.w),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(28.r),
-                        topRight: Radius.circular(28.r),
+          child: RefreshIndicator(
+            onRefresh: () async {
+              await context
+                  .read<MistakesCubit>()
+                  .getErrorList(_currentSubjectId);
+            },
+            child: Column(children: [
+              CustomAppBar(scaffKey: scaffKey),
+              BlocBuilder<DrawerCubit, DrawerState>(
+                builder: (context, state) {
+                  if (state is DrawerSubjectsLoadedState) {
+                    _currentSubjectId = state.index + 2;
+                    context
+                        .read<MistakesCubit>()
+                        .getErrorList(_currentSubjectId);
+                  }
+                  return Flexible(
+                    child: Container(
+                      padding:
+                          EdgeInsets.only(top: 20.h, left: 20.w, right: 20.w),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(28.r),
+                          topRight: Radius.circular(28.r),
+                        ),
+                      ),
+                      child: BlocBuilder<MistakesCubit, MistakesState>(
+                        builder: (context, state) {
+                          if (state is OnMistakesError) {
+                            print(state.error);
+                          }
+                          if (state is OnMistakesReceived) {
+                            final errorList = state.errorList;
+                            return _onMistakes(errorList);
+                          }
+                          if (state is OnMistakesEmpty) {
+                            return _onMistakesEmpty();
+                          }
+                          if (state is OnMistakesProgress) {
+                            return _onProgress();
+                          }
+                          return _onProgress();
+                        },
                       ),
                     ),
-                    child: BlocBuilder<MistakesCubit, MistakesState>(
-                      builder: (context, state) {
-                        if (state is OnMistakesError) {
-                          print(state.error);
-                        }
-                        if (state is OnMistakesReceived) {
-                          final errorList = state.errorList;
-                          return _onMistakes(errorList);
-                        }
-                        if (state is OnMistakesEmpty) {
-                          return _onMistakesEmpty();
-                        }
-                        if (state is OnMistakesProgress) {
-                          return _onProgress();
-                        }
-                        return _onProgress();
-                      },
-                    ),
-                  ),
-                );
-              },
-            ),
-          ]),
+                  );
+                },
+              ),
+            ]),
+          ),
         ),
       ),
     );

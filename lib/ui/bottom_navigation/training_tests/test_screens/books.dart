@@ -5,8 +5,8 @@ import 'package:gap/gap.dart';
 import 'package:test_app/res/components/custom_simple_appbar.dart';
 import 'package:test_app/res/constants.dart';
 import 'package:test_app/res/functions/show_toast.dart';
-import '../../core/bloc/book_cubit/book_cubit.dart';
-import '../../core/domain/test_model/test_model.dart';
+import '../../../../core/bloc/book_cubit/book_cubit.dart';
+import '../../../../core/domain/test_model/test_model.dart';
 
 class BookScreen extends StatefulWidget {
   const BookScreen({super.key, required this.bookList});

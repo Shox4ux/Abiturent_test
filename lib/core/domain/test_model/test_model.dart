@@ -1,9 +1,8 @@
 class TestModel {
   Subjects? subjects;
   List<Tests>? tests;
-  List<Books>? books;
 
-  TestModel({this.subjects, this.tests, this.books});
+  TestModel({this.subjects, this.tests});
 
   TestModel.fromJson(Map<String, dynamic> json) {
     subjects =
@@ -12,12 +11,6 @@ class TestModel {
       tests = <Tests>[];
       json['tests'].forEach((v) {
         tests!.add(Tests.fromJson(v));
-      });
-    }
-    if (json['books'] != null) {
-      books = <Books>[];
-      json['books'].forEach((v) {
-        books!.add(Books.fromJson(v));
       });
     }
   }
@@ -30,9 +23,6 @@ class TestModel {
     if (tests != null) {
       data['tests'] = tests!.map((v) => v.toJson()).toList();
     }
-    if (books != null) {
-      data['books'] = books!.map((v) => v.toJson()).toList();
-    }
     return data;
   }
 }
@@ -40,15 +30,23 @@ class TestModel {
 class Subjects {
   int? id;
   String? name;
+  Null? image;
   int? price;
   int? updated;
   String? updatedDate;
 
-  Subjects({this.id, this.name, this.price, this.updated, this.updatedDate});
+  Subjects(
+      {this.id,
+      this.name,
+      this.image,
+      this.price,
+      this.updated,
+      this.updatedDate});
 
   Subjects.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
+    image = json['image'];
     price = json['price'];
     updated = json['updated'];
     updatedDate = json['updated_date'];
@@ -58,6 +56,7 @@ class Subjects {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['name'] = name;
+    data['image'] = image;
     data['price'] = price;
     data['updated'] = updated;
     data['updated_date'] = updatedDate;
@@ -77,7 +76,9 @@ class Tests {
   int? status;
   String? statusText;
   int? questionsCount;
-  dynamic percent;
+  num? percent;
+  String? testType;
+  List<Books>? books;
 
   Tests(
       {this.id,
@@ -91,7 +92,9 @@ class Tests {
       this.status,
       this.statusText,
       this.questionsCount,
-      this.percent});
+      this.percent,
+      this.testType,
+      this.books});
 
   Tests.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -106,6 +109,13 @@ class Tests {
     statusText = json['status_text'];
     questionsCount = json['questions_count'];
     percent = json['percent'];
+    testType = json['test_type'];
+    if (json['books'] != null) {
+      books = <Books>[];
+      json['books'].forEach((v) {
+        books!.add(new Books.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -122,6 +132,10 @@ class Tests {
     data['status_text'] = statusText;
     data['questions_count'] = questionsCount;
     data['percent'] = percent;
+    data['test_type'] = testType;
+    if (books != null) {
+      data['books'] = books!.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }

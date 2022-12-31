@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:test_app/res/enum.dart';
 import 'package:test_app/res/models/intro_data.dart';
-import 'package:test_app/res/models/subject_data.dart';
-import 'package:test_app/res/models/test_model.dart';
 
 class AppColors {
   static const splashColor = Color(0xFFFCAC12);
@@ -23,20 +19,23 @@ class AppColors {
 }
 
 class AppStyles {
-  static TextStyle mainTextStyle = GoogleFonts.inter(
+  static TextStyle mainTextStyle = TextStyle(
       fontSize: 32.sp, fontWeight: FontWeight.w700, color: AppColors.mainColor);
 
-  static TextStyle subtitleTextStyle = GoogleFonts.inter(
+  static TextStyle subtitleTextStyle = TextStyle(
       fontSize: 16.sp,
+      fontFamily: 'Inter',
       fontWeight: FontWeight.w500,
       color: AppColors.subtitleColor);
 
-  static TextStyle introButtonText = GoogleFonts.inter(
+  static TextStyle introButtonText = TextStyle(
       fontSize: 18.sp,
+      fontFamily: 'Inter',
       fontWeight: FontWeight.w600,
       color: AppColors.subtitleColor);
-  static TextStyle smsVerBigTextStyle = GoogleFonts.inter(
+  static TextStyle smsVerBigTextStyle = TextStyle(
       fontSize: 36.sp,
+      fontFamily: 'Inter',
       fontWeight: FontWeight.w500,
       color: AppColors.smsVerColor);
 

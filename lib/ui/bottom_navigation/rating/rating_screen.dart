@@ -35,48 +35,55 @@ class _RatingScreenState extends State<RatingScreen> {
         },
         child: SafeArea(
           child: Expanded(
-            child: Column(children: [
-              CustomAppBar(scaffKey: scaffKey),
-              BlocBuilder<DrawerCubit, DrawerState>(
-                builder: (context, state) {
-                  if (state is DrawerSubjectsLoadedState) {
-                    currentSubjectId = state.index + 2;
-                    context
-                        .read<RatingCubit>()
-                        .callUserRating(currentSubjectId);
-                  }
-                  return Expanded(
-                    child: Container(
-                      width: double.maxFinite,
-                      padding:
-                          EdgeInsets.only(top: 20.h, left: 20.w, right: 20.w),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(28.r),
-                          topRight: Radius.circular(28.r),
+            child: RefreshIndicator(
+              onRefresh: () async {
+                await context
+                    .read<RatingCubit>()
+                    .callUserRating(currentSubjectId);
+              },
+              child: Column(children: [
+                CustomAppBar(scaffKey: scaffKey),
+                BlocBuilder<DrawerCubit, DrawerState>(
+                  builder: (context, state) {
+                    if (state is DrawerSubjectsLoadedState) {
+                      currentSubjectId = state.index + 2;
+                      context
+                          .read<RatingCubit>()
+                          .callUserRating(currentSubjectId);
+                    }
+                    return Expanded(
+                      child: Container(
+                        width: double.maxFinite,
+                        padding:
+                            EdgeInsets.only(top: 20.h, left: 20.w, right: 20.w),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(28.r),
+                            topRight: Radius.circular(28.r),
+                          ),
+                        ),
+                        child: BlocBuilder<RatingCubit, RatingState>(
+                          builder: (context, state) {
+                            if (state is OnRatingReceived) {
+                              final ratingData = state.ratingModel;
+                              return _onRating(ratingData);
+                            }
+                            if (state is OnRatingEmpty) {
+                              return _onRatingEmpty(state.ratingModel);
+                            }
+                            if (state is OnRatingProgress) {
+                              return _onProgress();
+                            }
+                            return _onProgress();
+                          },
                         ),
                       ),
-                      child: BlocBuilder<RatingCubit, RatingState>(
-                        builder: (context, state) {
-                          if (state is OnRatingReceived) {
-                            final ratingData = state.ratingModel;
-                            return _onRating(ratingData);
-                          }
-                          if (state is OnRatingEmpty) {
-                            return _onRatingEmpty(state.ratingModel);
-                          }
-                          if (state is OnRatingProgress) {
-                            return _onProgress();
-                          }
-                          return _onProgress();
-                        },
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ]),
+                    );
+                  },
+                ),
+              ]),
+            ),
           ),
         ),
       ),
@@ -210,7 +217,7 @@ class _RatingScreenState extends State<RatingScreen> {
                         style: AppStyles.subtitleTextStyle
                             .copyWith(color: AppColors.smsVerColor),
                       ),
-                      (data.userTelegram != null)
+                      (data.userTelegram != "-")
                           ? InkWell(
                               onTap: () async {
                                 await _launcher(

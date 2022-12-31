@@ -82,191 +82,180 @@ class _ProfileScreenState extends State<ProfileScreen> {
               padding: EdgeInsets.all(20.w),
               child: BlocBuilder<AuthCubit, AuthState>(
                 builder: (context, state) {
-                  return BlocBuilder<AuthCubit, AuthState>(
-                    builder: (context, state) {
-                      if (state is OnAuthProgress) {
-                        return const Center(
-                          child: CircularProgressIndicator.adaptive(),
-                        );
-                      }
-                      if (state is UserActive) {
-                        final userData = state.userInfo;
-                        return RefreshIndicator(
-                          onRefresh: () async {
-                            context.read<AuthCubit>().getUserData();
-                          },
-                          child: Column(
+                  if (state is OnAuthProgress) {
+                    return const Center(
+                      child: CircularProgressIndicator.adaptive(),
+                    );
+                  }
+                  if (state is UserActive) {
+                    final userData = state.userInfo;
+                    return RefreshIndicator(
+                      onRefresh: () async {
+                        await context.read<AuthCubit>().getUserData();
+                      },
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      Navigator.push<void>(
-                                        context,
-                                        MaterialPageRoute<void>(
-                                          builder: (BuildContext context) =>
-                                              RefactorScreen(user: userData),
-                                        ),
-                                      );
-                                    },
-                                    child: Container(
-                                      height: 100.h,
-                                      width: 100.w,
-                                      clipBehavior: Clip.hardEdge,
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(100.r),
-                                      ),
-                                      child: FadeInImage.assetNetwork(
-                                        image: userData.image!,
-                                        fit: BoxFit.cover,
-                                        imageErrorBuilder:
-                                            (context, error, stackTrace) =>
-                                                Icon(
-                                          Icons.person,
-                                          size: 64.h,
-                                          color: AppColors.mainColor,
-                                        ),
-                                        placeholder: AppIcons.info,
-                                      ),
-                                    ),
-                                  ),
-                                  Gap(10.w),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "ID #${userData.id}",
-                                          style: AppStyles.subtitleTextStyle
-                                              .copyWith(
-                                            fontSize: 14.sp,
-                                            color: const Color(0xff0D0E0F),
-                                          ),
-                                        ),
-                                        Text(
-                                          "${userData.fullname}",
-                                          overflow: TextOverflow.visible,
-                                          style: AppStyles.introButtonText
-                                              .copyWith(
-                                                  fontSize: 24.sp,
-                                                  color:
-                                                      const Color(0xff161719)),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  isStats
-                                      ? IconButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              isStats = false;
-                                            });
-                                          },
-                                          icon: Icon(
-                                            Icons.settings,
-                                            color: AppColors.mainColor,
-                                            size: 28.h,
-                                          ),
-                                        )
-                                      : const SizedBox.shrink()
-                                ],
-                              ),
-                              Gap(19.h),
                               GestureDetector(
-                                onTap: () async {
-                                  if (await context
-                                      .read<PaymentCubit>()
-                                      .isConfirmed()) {
-                                    context.read<PaymentCubit>().getCards();
-                                    Navigator.push<void>(
-                                      context,
-                                      MaterialPageRoute<void>(
-                                        builder: (BuildContext context) =>
-                                            const PaymeInfoConfirmation(
-                                          null,
-                                          isConfirmed: true,
-                                        ),
-                                      ),
-                                    );
-                                  } else {
-                                    Navigator.pushNamed(
-                                        context, RouteNames.payme);
-                                  }
+                                onTap: () {
+                                  Navigator.push<void>(
+                                    context,
+                                    MaterialPageRoute<void>(
+                                      builder: (BuildContext context) =>
+                                          RefactorScreen(user: userData),
+                                    ),
+                                  );
                                 },
                                 child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 5.h, horizontal: 10.w),
-                                  height: 52.h,
+                                  height: 100.h,
+                                  width: 100.w,
+                                  clipBehavior: Clip.hardEdge,
                                   decoration: BoxDecoration(
-                                      color: AppColors.greenBackground,
-                                      borderRadius:
-                                          BorderRadius.circular(10.r)),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Container(
-                                        height: 40.h,
-                                        width: 52.w,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(16.r),
-                                        ),
-                                        child: Image.asset(
-                                          AppIcons.greenPocket,
-                                          scale: 3.h,
-                                        ),
-                                      ),
-                                      RichText(
-                                        text: TextSpan(
-                                          text: "UZS ",
-                                          style: AppStyles.introButtonText
-                                              .copyWith(
-                                                  color: Colors.white,
-                                                  fontSize: 14.sp),
-                                          children: [
-                                            TextSpan(
-                                              text: numberFormatter(
-                                                  userData.balance),
-                                              style: AppStyles.introButtonText
-                                                  .copyWith(
-                                                      color: Colors.white,
-                                                      fontSize: 28.sp),
-                                            ),
-                                          ],
-                                        ),
-                                      )
-                                    ],
+                                    borderRadius: BorderRadius.circular(100.r),
+                                  ),
+                                  child: FadeInImage.assetNetwork(
+                                    image: userData.image!,
+                                    fit: BoxFit.cover,
+                                    imageErrorBuilder:
+                                        (context, error, stackTrace) => Icon(
+                                      Icons.person,
+                                      size: 64.h,
+                                      color: AppColors.mainColor,
+                                    ),
+                                    placeholder: AppIcons.info,
                                   ),
                                 ),
                               ),
-                              Gap(20.h),
-                              FutureBuilder(
-                                future: getStatistics(userData.id),
-                                builder: (context, snapshot) {
-                                  if (!snapshot.hasData) {
-                                    return const Center(
-                                      child: CircularProgressIndicator(
-                                        color: AppColors.mainColor,
+                              Gap(10.w),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "ID #${userData.id}",
+                                      style:
+                                          AppStyles.subtitleTextStyle.copyWith(
+                                        fontSize: 14.sp,
+                                        color: const Color(0xff0D0E0F),
                                       ),
-                                    );
-                                  }
-                                  return Expanded(child: body(stats!));
-                                },
-                              )
+                                    ),
+                                    Text(
+                                      "${userData.fullname}",
+                                      overflow: TextOverflow.visible,
+                                      style: AppStyles.introButtonText.copyWith(
+                                          fontSize: 24.sp,
+                                          color: const Color(0xff161719)),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              isStats
+                                  ? IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          isStats = false;
+                                        });
+                                      },
+                                      icon: Icon(
+                                        Icons.settings,
+                                        color: AppColors.mainColor,
+                                        size: 28.h,
+                                      ),
+                                    )
+                                  : const SizedBox.shrink()
                             ],
                           ),
-                        );
-                      }
-                      return const Center(
-                        child: CircularProgressIndicator.adaptive(),
-                      );
-                    },
+                          Gap(19.h),
+                          GestureDetector(
+                            onTap: () async {
+                              final con = await context
+                                  .read<PaymentCubit>()
+                                  .isConfirmed();
+                              if (con) {
+                                // ignore: use_build_context_synchronously
+                                await context.read<PaymentCubit>().getCards();
+                                // ignore: use_build_context_synchronously
+                                Navigator.push<void>(
+                                  context,
+                                  MaterialPageRoute<void>(
+                                    builder: (BuildContext context) =>
+                                        const PaymeInfoConfirmation(
+                                      null,
+                                      isConfirmed: true,
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                // ignore: use_build_context_synchronously
+                                Navigator.pushNamed(context, RouteNames.payme);
+                              }
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 5.h, horizontal: 10.w),
+                              height: 52.h,
+                              decoration: BoxDecoration(
+                                  color: AppColors.greenBackground,
+                                  borderRadius: BorderRadius.circular(10.r)),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    height: 40.h,
+                                    width: 52.w,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(16.r),
+                                    ),
+                                    child: Image.asset(
+                                      AppIcons.greenPocket,
+                                      scale: 3.h,
+                                    ),
+                                  ),
+                                  RichText(
+                                    text: TextSpan(
+                                      text: "UZS ",
+                                      style: AppStyles.introButtonText.copyWith(
+                                          color: Colors.white, fontSize: 14.sp),
+                                      children: [
+                                        TextSpan(
+                                          text:
+                                              numberFormatter(userData.balance),
+                                          style: AppStyles.introButtonText
+                                              .copyWith(
+                                                  color: Colors.white,
+                                                  fontSize: 28.sp),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          Gap(20.h),
+                          FutureBuilder(
+                            future: getStatistics(userData.id),
+                            builder: (context, snapshot) {
+                              if (!snapshot.hasData) {
+                                return const Center(
+                                  child: CircularProgressIndicator(
+                                    color: AppColors.mainColor,
+                                  ),
+                                );
+                              }
+                              return Expanded(child: body(stats!));
+                            },
+                          )
+                        ],
+                      ),
+                    );
+                  }
+                  return const Center(
+                    child: CircularProgressIndicator.adaptive(),
                   );
                 },
               ),
