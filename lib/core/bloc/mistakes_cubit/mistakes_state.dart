@@ -11,13 +11,19 @@ class MistakesInitial extends MistakesState {}
 
 class OnMistakesProgress extends MistakesState {}
 
-class OnMistakesEmpty extends MistakesState {}
+class OnMistakesEmpty extends MistakesState {
+  final String subjectName;
+
+  const OnMistakesEmpty(this.subjectName);
+  @override
+  List<Object> get props => [subjectName];
+}
 
 class OnMistakesReceived extends MistakesState {
-  final List<TestResult> errorList;
-  const OnMistakesReceived(this.errorList);
+  final MistakesModel mistakesModel;
+  const OnMistakesReceived(this.mistakesModel);
   @override
-  List<Object> get props => [errorList];
+  List<Object> get props => [mistakesModel];
 }
 
 class OnMistakesError extends MistakesState {

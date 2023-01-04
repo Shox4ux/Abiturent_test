@@ -54,171 +54,166 @@ class _PaymeScreenState extends State<PaymeScreen> {
               ),
             );
           }
-          return SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Gap(40.h),
-                CustomSimpleAppBar(
-                  isIcon: false,
-                  isSimple: true,
-                  titleText: "Hisobni to’ldirish",
-                  routeText: RouteNames.main,
-                  style: AppStyles.introButtonText.copyWith(
-                    fontSize: 22.sp,
-                    color: Colors.white,
-                  ),
-                  iconColor: Colors.white,
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Gap(40.h),
+              CustomSimpleAppBar(
+                isIcon: false,
+                isSimple: true,
+                titleText: "Hisobni to’ldirish",
+                routeText: RouteNames.main,
+                style: AppStyles.introButtonText.copyWith(
+                  fontSize: 22.sp,
+                  color: Colors.white,
                 ),
-                Gap(64.w),
-                Padding(
-                  padding: EdgeInsets.all(20.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "To’lov summasi",
-                        style: AppStyles.introButtonText.copyWith(
-                          color: AppColors.fillingColor.withOpacity(0.6),
-                        ),
+                iconColor: Colors.white,
+              ),
+              Gap(64.w),
+              Padding(
+                padding: EdgeInsets.all(20.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "To’lov summasi",
+                      style: AppStyles.introButtonText.copyWith(
+                        color: AppColors.fillingColor.withOpacity(0.6),
                       ),
-                      Gap(11.h),
-                      TextField(
-                        keyboardType: TextInputType.number,
-                        controller: _amountController,
-                        inputFormatters: [
-                          ThousandsFormatter(),
-                        ],
-                        decoration: InputDecoration(
-                          hintText: "0,00 UZS",
-                          hintStyle: AppStyles.introButtonText.copyWith(
-                            color: AppColors.fillingColor.withOpacity(0.6),
-                            fontSize: 36.sp,
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20.sp),
-                            borderSide: BorderSide(
-                              color: Colors.white.withOpacity(0.4),
-                            ),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20.sp),
-                            borderSide: BorderSide(
-                              color: Colors.white.withOpacity(0.4),
-                            ),
-                          ),
-                        ),
-                        style: AppStyles.introButtonText.copyWith(
-                          color: AppColors.fillingColor,
+                    ),
+                    Gap(11.h),
+                    TextField(
+                      keyboardType: TextInputType.number,
+                      controller: _amountController,
+                      inputFormatters: [
+                        ThousandsFormatter(),
+                      ],
+                      decoration: InputDecoration(
+                        hintText: "0,00 UZS",
+                        hintStyle: AppStyles.introButtonText.copyWith(
+                          color: AppColors.fillingColor.withOpacity(0.6),
                           fontSize: 36.sp,
                         ),
-                      )
-                    ],
-                  ),
-                ),
-                Gap(10.h),
-                Expanded(
-                  child: Container(
-                    height: double.maxFinite,
-                    width: double.maxFinite,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(16.r),
-                        topLeft: Radius.circular(16.r),
-                      ),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 16.h),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16.w),
-                            child: Column(
-                              children: [
-                                TextField(
-                                  controller: _cardPanController,
-                                  keyboardType: TextInputType.number,
-                                  inputFormatters: [
-                                    MaskTextInputFormatter(
-                                        mask: '#### #### #### ####')
-                                  ],
-                                  decoration: InputDecoration(
-                                    hintText: "1234 1234 1234 1234",
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(16.h),
-                                      borderSide: BorderSide(width: 2.w),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(16.h),
-                                      borderSide: BorderSide(
-                                          color: AppColors.mainColor,
-                                          width: 2.w),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(16.h),
-                                      borderSide: BorderSide(
-                                          color: AppColors.textFieldBorderColor,
-                                          width: 2.w),
-                                    ),
-                                  ),
-                                ),
-                                Gap(16.h),
-                                TextField(
-                                  textInputAction: TextInputAction.done,
-                                  controller: _cardPeriodController,
-                                  keyboardType: TextInputType.phone,
-                                  inputFormatters: [
-                                    MaskTextInputFormatter(mask: '##/##')
-                                  ],
-                                  decoration: InputDecoration(
-                                    hintText: "MM/YY",
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(16.h),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(16.h),
-                                      borderSide: BorderSide(
-                                          color: AppColors.mainColor,
-                                          width: 2.w),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(16.h),
-                                      borderSide: BorderSide(
-                                          color: AppColors.textFieldBorderColor,
-                                          width: 2.w),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20.sp),
+                          borderSide: BorderSide(
+                            color: Colors.white.withOpacity(0.4),
                           ),
-                          Padding(
-                            padding: EdgeInsets.only(bottom: 24.h),
-                            child: ElevatedButton(
-                              style: AppStyles.introUpButton,
-                              onPressed: () {
-                                context.read<PaymentCubit>().addCard(
-                                      _cardPanController.text
-                                          .replaceAll(" ", ""),
-                                      _cardPeriodController.text,
-                                    );
-                              },
-                              child: Text(
-                                "Karta qo'shish",
-                                style: AppStyles.introButtonText
-                                    .copyWith(color: const Color(0xffFCFCFC)),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20.sp),
+                          borderSide: BorderSide(
+                            color: Colors.white.withOpacity(0.4),
+                          ),
+                        ),
+                      ),
+                      style: AppStyles.introButtonText.copyWith(
+                        color: AppColors.fillingColor,
+                        fontSize: 36.sp,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              Gap(10.h),
+              Expanded(
+                child: Container(
+                  height: double.maxFinite,
+                  width: double.maxFinite,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(16.r),
+                      topLeft: Radius.circular(16.r),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 16.h),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16.w),
+                          child: Column(
+                            children: [
+                              TextField(
+                                controller: _cardPanController,
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  MaskTextInputFormatter(
+                                      mask: '#### #### #### ####')
+                                ],
+                                decoration: InputDecoration(
+                                  hintText: "1234 1234 1234 1234",
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(16.h),
+                                    borderSide: BorderSide(width: 2.w),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(16.h),
+                                    borderSide: BorderSide(
+                                        color: AppColors.mainColor, width: 2.w),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(16.h),
+                                    borderSide: BorderSide(
+                                        color: AppColors.textFieldBorderColor,
+                                        width: 2.w),
+                                  ),
+                                ),
                               ),
+                              Gap(16.h),
+                              TextField(
+                                textInputAction: TextInputAction.done,
+                                controller: _cardPeriodController,
+                                keyboardType: TextInputType.phone,
+                                inputFormatters: [
+                                  MaskTextInputFormatter(mask: '##/##')
+                                ],
+                                decoration: InputDecoration(
+                                  hintText: "MM/YY",
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(16.h),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(16.h),
+                                    borderSide: BorderSide(
+                                        color: AppColors.mainColor, width: 2.w),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(16.h),
+                                    borderSide: BorderSide(
+                                        color: AppColors.textFieldBorderColor,
+                                        width: 2.w),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 24.h),
+                          child: ElevatedButton(
+                            style: AppStyles.introUpButton,
+                            onPressed: () {
+                              context.read<PaymentCubit>().addCard(
+                                    _cardPanController.text.replaceAll(" ", ""),
+                                    _cardPeriodController.text,
+                                  );
+                            },
+                            child: Text(
+                              "Karta qo'shish",
+                              style: AppStyles.introButtonText
+                                  .copyWith(color: const Color(0xffFCFCFC)),
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           );
         },
       ),

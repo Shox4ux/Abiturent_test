@@ -77,7 +77,6 @@ class TestCubit extends Cubit<TestState> {
   Future<void> _combineTestNewList(List<Tests> extraTestList) async {
     if (extraTestList.length < _perPage) {
       _isPaginationEnded = true;
-      showToast("Testlar tugadi");
     }
     if (state is OnTestSuccess) {
       final oldState = (state as OnTestSuccess);

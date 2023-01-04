@@ -43,7 +43,9 @@ class DtmCubit extends Cubit<DtmState> {
           subId, _testType, _currentPage, _perPage);
       final allTestData = TestModel.fromJson(response.data);
 
-      _checkIsLastData(allTestData.tests!.length);
+      if (allTestData.tests!.length < _perPage) {
+        _isPaginationEnded = true;
+      }
 
       emit(OnDtmTestReceived(allTestData.subjects!, allTestData.tests!));
     } on DioError catch (e) {

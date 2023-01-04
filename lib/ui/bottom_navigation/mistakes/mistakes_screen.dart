@@ -7,8 +7,7 @@ import 'package:test_app/res/components/custom_dot.dart';
 import 'package:test_app/res/components/custom_drawer.dart';
 import '../../../core/bloc/drawer_cubit/drawer_cubit.dart';
 import '../../../core/bloc/mistakes_cubit/mistakes_cubit.dart';
-import '../../../core/bloc/test_cubit/test_cubit.dart';
-import '../../../core/domain/test_model/test_result_model.dart';
+import '../../../core/domain/mistakes_model/mistakes_model.dart';
 import '../../../res/constants.dart';
 import '../../../res/functions/will_pop_function.dart';
 
@@ -62,15 +61,14 @@ class _MistakesScreenState extends State<MistakesScreen> {
                       ),
                       child: BlocBuilder<MistakesCubit, MistakesState>(
                         builder: (context, state) {
-                          if (state is OnMistakesError) {
-                            print(state.error);
-                          }
+                          if (state is OnMistakesError) {}
                           if (state is OnMistakesReceived) {
-                            final errorList = state.errorList;
-                            return _onMistakes(errorList);
+                            final errorList = state.mistakesModel.data;
+                            final subName = state.mistakesModel.subjectName;
+                            return _onMistakes(errorList!, subName!);
                           }
                           if (state is OnMistakesEmpty) {
-                            return _onMistakesEmpty();
+                            return _onMistakesEmpty(state.subjectName);
                           }
                           if (state is OnMistakesProgress) {
                             return _onProgress();
@@ -95,12 +93,18 @@ class _MistakesScreenState extends State<MistakesScreen> {
     );
   }
 
-  Widget _onMistakesEmpty() {
+  Widget _onMistakesEmpty(String subName) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           "Xatolar bilan ishlash",
+          style: AppStyles.introButtonText.copyWith(
+            color: Colors.black,
+          ),
+        ),
+        Text(
+          subName,
           style: AppStyles.introButtonText.copyWith(
             color: Colors.black,
           ),
@@ -116,11 +120,17 @@ class _MistakesScreenState extends State<MistakesScreen> {
     );
   }
 
-  Widget _onMistakes(List<TestResult> errorList) {
+  Widget _onMistakes(List<Data> errorList, String subName) {
     return Flexible(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Text(
+            "Xatolar bilan ishlash",
+            style: AppStyles.introButtonText.copyWith(
+              color: Colors.black,
+            ),
+          ),
           Text(
             "Xatolar bilan ishlash",
             style: AppStyles.introButtonText.copyWith(
@@ -146,8 +156,7 @@ class _MistakesScreenState extends State<MistakesScreen> {
     );
   }
 
-  Widget testItem(
-      TestResult result, List<AnswersDetail> ansList, String testQ) {
+  Widget testItem(Data result, List<AnswersDetail> ansList, String testQ) {
     return Container(
       margin: EdgeInsets.only(bottom: 15.h),
       child: Column(
@@ -175,7 +184,7 @@ class _MistakesScreenState extends State<MistakesScreen> {
                   ),
                 ],
               ),
-              Gap(10.h),
+              Gap(5.h),
               Row(
                 children: [
                   Text(

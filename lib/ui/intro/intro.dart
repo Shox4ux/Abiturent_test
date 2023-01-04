@@ -42,7 +42,7 @@ class _IntroScreenState extends State<IntroScreen> {
               activeIndex: activeIndex,
               itemCount: AppIntroImages.introList.length,
             ),
-            Gap(31.h),
+            Gap(30.h),
             SizedBox(
               height: 56.h,
               child: ElevatedButton(

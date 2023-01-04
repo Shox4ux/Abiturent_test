@@ -1,5 +1,9 @@
+import 'dart:async';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import '../../res/constants.dart';
 import '../bottom_navigation/dtm_test/dtm.dart';
 import '../bottom_navigation/mistakes/mistakes_screen.dart';
@@ -8,22 +12,75 @@ import '../bottom_navigation/rating/rating_screen.dart';
 import '../bottom_navigation/training_tests/subject_screen.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen(
-    this.pageIndex, {
-    super.key,
-  });
+  const MainScreen(this.pageIndex, {super.key});
   @override
   State<MainScreen> createState() => _MainScreenState();
-
   final int? pageIndex;
 }
 
 class _MainScreenState extends State<MainScreen> {
   int selectedIndex = 2;
+  late StreamSubscription subscription;
+  var isInternetConnected = false;
+  bool isAlertSet = false;
+
   @override
   void initState() {
+    getConnectivity();
     super.initState();
     selectedIndex = widget.pageIndex ?? 2;
+  }
+
+  getConnectivity() {
+    subscription = Connectivity().onConnectivityChanged.listen((event) async {
+      isInternetConnected = await InternetConnectionChecker().hasConnection;
+      if (!isInternetConnected && isAlertSet == false) {
+        showDialogBox();
+        setState(() {
+          isAlertSet = true;
+        });
+      }
+    });
+  }
+
+  showDialogBox() {
+    return showCupertinoDialog(
+      context: context,
+      builder: (context) => CupertinoAlertDialog(
+        title: const Text("Tarmoqda nosozlik"),
+        content: const Text("Iltimos internetga ulanishni tekshiring"),
+        actions: [
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(context, "Cancel");
+              setState(() {
+                isAlertSet = false;
+              });
+              isInternetConnected =
+                  await InternetConnectionChecker().hasConnection;
+              if (!isInternetConnected && isAlertSet == false) {
+                showDialogBox();
+                setState(() {
+                  isAlertSet = true;
+                });
+              }
+            },
+            child: Text(
+              "Qaytattan",
+              style: AppStyles.mainTextStyle.copyWith(
+                fontSize: 16.sp,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    subscription.cancel();
+    super.dispose();
   }
 
   @override

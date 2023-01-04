@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
+import 'package:test_app/core/domain/mistakes_model/mistakes_model.dart';
 
 import '../../domain/test_model/test_result_model.dart';
 import '../../helper/database/app_storage.dart';
@@ -21,13 +22,12 @@ class MistakesCubit extends Cubit<MistakesState> {
     final userId = await _storage.getUserId();
     try {
       final response = await _repo.getErrorList(userId, subjectId);
-      final rowData = response.data as List;
-      if (rowData.isEmpty) {
-        emit(OnMistakesEmpty());
+      if (response.data["data"].isEmpty) {
+        emit(OnMistakesEmpty(response.data["subject_name"]));
         return;
       }
-      final rowList = rowData.map((e) => TestResult.fromJson(e)).toList();
-      emit(OnMistakesReceived(rowList));
+      final model = MistakesModel.fromJson(response.data);
+      emit(OnMistakesReceived(model));
     } on DioError catch (e) {
       emit(OnMistakesError(e.response?.data["message"] ?? "Tizimda nosozlik"));
     } on SocketException {

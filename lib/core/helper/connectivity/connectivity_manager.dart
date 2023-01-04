@@ -9,9 +9,7 @@ class ConnectivityManager {
   final _connectivity = Connectivity();
   StreamSubscription? streamSubscription;
 
-  Future<Response> scheduleRequestRetry(
-    RequestOptions requestOptions,
-  ) async {
+  Future<Response> scheduleRequestRetry(RequestOptions requestOptions) async {
     final completer = Completer<Response>();
     streamSubscription =
         _connectivity.onConnectivityChanged.listen((connectivityResult) {
