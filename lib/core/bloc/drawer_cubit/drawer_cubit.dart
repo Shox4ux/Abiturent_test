@@ -1,12 +1,9 @@
-import 'dart:io';
-
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:test_app/core/helper/database/app_storage.dart';
 import '../../domain/subject_models/subject_model.dart';
 import '../../helper/repos/subject_repo.dart';
-
 part 'drawer_state.dart';
 
 class DrawerCubit extends Cubit<DrawerState> {
@@ -32,10 +29,8 @@ class DrawerCubit extends Cubit<DrawerState> {
       }
 
       ///
-    } on SocketException {
-      emit(const OnDrawerError("Tarmoqda nosozlik"));
     } on DioError catch (e) {
-      emit(OnDrawerError(e.response!.data["message"]));
+      emit(OnDrawerError(e.response?.data["message"] ?? "Tizimda nosozlik"));
     } catch (e) {
       emit(OnDrawerError(e.toString()));
     }

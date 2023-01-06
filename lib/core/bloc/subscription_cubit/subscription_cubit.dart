@@ -28,8 +28,6 @@ class SubscriptionCubit extends Cubit<SubscriptionState> {
       emit(OnReceivedScript(rowList));
     } on DioError catch (e) {
       emit(OnScriptError(e.response!.data["message"]));
-    } on SocketException catch (e) {
-      emit(OnScriptError(e.message));
     } catch (e) {
       emit(const OnScriptError("Tizimda nosozlik"));
     }

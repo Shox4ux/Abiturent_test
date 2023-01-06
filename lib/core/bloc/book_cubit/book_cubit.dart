@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
@@ -27,9 +26,7 @@ class BookCubit extends Cubit<BookState> {
         await _saveBookInHiveStorage(filePath, bookId);
       }
     } on DioError catch (e) {
-      emit(OnError(e.response!.data["message"]));
-    } on SocketException {
-      emit(const OnError("Tarmoqda nosozlik"));
+      emit(OnError(e.response?.data["message"] ?? "Tizimda nosozlik"));
     } catch (e) {
       emit(const OnError("Tizimda nosozlik"));
     }

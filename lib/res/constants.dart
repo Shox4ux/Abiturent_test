@@ -153,7 +153,6 @@ class AppIcons {
   static const String user = "assets/user.png";
   static const String borrow = "assets/borrow.png";
   static const String gear = "assets/gear.png";
-
   static const String info = "assets/info.png";
   static const String arrow = "assets/arrow.png";
   static const String down = "assets/down.png";

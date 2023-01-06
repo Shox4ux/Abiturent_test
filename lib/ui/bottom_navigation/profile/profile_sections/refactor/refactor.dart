@@ -11,6 +11,7 @@ import 'package:test_app/res/constants.dart';
 import 'package:test_app/res/functions/show_toast.dart';
 import 'package:test_app/res/navigation/main_navigation.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile.dart';
+import '../../../../../core/bloc/auth_cubit/auth_cubit.dart';
 import '../../../../../core/bloc/user_cubit/user_cubit.dart';
 
 class RefactorScreen extends StatefulWidget {
@@ -25,9 +26,9 @@ class _RefactorScreenState extends State<RefactorScreen> {
   File? _pickedFile;
   final ImagePicker _picker = ImagePicker();
   final _changedNameController =
-      TextEditingController(text: user!.fullname ?? '');
+      TextEditingController(text: userData?.fullname ?? '');
   final _tegLinkController =
-      TextEditingController(text: user!.telegramLink ?? '');
+      TextEditingController(text: userData?.telegramLink ?? '');
 
   Future _takePhoto(ImageSource source) async {
     try {
@@ -106,7 +107,7 @@ class _RefactorScreenState extends State<RefactorScreen> {
                                           BorderRadius.circular(100.r),
                                     ),
                                     child: Image.network(
-                                      user!.image!,
+                                      userData!.image!,
                                       fit: BoxFit.fill,
                                       errorBuilder:
                                           (context, error, stackTrace) {
@@ -190,13 +191,15 @@ class _RefactorScreenState extends State<RefactorScreen> {
                         ),
                         Gap(40.h),
                         BlocConsumer<UserCubit, UserState>(
-                          listener: (context, state) {
+                          listener: (context, state) async {
                             if (state is OnUserUpdated) {
                               Navigator.pushNamedAndRemoveUntil(
                                 context,
                                 RouteNames.main,
                                 (route) => false,
                               );
+
+                              await context.read<AuthCubit>().getUserData();
                             }
                           },
                           builder: (context, state) {

@@ -30,8 +30,6 @@ class MistakesCubit extends Cubit<MistakesState> {
       emit(OnMistakesReceived(model));
     } on DioError catch (e) {
       emit(OnMistakesError(e.response?.data["message"] ?? "Tizimda nosozlik"));
-    } on SocketException {
-      emit(const OnMistakesError("Tarmoqda nosozlik"));
     } catch (e) {
       emit(const OnMistakesError("Tizimda nosozlik"));
     }

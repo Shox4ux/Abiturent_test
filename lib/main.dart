@@ -13,7 +13,6 @@ import 'core/bloc/drawer_cubit/drawer_cubit.dart';
 import 'core/bloc/group_cubit/group_cubit.dart';
 import 'core/bloc/inner_test_cubit/inside_test_cubit.dart';
 import 'core/bloc/mistakes_cubit/mistakes_cubit.dart';
-import 'core/bloc/news_cubit/news_cubit.dart';
 import 'core/bloc/payment_cubit/payment_cubit.dart';
 import 'core/bloc/rating_cubit/rating_cubit.dart';
 import 'core/bloc/subscription_cubit/subscription_cubit.dart';
@@ -43,9 +42,6 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => InnerTestCubit(),
-        ),
-        BlocProvider(
-          create: (context) => NewsCubit(),
         ),
         BlocProvider(
           create: (context) => BookCubit(),
@@ -79,7 +75,6 @@ class MyApp extends StatelessWidget {
         designSize: const Size(376, 812),
         builder: (BuildContext context, Widget? child) => MaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'Flutter Demo',
           theme: ThemeData(
             primarySwatch: Colors.blue,
           ),

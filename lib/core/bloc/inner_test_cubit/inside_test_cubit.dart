@@ -47,11 +47,11 @@ class InnerTestCubit extends Cubit<InsideTestState> {
         emit(OnTestInnerSuccess(test));
       }
     } on DioError catch (e) {
-      emit(OnInnerTestError(e.message));
-    } on SocketException catch (e) {
-      emit(OnInnerTestError(e.message));
+      emit(OnInnerTestError(e.response?.data["message"] ?? "Tizimda nosozlik"));
+    } on SocketException {
+      emit(const OnInnerTestError("Tarmoqda nosozlik"));
     } catch (e) {
-      emit(OnInnerTestError(e.toString()));
+      emit(const OnInnerTestError("Tizimda nosozlik"));
     }
   }
 
@@ -64,11 +64,9 @@ class InnerTestCubit extends Cubit<InsideTestState> {
       final resultList = rowList.map((e) => TestResult.fromJson(e)).toList();
       emit(OnInnerTestCompleted(resultList));
     } on DioError catch (e) {
-      emit(OnInnerTestError(e.response!.data["message"]));
-    } on SocketException catch (e) {
-      emit(OnInnerTestError(e.message));
+      emit(OnInnerTestError(e.response?.data["message"] ?? "Tizimda nosozlik"));
     } catch (e) {
-      emit(OnInnerTestError(e.toString()));
+      emit(const OnInnerTestError("Tizimda nosozlik"));
     }
   }
 }

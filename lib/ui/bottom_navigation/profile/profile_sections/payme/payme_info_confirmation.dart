@@ -78,84 +78,82 @@ class _PaymeInfoConfirmationState extends State<PaymeInfoConfirmation> {
           },
           builder: (context, state) {
             if (state is OnCardsReceived) {
-              return Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CustomSimpleAppBar(
-                      isIcon: true,
-                      isSimple: true,
-                      titleText: "Hisobni to’ldirish",
-                      style: AppStyles.introButtonText.copyWith(
-                        fontSize: 22.sp,
-                        color: Colors.white,
-                      ),
-                      iconColor: Colors.white,
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CustomSimpleAppBar(
+                    isIcon: true,
+                    isSimple: true,
+                    titleText: "Hisobni to’ldirish",
+                    style: AppStyles.introButtonText.copyWith(
+                      fontSize: 22.sp,
+                      color: Colors.white,
                     ),
-                    Gap(54.w),
-                    Padding(
-                      padding: EdgeInsets.all(20.w),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "To’lov summasi",
-                            style: AppStyles.introButtonText.copyWith(
-                              color: AppColors.fillingColor.withOpacity(0.6),
-                            ),
-                          ),
-                          Gap(11.h),
-                          TextField(
-                            keyboardType: TextInputType.number,
-                            controller: _amountController,
-                            onChanged: (value) {
-                              _check(value);
-                            },
-                            inputFormatters: [
-                              ThousandsFormatter(),
-                            ],
-                            decoration: InputDecoration(
-                              hintText: "0,00 UZS",
-                              hintStyle: AppStyles.introButtonText.copyWith(
-                                color: AppColors.fillingColor.withOpacity(0.6),
-                                fontSize: 36.sp,
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20.sp),
-                                borderSide: BorderSide(
-                                  color: Colors.white.withOpacity(0.4),
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20.sp),
-                                borderSide: BorderSide(
-                                  color: Colors.white.withOpacity(0.4),
-                                ),
-                              ),
-                            ),
-                            style: AppStyles.introButtonText.copyWith(
-                              color: AppColors.fillingColor,
-                              fontSize: 36.sp,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        width: double.maxFinite,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(16.r),
-                            topLeft: Radius.circular(16.r),
+                    iconColor: Colors.white,
+                  ),
+                  Gap(54.w),
+                  Padding(
+                    padding: EdgeInsets.all(20.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "To’lov summasi",
+                          style: AppStyles.introButtonText.copyWith(
+                            color: AppColors.fillingColor.withOpacity(0.6),
                           ),
                         ),
-                        child: _decider(state, context),
-                      ),
+                        Gap(11.h),
+                        TextField(
+                          keyboardType: TextInputType.number,
+                          controller: _amountController,
+                          onChanged: (value) {
+                            _check(value);
+                          },
+                          inputFormatters: [
+                            ThousandsFormatter(),
+                          ],
+                          decoration: InputDecoration(
+                            hintText: "0,00 UZS",
+                            hintStyle: AppStyles.introButtonText.copyWith(
+                              color: AppColors.fillingColor.withOpacity(0.6),
+                              fontSize: 36.sp,
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20.sp),
+                              borderSide: BorderSide(
+                                color: Colors.white.withOpacity(0.4),
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20.sp),
+                              borderSide: BorderSide(
+                                color: Colors.white.withOpacity(0.4),
+                              ),
+                            ),
+                          ),
+                          style: AppStyles.introButtonText.copyWith(
+                            color: AppColors.fillingColor,
+                            fontSize: 36.sp,
+                          ),
+                        )
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      width: double.maxFinite,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(16.r),
+                          topLeft: Radius.circular(16.r),
+                        ),
+                      ),
+                      child: _decider(state, context),
+                    ),
+                  ),
+                ],
               );
             }
 
@@ -179,78 +177,76 @@ class _PaymeInfoConfirmationState extends State<PaymeInfoConfirmation> {
   }
 
   Widget itConfirmed(OnCardsReceived state, BuildContext context) {
-    return Expanded(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            children: [
-              SizedBox(
-                height: 245.h,
-                child: ListView.builder(
-                  itemCount: state.models.length,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    currentIndex = index;
-                    return Padding(
-                      padding: EdgeInsets.all(10.h),
-                      child: CustomCard(state.models[index]),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          children: [
+            SizedBox(
+              height: 245.h,
+              child: ListView.builder(
+                itemCount: state.models.length,
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) {
+                  currentIndex = index;
+                  return Padding(
+                    padding: EdgeInsets.all(10.h),
+                    child: CustomCard(state.models[index]),
+                  );
+                },
+              ),
+            ),
+            Gap(60.h),
+            Column(
+              children: [
+                const Text("Powered by"),
+                Image.asset(
+                  AppIcons.big,
+                  scale: 4,
+                )
+              ],
+            )
+          ],
+        ),
+        _isNotEmpty
+            ? Padding(
+                padding: EdgeInsets.only(bottom: 24.h),
+                child: ElevatedButton(
+                  style: AppStyles.introUpButton,
+                  onPressed: () {
+                    context.read<PaymentCubit>().makePayment(
+                        state.models[currentIndex].cardMonth!,
+                        state.models[currentIndex].cardPan!,
+                        _amountController.text.replaceAll(",", ""));
+
+                    Navigator.push<void>(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (BuildContext context) =>
+                            PaymeSmsConfirmation(state.models[currentIndex]),
+                      ),
                     );
                   },
+                  child: Text(
+                    "To’lov amalga oshirish",
+                    style: AppStyles.introButtonText
+                        .copyWith(color: const Color(0xffFCFCFC)),
+                  ),
+                ),
+              )
+            : Padding(
+                padding: EdgeInsets.only(bottom: 24.h),
+                child: ElevatedButton(
+                  style: AppStyles.disabledButton,
+                  onPressed: null,
+                  child: Text(
+                    "To’lov amalga oshirish",
+                    style: AppStyles.introButtonText
+                        .copyWith(color: const Color(0xffFCFCFC)),
+                  ),
                 ),
               ),
-              Gap(60.h),
-              Column(
-                children: [
-                  const Text("Powered by"),
-                  Image.asset(
-                    AppIcons.big,
-                    scale: 4,
-                  )
-                ],
-              )
-            ],
-          ),
-          _isNotEmpty
-              ? Padding(
-                  padding: EdgeInsets.only(bottom: 24.h),
-                  child: ElevatedButton(
-                    style: AppStyles.introUpButton,
-                    onPressed: () {
-                      context.read<PaymentCubit>().makePayment(
-                          state.models[currentIndex].cardMonth!,
-                          state.models[currentIndex].cardPan!,
-                          _amountController.text.replaceAll(",", ""));
-
-                      Navigator.push<void>(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (BuildContext context) =>
-                              PaymeSmsConfirmation(state.models[currentIndex]),
-                        ),
-                      );
-                    },
-                    child: Text(
-                      "To’lov amalga oshirish",
-                      style: AppStyles.introButtonText
-                          .copyWith(color: const Color(0xffFCFCFC)),
-                    ),
-                  ),
-                )
-              : Padding(
-                  padding: EdgeInsets.only(bottom: 24.h),
-                  child: ElevatedButton(
-                    style: AppStyles.disabledButton,
-                    onPressed: null,
-                    child: Text(
-                      "To’lov amalga oshirish",
-                      style: AppStyles.introButtonText
-                          .copyWith(color: const Color(0xffFCFCFC)),
-                    ),
-                  ),
-                ),
-        ],
-      ),
+      ],
     );
   }
 

@@ -6,6 +6,7 @@ import 'package:test_app/core/bloc/inner_test_cubit/inside_test_cubit.dart';
 import 'package:test_app/res/components/custom_dot.dart';
 import 'package:test_app/res/components/custom_drawer.dart';
 import 'package:test_app/ui/bottom_navigation/training_tests/test_screens/books.dart';
+import '../../../core/bloc/auth_cubit/auth_cubit.dart';
 import '../../../core/bloc/drawer_cubit/drawer_cubit.dart';
 import '../../../core/bloc/test_cubit/test_cubit.dart';
 import '../../../core/domain/test_model/test_model.dart';
@@ -33,19 +34,19 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    return Scaffold(
-      backgroundColor: AppColors.mainColor,
-      key: scaffKey,
-      drawer: CustomDrawer(mainWidth: screenWidth),
-      body: WillPopScope(
-        onWillPop: () async {
-          return await onWillPop(context);
-        },
-        child: SafeArea(
-          child: RefreshIndicator(
-            onRefresh: () async {
-              await _startPagination();
-            },
+    return RefreshIndicator(
+      onRefresh: () async {
+        await context.read<AuthCubit>().getUserData();
+      },
+      child: Scaffold(
+        backgroundColor: AppColors.mainColor,
+        key: scaffKey,
+        drawer: CustomDrawer(mainWidth: screenWidth),
+        body: WillPopScope(
+          onWillPop: () async {
+            return await onWillPop(context);
+          },
+          child: SafeArea(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -152,7 +153,9 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
                           child: ElevatedButton(
                             style: AppStyles.introUpButton,
                             onPressed: () async {
-                              await _startPagination();
+                              context
+                                  .read<TestCubit>()
+                                  .startTestPagination(_currentSubjectId!);
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,

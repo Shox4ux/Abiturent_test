@@ -18,7 +18,7 @@ import '../../../core/helper/repos/user_repo.dart';
 import '../../../res/enum.dart';
 import '../../../res/navigation/main_navigation.dart';
 
-UserInfo? user;
+UserInfo? userData;
 final _repo = UserRepo();
 List<StatModel>? stats;
 
@@ -69,31 +69,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
               context, RouteNames.signin, (route) => false);
         }
       },
-      child: Scaffold(
-        body: WillPopScope(
-          onWillPop: () async {
-            setState(() {
-              isInSubs = false;
-            });
-            return false;
-          },
-          child: SafeArea(
-            child: Padding(
-              padding: EdgeInsets.all(20.w),
-              child: BlocBuilder<AuthCubit, AuthState>(
-                builder: (context, state) {
-                  if (state is OnAuthProgress) {
-                    return const Center(
-                      child: CircularProgressIndicator.adaptive(),
-                    );
-                  }
-                  if (state is UserActive) {
-                    final userData = state.userInfo;
-                    return RefreshIndicator(
-                      onRefresh: () async {
-                        await context.read<AuthCubit>().getUserData();
-                      },
-                      child: Column(
+      child: RefreshIndicator(
+        onRefresh: () async {
+          await context.read<AuthCubit>().getUserData();
+        },
+        child: Scaffold(
+          body: WillPopScope(
+            onWillPop: () async {
+              setState(() {
+                isInSubs = false;
+              });
+              return false;
+            },
+            child: SafeArea(
+              child: Padding(
+                padding: EdgeInsets.all(20.w),
+                child: BlocBuilder<AuthCubit, AuthState>(
+                  builder: (context, state) {
+                    if (state is OnAuthProgress) {
+                      return const Center(
+                        child: CircularProgressIndicator.adaptive(),
+                      );
+                    }
+                    if (state is UserActive) {
+                      userData = state.userInfo;
+                      return Column(
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -104,7 +104,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     context,
                                     MaterialPageRoute<void>(
                                       builder: (BuildContext context) =>
-                                          RefactorScreen(user: userData),
+                                          RefactorScreen(user: userData!),
                                     ),
                                   );
                                 },
@@ -116,7 +116,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     borderRadius: BorderRadius.circular(100.r),
                                   ),
                                   child: FadeInImage.assetNetwork(
-                                    image: userData.image!,
+                                    image: userData!.image!,
                                     fit: BoxFit.cover,
                                     imageErrorBuilder:
                                         (context, error, stackTrace) => Icon(
@@ -134,7 +134,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "ID #${userData.id}",
+                                      "ID #${userData!.id}",
                                       style:
                                           AppStyles.subtitleTextStyle.copyWith(
                                         fontSize: 14.sp,
@@ -142,7 +142,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       ),
                                     ),
                                     Text(
-                                      "${userData.fullname}",
+                                      "${userData!.fullname}",
                                       overflow: TextOverflow.visible,
                                       style: AppStyles.introButtonText.copyWith(
                                           fontSize: 24.sp,
@@ -222,8 +222,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           color: Colors.white, fontSize: 14.sp),
                                       children: [
                                         TextSpan(
-                                          text:
-                                              numberFormatter(userData.balance),
+                                          text: numberFormatter(
+                                              userData!.balance),
                                           style: AppStyles.introButtonText
                                               .copyWith(
                                                   color: Colors.white,
@@ -238,7 +238,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           Gap(20.h),
                           FutureBuilder(
-                            future: getStatistics(userData.id),
+                            future: getStatistics(userData!.id),
                             builder: (context, snapshot) {
                               if (!snapshot.hasData) {
                                 return const Center(
@@ -251,13 +251,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             },
                           )
                         ],
-                      ),
+                      );
+                    }
+                    return const Center(
+                      child: CircularProgressIndicator.adaptive(),
                     );
-                  }
-                  return const Center(
-                    child: CircularProgressIndicator.adaptive(),
-                  );
-                },
+                  },
+                ),
               ),
             ),
           ),
@@ -420,7 +420,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         context,
                         MaterialPageRoute<void>(
                           builder: (BuildContext context) =>
-                              RefactorScreen(user: user!),
+                              RefactorScreen(user: userData!),
                         ),
                       );
                     },

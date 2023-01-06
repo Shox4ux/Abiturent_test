@@ -27,14 +27,15 @@ class TestCubit extends Cubit<TestState> {
     }
 
     if (_isPaginationEnded) {
-      showToast("Testlar tugadi");
+      showToast("Testlarni bori shu");
       return;
     }
     if (_currentPage == 1) {
       await _getTestsFirstTime(subId);
-    } else {
-      await _startTestPagination(subId);
     }
+    //  else {
+    //   await _startTestPagination(subId);
+    // }
   }
 
   Future<void> _getTestsFirstTime(int subId) async {
@@ -51,14 +52,12 @@ class TestCubit extends Cubit<TestState> {
       _currentPage++;
     } on DioError catch (e) {
       emit(OnTestError(e.response!.data["message"]));
-    } on SocketException {
-      emit(const OnTestError("Tarmoqda nosozlik"));
     } catch (e) {
       emit(const OnTestError("Tizimda nosozlik"));
     }
   }
 
-  Future<void> _startTestPagination(int subId) async {
+  Future<void> startTestPagination(int subId) async {
     try {
       final response = await _repo.getTestPaginationByType(
           subId, _currentPage, _currentPage, _perPage);
@@ -67,23 +66,28 @@ class TestCubit extends Cubit<TestState> {
       _currentPage++;
     } on DioError catch (e) {
       emit(OnTestError(e.response!.data["message"]));
-    } on SocketException {
-      emit(const OnTestError("Tarmoqda nosozlik"));
     } catch (e) {
       emit(const OnTestError("Tizimda nosozlik"));
     }
   }
 
   Future<void> _combineTestNewList(List<Tests> extraTestList) async {
-    if (extraTestList.length < _perPage) {
-      _isPaginationEnded = true;
-    }
+    _checkIsLastData(extraTestList.length);
+
     if (state is OnTestSuccess) {
       final oldState = (state as OnTestSuccess);
       final newList = List.of(oldState.testList);
       newList.addAll(extraTestList);
       final newState = oldState.copyWith(newList);
       emit(newState);
+    }
+  }
+
+  void _checkIsLastData(int listLength) {
+    if (listLength < _perPage) {
+      _isPaginationEnded = true;
+      showToast("Boshqa testlar mavjud emas");
+      return;
     }
   }
 }

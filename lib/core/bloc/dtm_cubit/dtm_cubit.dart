@@ -23,16 +23,16 @@ class DtmCubit extends Cubit<DtmState> {
       _currentPage = 1;
     }
     if (_isPaginationEnded) {
-      showToast("Testlar tugadi");
       return;
     }
     if (_currentPage == 1) {
       await _getDtmTestsFirstTime(subId);
       _currentPage++;
-    } else {
-      await _startDtmPagination(subId);
-      _currentPage++;
     }
+    // else {
+    //   await _startDtmPagination(subId);
+    //   _currentPage++;
+    // }
   }
 
   Future<void> _getDtmTestsFirstTime(int subId) async {
@@ -50,14 +50,12 @@ class DtmCubit extends Cubit<DtmState> {
       emit(OnDtmTestReceived(allTestData.subjects!, allTestData.tests!));
     } on DioError catch (e) {
       emit(OnDtmTestError(e.response!.data["message"]));
-    } on SocketException {
-      emit(const OnDtmTestError("Tarmoqda nosozlik"));
     } catch (e) {
       emit(const OnDtmTestError("Tizimda nosozlik"));
     }
   }
 
-  Future<void> _startDtmPagination(int subId) async {
+  Future<void> startDtmPagination(int subId) async {
     try {
       final response = await _repo.getTestPaginationByType(
           subId, _testType, _currentPage, _perPage);
@@ -65,8 +63,6 @@ class DtmCubit extends Cubit<DtmState> {
       _combineDtmNewList(allTestData.tests!);
     } on DioError catch (e) {
       emit(OnDtmTestError(e.response!.data["message"]));
-    } on SocketException {
-      emit(const OnDtmTestError("Tarmoqda nosozlik"));
     } catch (e) {
       emit(const OnDtmTestError("Tizimda nosozlik"));
     }
@@ -88,7 +84,8 @@ class DtmCubit extends Cubit<DtmState> {
   void _checkIsLastData(int listLength) {
     if (listLength < _perPage) {
       _isPaginationEnded = true;
-      showToast("Testlar tugadi");
+      showToast("Boshqa testlar mavjud emas");
+      return;
     }
   }
 }

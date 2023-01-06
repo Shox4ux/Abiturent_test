@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
@@ -22,9 +21,7 @@ class AppBarCubit extends Cubit<AppBarState> {
       emit(OnAppBarRatingReceived(rowData));
     } on DioError catch (e) {
       emit(OnAppBarRatingError(
-          error: e.response!.data["message"] ?? "Tizimda nosozlik"));
-    } on SocketException {
-      emit(const OnAppBarRatingError(error: "Tarmoqda nosozlik"));
+          error: e.response?.data["message"] ?? "Tizimda nosozlik"));
     } catch (e) {
       emit(const OnAppBarRatingError(error: "Tarmoqda nosozlik"));
     }

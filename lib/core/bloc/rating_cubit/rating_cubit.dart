@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
@@ -22,9 +21,7 @@ class RatingCubit extends Cubit<RatingState> {
       }
       emit(OnRatingReceived(rowData));
     } on DioError catch (e) {
-      emit(OnRatingError(error: e.response!.data["message"]));
-    } on SocketException {
-      emit(const OnRatingError(error: "Tarmoqda nosozlik"));
+      emit(OnRatingError(error: e.response?.data["message"]));
     } catch (e) {
       emit(const OnRatingError(error: "Tizimda nosozlik"));
     }

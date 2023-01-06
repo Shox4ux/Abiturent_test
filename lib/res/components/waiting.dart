@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:test_app/res/constants.dart';
 import 'package:test_app/res/functions/number_formatter.dart';
+import '../../core/bloc/auth_cubit/auth_cubit.dart';
 import '../../core/bloc/subscription_cubit/subscription_cubit.dart';
 import 'custom_simple_appbar.dart';
 import '../navigation/main_navigation.dart';
@@ -32,25 +33,15 @@ class _WaitingScreenState extends State<WaitingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: checkStatus(
-          context,
-          widget.status,
-          widget.alertText,
-          widget.buttonText,
-          widget.extraText,
-        ),
+        child: checkStatus(context, widget.status, widget.alertText,
+            widget.buttonText, widget.extraText),
       ),
     );
   }
 }
 
-Widget checkStatus(
-  BuildContext context,
-  String status,
-  String alertText,
-  String buttonText,
-  String extraText,
-) {
+Widget checkStatus(BuildContext context, String status, String alertText,
+    String buttonText, String extraText) {
   if (status == WarningValues.subFirstDone) {
     return whenPreview(context);
   }
@@ -133,11 +124,12 @@ Widget whenPaymentDone(
         padding: EdgeInsets.only(bottom: 24.h),
         child: ElevatedButton(
           style: AppStyles.introUpButton,
-          onPressed: () {
+          onPressed: () async {
             Navigator.of(context).pushNamedAndRemoveUntil(
               RouteNames.main,
               (Route<dynamic> route) => false,
             );
+            await context.read<AuthCubit>().getUserData();
           },
           child: Text(
             "Bosh sahifa",

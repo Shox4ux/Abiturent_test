@@ -5,6 +5,7 @@ import 'package:gap/gap.dart';
 import 'package:test_app/res/components/custom_appbar.dart';
 import 'package:test_app/res/components/custom_dot.dart';
 import 'package:test_app/res/components/custom_drawer.dart';
+import '../../../core/bloc/auth_cubit/auth_cubit.dart';
 import '../../../core/bloc/drawer_cubit/drawer_cubit.dart';
 import '../../../core/bloc/mistakes_cubit/mistakes_cubit.dart';
 import '../../../core/domain/mistakes_model/mistakes_model.dart';
@@ -23,21 +24,19 @@ class _MistakesScreenState extends State<MistakesScreen> {
   var _currentSubjectId = 0;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: CustomDrawer(mainWidth: MediaQuery.of(context).size.width),
-      backgroundColor: AppColors.mainColor,
-      key: scaffKey,
-      body: WillPopScope(
-        onWillPop: () async {
-          return await onWillPop(context);
-        },
-        child: SafeArea(
-          child: RefreshIndicator(
-            onRefresh: () async {
-              await context
-                  .read<MistakesCubit>()
-                  .getErrorList(_currentSubjectId);
-            },
+    return RefreshIndicator(
+      onRefresh: () async {
+        await context.read<AuthCubit>().getUserData();
+      },
+      child: Scaffold(
+        drawer: CustomDrawer(mainWidth: MediaQuery.of(context).size.width),
+        backgroundColor: AppColors.mainColor,
+        key: scaffKey,
+        body: WillPopScope(
+          onWillPop: () async {
+            return await onWillPop(context);
+          },
+          child: SafeArea(
             child: Column(children: [
               CustomAppBar(scaffKey: scaffKey),
               BlocBuilder<DrawerCubit, DrawerState>(
@@ -121,38 +120,36 @@ class _MistakesScreenState extends State<MistakesScreen> {
   }
 
   Widget _onMistakes(List<Data> errorList, String subName) {
-    return Flexible(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Xatolar bilan ishlash",
-            style: AppStyles.introButtonText.copyWith(
-              color: Colors.black,
-            ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Xatolar bilan ishlash",
+          style: AppStyles.introButtonText.copyWith(
+            color: Colors.black,
           ),
-          Text(
-            "Xatolar bilan ishlash",
-            style: AppStyles.introButtonText.copyWith(
-              color: Colors.black,
-            ),
+        ),
+        Text(
+          subName,
+          style: AppStyles.introButtonText.copyWith(
+            color: Colors.black,
           ),
-          Gap(10.h),
-          Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.only(bottom: 20),
-              itemCount: errorList.length,
-              itemBuilder: (BuildContext context, int index) {
-                return testItem(
-                  errorList[index],
-                  errorList[index].answersDetail!,
-                  errorList[index].questionContent!,
-                );
-              },
-            ),
-          )
-        ],
-      ),
+        ),
+        Gap(10.h),
+        Expanded(
+          child: ListView.builder(
+            padding: const EdgeInsets.only(bottom: 20),
+            itemCount: errorList.length,
+            itemBuilder: (BuildContext context, int index) {
+              return testItem(
+                errorList[index],
+                errorList[index].answersDetail!,
+                errorList[index].questionContent!,
+              );
+            },
+          ),
+        )
+      ],
     );
   }
 

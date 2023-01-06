@@ -8,8 +8,8 @@ import 'package:test_app/res/constants.dart';
 import 'package:test_app/res/components/custom_appbar.dart';
 import 'package:test_app/res/components/custom_drawer.dart';
 import 'package:test_app/ui/bottom_navigation/training_tests/test_screens/test.dart';
+import '../../../core/bloc/auth_cubit/auth_cubit.dart';
 import '../../../core/bloc/drawer_cubit/drawer_cubit.dart';
-import '../../../core/bloc/test_cubit/test_cubit.dart';
 import '../../../core/domain/test_model/test_model.dart';
 import '../../../core/helper/repos/test_repo.dart';
 import '../../../res/functions/will_pop_function.dart';
@@ -65,21 +65,22 @@ class _DtmScreenState extends State<DtmScreen>
     }
     final GlobalKey<ScaffoldState> scaffKey = GlobalKey<ScaffoldState>();
     final screenWidth = MediaQuery.of(context).size.width;
-    return Scaffold(
-      key: scaffKey,
-      backgroundColor: AppColors.mainColor,
-      drawer: CustomDrawer(
-        mainWidth: screenWidth,
-      ),
-      body: WillPopScope(
-        onWillPop: () async {
-          return await onWillPop(context);
-        },
-        child: SafeArea(
-          child: RefreshIndicator(
-            onRefresh: () async {
-              await _startPagination();
-            },
+
+    return RefreshIndicator(
+      onRefresh: () async {
+        await context.read<AuthCubit>().getUserData();
+      },
+      child: Scaffold(
+        key: scaffKey,
+        backgroundColor: AppColors.mainColor,
+        drawer: CustomDrawer(
+          mainWidth: screenWidth,
+        ),
+        body: WillPopScope(
+          onWillPop: () async {
+            return await onWillPop(context);
+          },
+          child: SafeArea(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -131,76 +132,76 @@ class _DtmScreenState extends State<DtmScreen>
   }
 
   Widget _onDtmTest(Subjects subjectData, List<Tests> testList) {
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w),
-            child: Text(
-              "DTM testlar",
-              style: AppStyles.introButtonText.copyWith(
-                color: Colors.black,
-              ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
+          child: Text(
+            "DTM testlar",
+            style: AppStyles.introButtonText.copyWith(
+              color: Colors.black,
             ),
           ),
-          Gap(10.h),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w),
-            child: Text(
-              subjectData.name!,
-              style: AppStyles.introButtonText.copyWith(
-                color: Colors.black,
-              ),
+        ),
+        Gap(10.h),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
+          child: Text(
+            subjectData.name!,
+            style: AppStyles.introButtonText.copyWith(
+              color: Colors.black,
             ),
           ),
-          Gap(10.h),
-          (testList.isEmpty)
-              ? const Flexible(child: Center(child: Text("Testlar topilmadi")))
-              : Expanded(
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: GridView.builder(
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2),
-                            itemCount: testList.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return gridItem(testList[index], (index + 1));
-                            }),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20.w),
-                        child: ElevatedButton(
-                          style: AppStyles.introUpButton,
-                          onPressed: () async {
-                            await _startPagination();
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                AppIcons.down,
-                                scale: 3,
+        ),
+        Gap(10.h),
+        (testList.isEmpty)
+            ? const Flexible(child: Center(child: Text("Testlar topilmadi")))
+            : Expanded(
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: GridView.builder(
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2),
+                          itemCount: testList.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return gridItem(testList[index], (index + 1));
+                          }),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
+                      child: ElevatedButton(
+                        style: AppStyles.introUpButton,
+                        onPressed: () async {
+                          await context
+                              .read<DtmCubit>()
+                              .startDtmPagination(_currentSubjectId!);
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              AppIcons.down,
+                              scale: 3,
+                              color: Colors.white,
+                            ),
+                            Gap(10.w),
+                            Text(
+                              "Ko’proq testlar",
+                              style: AppStyles.introButtonText.copyWith(
                                 color: Colors.white,
                               ),
-                              Gap(10.w),
-                              Text(
-                                "Ko’proq testlar",
-                                style: AppStyles.introButtonText.copyWith(
-                                  color: Colors.white,
-                                ),
-                              )
-                            ],
-                          ),
+                            )
+                          ],
                         ),
-                      )
-                    ],
-                  ),
+                      ),
+                    )
+                  ],
                 ),
-        ],
-      ),
+              ),
+      ],
     );
   }
 
@@ -235,18 +236,18 @@ class _DtmScreenState extends State<DtmScreen>
                   padding: EdgeInsets.all(18.h),
                   decoration: BoxDecoration(
                     color: AppColors.mainColor,
-                    borderRadius: BorderRadius.circular(200.r),
+                    borderRadius: BorderRadius.circular(100.r),
                   ),
                   child: Image.asset(
                     AppIcons.star,
-                    scale: 3.h,
+                    scale: 3,
                   ),
                 ),
               ),
               CustomPaint(
                 foregroundPainter: CircleProgress(
                   tests.percent!.toDouble(),
-                  8.0,
+                  7.0,
                 ),
               ),
               Positioned(

@@ -27,8 +27,6 @@ class UserCubit extends Cubit<UserState> {
       emit(OnUserUpdated());
     } on DioError catch (e) {
       emit(OnError(error: e.response!.data["message"]));
-    } on SocketException {
-      emit(const OnError(error: "Tarmoqda nosozlik"));
     } catch (e) {
       emit(const OnError(error: "Tizimda nosozlik"));
     }

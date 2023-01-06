@@ -37,12 +37,11 @@ class _TestScreenState extends State<TestScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.mainColor,
       body: SafeArea(
         child: BlocBuilder<InnerTestCubit, InsideTestState>(
           builder: (context, state) {
             if (state is OnInnerTestError) {
-              return whenError(context, state.error, "Obunalar oynasiga o'tish",
+              return whenError(state.error, "Obunalar oynasiga o'tish",
                   WarningValues.obunaError);
             }
             if (state is OnTestInnerSuccess) {
@@ -66,8 +65,7 @@ class _TestScreenState extends State<TestScreen> {
     );
   }
 
-  Widget whenError(BuildContext context, String errorText, String buttonText,
-      String status) {
+  Widget whenError(String errorText, String buttonText, String status) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [

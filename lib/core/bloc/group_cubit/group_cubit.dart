@@ -71,7 +71,7 @@ class GroupCubit extends Cubit<GroupState> {
       final rowData = GroupModel.fromJson(response.data);
       emit(OnGroupAdded(rowData, u.id!));
     } on DioError catch (e) {
-      emit(OnError(e.response!.data["message"]));
+      emit(OnError(e.response?.data["message"] ?? "Tizimda nosozlik"));
     } on SocketException {
       emit(const OnError("Tarmoqda nosozlik"));
     } catch (e) {
@@ -90,9 +90,7 @@ class GroupCubit extends Cubit<GroupState> {
 
       emit(OnGroupsReceived(rowList));
     } on DioError catch (e) {
-      emit(OnError(e.response!.data["message"]));
-    } on SocketException {
-      emit(const OnError("Tarmoqda nosozlik"));
+      emit(OnError(e.response?.data["message"] ?? "Tizimda nosozlik"));
     } catch (e) {
       emit(const OnError("Tizimda nosozlik"));
     }
@@ -107,7 +105,7 @@ class GroupCubit extends Cubit<GroupState> {
 
       emit(OnGroupTapped(rowData, u.id!));
     } on DioError catch (e) {
-      emit(OnError(e.response!.data["message"]));
+      emit(OnError(e.response?.data["message"] ?? "Tizimda nosozlik"));
     } on SocketException {
       emit(const OnError("Tarmoqda nosozlik"));
     } catch (e) {

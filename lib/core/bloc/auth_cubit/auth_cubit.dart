@@ -37,8 +37,6 @@ class AuthCubit extends Cubit<AuthState> {
     } on DioError catch (e) {
       emit(
           AuthDenied(error: e.response?.data["message"] ?? "Tizimda nosozlik"));
-    } on SocketException {
-      emit(const AuthDenied(error: "Tarmoqda nosozlik"));
     } catch (e) {
       emit(const AuthDenied(error: "Tizimda nosozlik "));
       print(e);
@@ -74,8 +72,6 @@ class AuthCubit extends Cubit<AuthState> {
     } on DioError catch (e) {
       emit(
           AuthDenied(error: e.response?.data["message"] ?? "Tizimda nosozlik"));
-    } on SocketException {
-      emit(const AuthDenied(error: "Tarmoqda nosozlik"));
     } catch (e) {
       emit(const AuthDenied(error: "Tizimda nosozlik"));
     }
@@ -105,8 +101,6 @@ class AuthCubit extends Cubit<AuthState> {
       }
       emit(
           AuthDenied(error: e.response?.data["message"] ?? "Tizimda nosozlik"));
-    } on SocketException {
-      emit(const AuthDenied(error: "Tarmoqda nosozlik"));
     } catch (e) {
       emit(const AuthDenied(error: "Tizimda nosozlik"));
     }
@@ -124,25 +118,21 @@ class AuthCubit extends Cubit<AuthState> {
     } on DioError catch (e) {
       emit(
           AuthDenied(error: e.response?.data["message"] ?? "Tizimda nosozlik"));
-    } on SocketException {
-      emit(const AuthDenied(error: "Tarmoqda nosozlik"));
     } catch (e) {
       emit(const AuthDenied(error: "Tizimda nosozlik"));
     }
   }
 
   Future<void> checkResetPassword(
-      int userId, String phone, String smsCode) async {
-    var realNum = "998$phone";
+      int userId, String realPhone, String smsCode) async {
     emit(OnAuthProgress());
     try {
-      final response = await _repo.checkResetPassWord(userId, realNum, smsCode);
+      final response =
+          await _repo.checkResetPassWord(userId, realPhone, smsCode);
       print("sms data: ${response.data}");
       emit(AuthGranted());
     } on DioError catch (e) {
       emit(AuthDenied(error: e.response?.data["message"] ?? ""));
-    } on SocketException {
-      emit(const AuthDenied(error: "Tarmoqda nosozlik"));
     } catch (e) {
       emit(const AuthDenied(error: "Tizimda nosozlik"));
     }
@@ -161,8 +151,6 @@ class AuthCubit extends Cubit<AuthState> {
       }
     } on DioError catch (e) {
       emit(AuthDenied(error: e.response?.data["message"] ?? ""));
-    } on SocketException {
-      emit(const AuthDenied(error: "Tarmoqda nosozlik"));
     } catch (e) {
       emit(const AuthDenied(error: "Tizimda nosozlik"));
     }
@@ -180,8 +168,6 @@ class AuthCubit extends Cubit<AuthState> {
       emit(AuthDenied(
           error: e.response?.data["message"] ??
               "Tizimda nosozlik, qaytattan urinib ko'ring"));
-    } on SocketException {
-      emit(const AuthDenied(error: "Tarmoqda nosozlik"));
     } catch (e) {
       emit(const AuthDenied(error: "Tizimda nosozlik"));
     }
@@ -199,8 +185,6 @@ class AuthCubit extends Cubit<AuthState> {
       emit(AuthGranted());
     } on DioError catch (e) {
       emit(AuthDenied(error: e.response?.data["message"] ?? ""));
-    } on SocketException {
-      emit(const AuthDenied(error: "Tarmoqda nosozlik"));
     } catch (e) {
       emit(const AuthDenied(error: "Tizimda nosozlik"));
     }
