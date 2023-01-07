@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
@@ -9,10 +7,7 @@ import 'package:test_app/res/components/custom_simple_appbar.dart';
 import 'package:url_launcher/link.dart';
 
 class InsideNewsScreen extends StatefulWidget {
-  const InsideNewsScreen({
-    Key? key,
-    required this.model,
-  }) : super(key: key);
+  const InsideNewsScreen({Key? key, required this.model}) : super(key: key);
   final MainNewsModel model;
   @override
   State<InsideNewsScreen> createState() => _InsideNewsScreenState();
@@ -23,10 +18,12 @@ class _InsideNewsScreenState extends State<InsideNewsScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
+      backgroundColor: Colors.red,
       body: SizedBox(
-        height: double.maxFinite,
-        width: double.maxFinite,
+        height: size.height,
+        width: size.width,
         child: Stack(
+          fit: StackFit.loose,
           children: [
             SizedBox(
               height: 320.h,
@@ -40,7 +37,8 @@ class _InsideNewsScreenState extends State<InsideNewsScreen> {
               ),
             ),
             Positioned(
-              top: 170,
+              width: size.width,
+              top: 210.h,
               child: CustomSimpleAppBar(
                 isIcon: false,
                 isSimple: true,
@@ -53,16 +51,12 @@ class _InsideNewsScreenState extends State<InsideNewsScreen> {
               ),
             ),
             Positioned(
-              top: 240,
+              top: 260.h,
               child: Container(
                 padding: EdgeInsets.only(
-                  left: 20.w,
-                  right: 20.w,
-                  top: 17.h,
-                  bottom: 7.h,
-                ),
-                height: 93.h,
+                    left: 20.w, right: 20.w, top: 17.h, bottom: 7.h),
                 width: size.width,
+                height: size.height - 260.h,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
@@ -81,12 +75,8 @@ class _InsideNewsScreenState extends State<InsideNewsScreen> {
                             color: const Color(0xffEEE5FF),
                             borderRadius: BorderRadius.circular(16.r),
                           ),
-                          child: Image.asset(
-                            AppIcons.bell,
-                            height: 20,
-                            width: 20,
-                            scale: 3,
-                          ),
+                          child: Image.asset(AppIcons.bell,
+                              height: 20, width: 20, scale: 3),
                         ),
                         Gap(9.w),
                         Expanded(
@@ -112,69 +102,67 @@ class _InsideNewsScreenState extends State<InsideNewsScreen> {
                           ),
                         )
                       ],
-                    )
+                    ),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        vertical: 13.h,
+                        horizontal: 23.w,
+                      ),
+                      height: 388.h,
+                      width: size.width,
+                      child: Column(
+                        children: [
+                          (widget.model.video != null)
+                              ? Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset(
+                                      AppIcons.y,
+                                      scale: 3,
+                                    ),
+                                    Gap(10.w),
+                                    Link(
+                                      uri: Uri.parse(widget.model.video!),
+                                      builder: ((context, followLink) =>
+                                          InkWell(
+                                            onTap: followLink,
+                                            child: Text(
+                                              "Video file",
+                                              style: AppStyles.subtitleTextStyle
+                                                  .copyWith(
+                                                color: AppColors.mainColor,
+                                              ),
+                                            ),
+                                          )),
+                                    )
+                                  ],
+                                )
+                              : const SizedBox.shrink(),
+                          Gap(10.h),
+                          Text(
+                            widget.model.short ?? "",
+                            style: AppStyles.introButtonText.copyWith(
+                              fontWeight: FontWeight.w300,
+                              fontSize: 11.sp,
+                            ),
+                          ),
+                          Gap(10.h),
+                          Expanded(
+                            child: Text(
+                              widget.model.content ?? "",
+                              style: AppStyles.introButtonText.copyWith(
+                                  fontWeight: FontWeight.w300,
+                                  fontSize: 11.sp,
+                                  overflow: TextOverflow.visible),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
             ),
-            Positioned(
-              top: 320,
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                  vertical: 13.h,
-                  horizontal: 23.w,
-                ),
-                height: 388.h,
-                width: size.width,
-                child: Column(
-                  children: [
-                    (widget.model.video != null)
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                AppIcons.y,
-                                scale: 3,
-                              ),
-                              Gap(10.w),
-                              Link(
-                                uri: Uri.parse(widget.model.video!),
-                                builder: ((context, followLink) => InkWell(
-                                      onTap: followLink,
-                                      child: Text(
-                                        "Video file",
-                                        style: AppStyles.subtitleTextStyle
-                                            .copyWith(
-                                          color: AppColors.mainColor,
-                                        ),
-                                      ),
-                                    )),
-                              )
-                            ],
-                          )
-                        : const SizedBox.shrink(),
-                    Gap(10.h),
-                    Text(
-                      widget.model.short ?? "",
-                      style: AppStyles.introButtonText.copyWith(
-                        fontWeight: FontWeight.w300,
-                        fontSize: 11.sp,
-                      ),
-                    ),
-                    Gap(10.h),
-                    Expanded(
-                      child: Text(
-                        widget.model.content ?? "",
-                        style: AppStyles.introButtonText.copyWith(
-                            fontWeight: FontWeight.w300,
-                            fontSize: 11.sp,
-                            overflow: TextOverflow.visible),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            )
           ],
         ),
       ),

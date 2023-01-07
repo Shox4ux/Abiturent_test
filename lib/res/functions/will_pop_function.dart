@@ -9,6 +9,7 @@ Future<bool> onWillPop(BuildContext context) {
     currentBackPressTime = now;
     showToast("Darturdan chiqich uchun tugmani ikki marta bosing");
     return Future.value(false);
+  } else {
+    return Future.value(true);
   }
-  return Future.value(true);
 }

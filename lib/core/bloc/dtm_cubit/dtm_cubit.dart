@@ -13,6 +13,7 @@ class DtmCubit extends Cubit<DtmState> {
   final _repo = TestRepo();
   final _perPage = 10;
   var _currentPage = 1;
+  var _testLimit = 0;
   bool _isPaginationEnded = false;
   final _testType = ApiValues.dtmTestType;
   var _currentSubjectId = 0;
@@ -29,10 +30,6 @@ class DtmCubit extends Cubit<DtmState> {
       await _getDtmTestsFirstTime(subId);
       _currentPage++;
     }
-    // else {
-    //   await _startDtmPagination(subId);
-    //   _currentPage++;
-    // }
   }
 
   Future<void> _getDtmTestsFirstTime(int subId) async {
@@ -42,12 +39,9 @@ class DtmCubit extends Cubit<DtmState> {
       final response = await _repo.getTestPaginationByType(
           subId, _testType, _currentPage, _perPage);
       final allTestData = TestModel.fromJson(response.data);
+      _testLimit = allTestData.subjects!.testLimit!;
 
-      if (allTestData.tests!.length < _perPage) {
-        _isPaginationEnded = true;
-      }
-
-      emit(OnDtmTestReceived(allTestData.subjects!, allTestData.tests!));
+      emit(OnDtmTestReceived(allTestData.subjects!, allTestData.tests!, false));
     } on DioError catch (e) {
       emit(OnDtmTestError(e.response!.data["message"]));
     } catch (e) {
@@ -56,6 +50,10 @@ class DtmCubit extends Cubit<DtmState> {
   }
 
   Future<void> startDtmPagination(int subId) async {
+    if (_isPaginationEnded) {
+      showToast("Boshqa testlar mavjud emas");
+      return;
+    }
     try {
       final response = await _repo.getTestPaginationByType(
           subId, _testType, _currentPage, _perPage);
@@ -72,8 +70,15 @@ class DtmCubit extends Cubit<DtmState> {
     _checkIsLastData(extraTestList.length);
 
     if (state is OnDtmTestReceived) {
-      print("state is $state");
       final oldState = (state as OnDtmTestReceived);
+      if (oldState.testList.length == _testLimit) {
+        _isPaginationEnded = true;
+        showToast("Boshqa testlar mavjud emas");
+        final newState = oldState.changeBool(true);
+        emit(newState);
+        return;
+      }
+
       final newList = List.of(oldState.testList);
       newList.addAll(extraTestList);
       final newState = oldState.copyWith(newList);

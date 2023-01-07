@@ -26,6 +26,19 @@ class _RatingScreenState extends State<RatingScreen> {
     final GlobalKey<ScaffoldState> scaffKey = GlobalKey<ScaffoldState>();
     final screenWidth = MediaQuery.of(context).size.width;
 
+    DateTime? currentBackPressTime;
+    Future<bool> onWillPop() {
+      DateTime now = DateTime.now();
+      if (currentBackPressTime == null ||
+          now.difference(currentBackPressTime!) > const Duration(seconds: 1)) {
+        currentBackPressTime = now;
+        showToast("Darturdan chiqich uchun tugmani ikki marta bosing");
+        return Future.value(false);
+      } else {
+        return Future.value(true);
+      }
+    }
+
     return RefreshIndicator(
       onRefresh: () async {
         await context.read<AuthCubit>().getUserData();
@@ -36,7 +49,7 @@ class _RatingScreenState extends State<RatingScreen> {
         drawer: CustomDrawer(mainWidth: screenWidth),
         body: WillPopScope(
           onWillPop: () async {
-            return await onWillPop(context);
+            return await onWillPop();
           },
           child: SafeArea(
             child: Column(children: [

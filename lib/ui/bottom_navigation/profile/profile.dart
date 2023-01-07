@@ -16,6 +16,7 @@ import '../../../core/bloc/group_cubit/group_cubit.dart';
 import '../../../core/bloc/payment_cubit/payment_cubit.dart';
 import '../../../core/helper/repos/user_repo.dart';
 import '../../../res/enum.dart';
+import '../../../res/functions/show_toast.dart';
 import '../../../res/navigation/main_navigation.dart';
 
 UserInfo? userData;
@@ -116,7 +117,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     borderRadius: BorderRadius.circular(100.r),
                                   ),
                                   child: FadeInImage.assetNetwork(
-                                    image: userData!.image!,
+                                    image: userData!.image ?? "",
                                     fit: BoxFit.cover,
                                     imageErrorBuilder:
                                         (context, error, stackTrace) => Icon(
@@ -617,6 +618,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
       height: 2.h,
       width: double.maxFinite,
     );
+  }
+
+  Future<bool> onWillPop() {
+    DateTime now = DateTime.now();
+    DateTime? currentBackPressTime;
+    if (currentBackPressTime == null ||
+        now.difference(currentBackPressTime) > const Duration(seconds: 1)) {
+      currentBackPressTime = now;
+      showToast("Darturdan chiqich uchun tugmani ikki marta bosing");
+      return Future.value(false);
+    } else {
+      return Future.value(true);
+    }
   }
 }
 

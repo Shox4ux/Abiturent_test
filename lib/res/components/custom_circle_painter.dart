@@ -6,8 +6,9 @@ import 'package:test_app/res/constants.dart';
 class CircleProgress extends CustomPainter {
   final double value;
   final double stokeWidth;
+  final double radius;
 
-  CircleProgress(this.value, this.stokeWidth);
+  CircleProgress(this.value, this.stokeWidth, this.radius);
   @override
   void paint(Canvas canvas, Size size) {
     Paint circle = Paint()
@@ -16,7 +17,6 @@ class CircleProgress extends CustomPainter {
       ..style = PaintingStyle.stroke;
 
     Offset center = const Offset(124 / 2, 121 / 2);
-    double radius = 54;
     canvas.drawCircle(center, radius, circle);
 
     Paint animationArc = Paint()

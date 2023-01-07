@@ -1,4 +1,5 @@
-import 'dart:io';
+import 'dart:isolate';
+
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
@@ -14,10 +15,10 @@ class TestCubit extends Cubit<TestState> {
   TestCubit() : super(TestInitial());
   final _repo = TestRepo();
   final _perPage = 10;
+  var _testLimit = 0;
   var _currentPage = 1;
   bool _isPaginationEnded = false;
   final _testType = ApiValues.ordinaryTestType;
-
   int _currentSubjectId = 0;
 
   Future<void> getTestBySubIdWithPagination(int subId) async {
@@ -33,9 +34,31 @@ class TestCubit extends Cubit<TestState> {
     if (_currentPage == 1) {
       await _getTestsFirstTime(subId);
     }
-    //  else {
-    //   await _startTestPagination(subId);
-    // }
+  }
+
+  Future<void> onRefresh(int subId) async {
+    _currentPage = 1;
+    emit(OnTestProgress());
+    _currentSubjectId = subId;
+    try {
+      final response = await _repo.getTestPaginationByType(
+          subId, _testType, _currentPage, _perPage);
+
+      final allTestData = TestModel.fromJson(response.data);
+      _testLimit = allTestData.subjects!.testLimit!;
+      emit(
+        OnTestSuccess(
+          false,
+          subjectData: allTestData.subjects!,
+          testList: allTestData.tests!,
+        ),
+      );
+      _currentPage++;
+    } on DioError catch (e) {
+      emit(OnTestError(e.response!.data["message"]));
+    } catch (e) {
+      emit(const OnTestError("Tizimda nosozlik"));
+    }
   }
 
   Future<void> _getTestsFirstTime(int subId) async {
@@ -44,11 +67,16 @@ class TestCubit extends Cubit<TestState> {
     try {
       final response = await _repo.getTestPaginationByType(
           subId, _testType, _currentPage, _perPage);
+
       final allTestData = TestModel.fromJson(response.data);
-      emit(OnTestSuccess(
-        subjectData: allTestData.subjects!,
-        testList: allTestData.tests!,
-      ));
+      _testLimit = allTestData.subjects!.testLimit!;
+      emit(
+        OnTestSuccess(
+          false,
+          subjectData: allTestData.subjects!,
+          testList: allTestData.tests!,
+        ),
+      );
       _currentPage++;
     } on DioError catch (e) {
       emit(OnTestError(e.response!.data["message"]));
@@ -58,12 +86,15 @@ class TestCubit extends Cubit<TestState> {
   }
 
   Future<void> startTestPagination(int subId) async {
+    if (_isPaginationEnded) {
+      showToast("Boshqa testlar mavjud emas");
+      return;
+    }
     try {
       final response = await _repo.getTestPaginationByType(
-          subId, _currentPage, _currentPage, _perPage);
+          subId, _testType, _currentPage, _perPage);
       final allTestData = TestModel.fromJson(response.data);
-      _combineTestNewList(allTestData.tests!);
-      _currentPage++;
+      await _combineTestNewList(allTestData.tests!);
     } on DioError catch (e) {
       emit(OnTestError(e.response!.data["message"]));
     } catch (e) {
@@ -72,22 +103,22 @@ class TestCubit extends Cubit<TestState> {
   }
 
   Future<void> _combineTestNewList(List<Tests> extraTestList) async {
-    _checkIsLastData(extraTestList.length);
-
     if (state is OnTestSuccess) {
       final oldState = (state as OnTestSuccess);
+
+      if (oldState.testList.length == _testLimit) {
+        _isPaginationEnded = true;
+        showToast("Boshqa testlar mavjud emas");
+        final newState = oldState.changeBool(true);
+        emit(newState);
+        return;
+      }
+
       final newList = List.of(oldState.testList);
       newList.addAll(extraTestList);
       final newState = oldState.copyWith(newList);
       emit(newState);
-    }
-  }
-
-  void _checkIsLastData(int listLength) {
-    if (listLength < _perPage) {
-      _isPaginationEnded = true;
-      showToast("Boshqa testlar mavjud emas");
-      return;
+      _currentPage++;
     }
   }
 }

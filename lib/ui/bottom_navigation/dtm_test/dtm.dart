@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:test_app/core/bloc/dtm_cubit/dtm_cubit.dart';
 import 'package:test_app/core/bloc/inner_test_cubit/inside_test_cubit.dart';
 import 'package:test_app/res/constants.dart';
@@ -12,8 +13,9 @@ import '../../../core/bloc/auth_cubit/auth_cubit.dart';
 import '../../../core/bloc/drawer_cubit/drawer_cubit.dart';
 import '../../../core/domain/test_model/test_model.dart';
 import '../../../core/helper/repos/test_repo.dart';
+import '../../../res/functions/show_toast.dart';
 import '../../../res/functions/will_pop_function.dart';
-import '../../../res/painter.dart';
+import '../../../res/components/custom_circle_painter.dart';
 
 int? _currentSubjectId;
 
@@ -31,6 +33,7 @@ class _DtmScreenState extends State<DtmScreen>
   Animation<double>? animation;
   final maxProgress = 80.0;
   final dtmTestType = 0;
+  bool isTestEnd = false;
 
   @override
   void initState() {
@@ -58,6 +61,19 @@ class _DtmScreenState extends State<DtmScreen>
         .getDtmTestBySubIdWithPagination(_currentSubjectId!);
   }
 
+  DateTime? currentBackPressTime;
+  Future<bool> onWillPop() {
+    DateTime now = DateTime.now();
+    if (currentBackPressTime == null ||
+        now.difference(currentBackPressTime!) > const Duration(seconds: 1)) {
+      currentBackPressTime = now;
+      showToast("Darturdan chiqich uchun tugmani ikki marta bosing");
+      return Future.value(false);
+    } else {
+      return Future.value(true);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_animationController != null) {
@@ -68,7 +84,7 @@ class _DtmScreenState extends State<DtmScreen>
 
     return RefreshIndicator(
       onRefresh: () async {
-        await context.read<AuthCubit>().getUserData();
+        setState(() {});
       },
       child: Scaffold(
         key: scaffKey,
@@ -78,7 +94,7 @@ class _DtmScreenState extends State<DtmScreen>
         ),
         body: WillPopScope(
           onWillPop: () async {
-            return await onWillPop(context);
+            return await onWillPop();
           },
           child: SafeArea(
             child: Column(
@@ -106,6 +122,7 @@ class _DtmScreenState extends State<DtmScreen>
                           if (state is OnDtmTestReceived) {
                             final subjectData = state.subjectData;
                             final testList = state.testList;
+                            isTestEnd = state.isTestEnded;
                             return _onDtmTest(subjectData, testList);
                           }
                           if (state is OnDtmTestProgress) {
@@ -170,34 +187,36 @@ class _DtmScreenState extends State<DtmScreen>
                             return gridItem(testList[index], (index + 1));
                           }),
                     ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20.w),
-                      child: ElevatedButton(
-                        style: AppStyles.introUpButton,
-                        onPressed: () async {
-                          await context
-                              .read<DtmCubit>()
-                              .startDtmPagination(_currentSubjectId!);
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset(
-                              AppIcons.down,
-                              scale: 3,
-                              color: Colors.white,
-                            ),
-                            Gap(10.w),
-                            Text(
-                              "Ko’proq testlar",
-                              style: AppStyles.introButtonText.copyWith(
-                                color: Colors.white,
+                    isTestEnd
+                        ? const Text("Boshqa testlar mavjud emas")
+                        : Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 20.w),
+                            child: ElevatedButton(
+                              style: AppStyles.introUpButton,
+                              onPressed: () async {
+                                await context
+                                    .read<DtmCubit>()
+                                    .startDtmPagination(_currentSubjectId!);
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image.asset(
+                                    AppIcons.down,
+                                    scale: 3,
+                                    color: Colors.white,
+                                  ),
+                                  Gap(10.w),
+                                  Text(
+                                    "Ko’proq testlar",
+                                    style: AppStyles.introButtonText.copyWith(
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                ],
                               ),
-                            )
-                          ],
-                        ),
-                      ),
-                    )
+                            ),
+                          ),
                   ],
                 ),
               ),
@@ -224,32 +243,42 @@ class _DtmScreenState extends State<DtmScreen>
         children: [
           Stack(
             children: [
-              Container(
-                width: 130.w,
-                height: 130.h,
-                padding: EdgeInsets.all(10.h),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(120.r),
-                ),
-                child: Container(
-                  padding: EdgeInsets.all(18.h),
+              CircularPercentIndicator(
+                center: Container(
+                  width: 125.w,
+                  height: 125.h,
                   decoration: BoxDecoration(
-                    color: AppColors.mainColor,
-                    borderRadius: BorderRadius.circular(100.r),
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(120.r),
                   ),
-                  child: Image.asset(
-                    AppIcons.star,
-                    scale: 3,
+                  child: Container(
+                    padding: EdgeInsets.all(18.h),
+                    decoration: BoxDecoration(
+                      color: AppColors.mainColor,
+                      borderRadius: BorderRadius.circular(100.r),
+                    ),
+                    child: Image.asset(
+                      AppIcons.star,
+                      scale: 3,
+                    ),
                   ),
                 ),
+                radius: 70.r,
+                animation: true,
+                animationDuration: 1200,
+                lineWidth: 8,
+                percent: (tests.percent! / 100).toDouble(),
+                circularStrokeCap: CircularStrokeCap.round,
+                backgroundColor: AppColors.backgroundColor,
+                progressColor: Colors.green,
               ),
-              CustomPaint(
-                foregroundPainter: CircleProgress(
-                  tests.percent!.toDouble(),
-                  7.0,
-                ),
-              ),
+              // CustomPaint(
+              //   foregroundPainter: CircleProgress(
+              //     tests.percent!.toDouble(),
+              //     7.0,
+              //     54.r,
+              //   ),
+              // ),
               Positioned(
                 top: 90.h,
                 right: 0.w,

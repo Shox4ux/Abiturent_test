@@ -66,7 +66,7 @@ class _MainScreenState extends State<MainScreen> {
               }
             },
             child: Text(
-              "Qaytattan",
+              "Qaytadan",
               style: AppStyles.mainTextStyle.copyWith(
                 fontSize: 16.sp,
               ),

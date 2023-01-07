@@ -46,16 +46,27 @@ class OnTestCompleted extends TestState {
 class OnTestSuccess extends TestState {
   final Subjects subjectData;
   final List<Tests> testList;
+  var isTestEnded = false;
 
-  const OnTestSuccess({
+  OnTestSuccess(
+    this.isTestEnded, {
     required this.subjectData,
     required this.testList,
   });
 
   OnTestSuccess copyWith(List<Tests>? newTestList) {
     return OnTestSuccess(
+      isTestEnded,
       subjectData: subjectData,
       testList: newTestList!,
+    );
+  }
+
+  OnTestSuccess changeBool(bool isTestEnd) {
+    return OnTestSuccess(
+      isTestEnd,
+      subjectData: subjectData,
+      testList: testList,
     );
   }
 

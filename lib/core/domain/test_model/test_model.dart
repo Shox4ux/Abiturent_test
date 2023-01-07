@@ -30,10 +30,11 @@ class TestModel {
 class Subjects {
   int? id;
   String? name;
-  Null? image;
+  String? image;
   int? price;
   int? updated;
   String? updatedDate;
+  int? testLimit;
 
   Subjects(
       {this.id,
@@ -41,7 +42,8 @@ class Subjects {
       this.image,
       this.price,
       this.updated,
-      this.updatedDate});
+      this.updatedDate,
+      this.testLimit});
 
   Subjects.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -50,6 +52,7 @@ class Subjects {
     price = json['price'];
     updated = json['updated'];
     updatedDate = json['updated_date'];
+    testLimit = json['test_limit'];
   }
 
   Map<String, dynamic> toJson() {
@@ -60,6 +63,7 @@ class Subjects {
     data['price'] = price;
     data['updated'] = updated;
     data['updated_date'] = updatedDate;
+    data['test_limit'] = testLimit;
     return data;
   }
 }

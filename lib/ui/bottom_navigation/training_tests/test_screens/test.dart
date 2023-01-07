@@ -37,6 +37,7 @@ class _TestScreenState extends State<TestScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.mainColor,
       body: SafeArea(
         child: BlocBuilder<InnerTestCubit, InsideTestState>(
           builder: (context, state) {
@@ -66,78 +67,81 @@ class _TestScreenState extends State<TestScreen> {
   }
 
   Widget whenError(String errorText, String buttonText, String status) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            CustomSimpleAppBar(
-              isIcon: false,
-              titleText: "Orqaga qaytish",
-              style: AppStyles.introButtonText.copyWith(color: Colors.black),
-              iconColor: Colors.black,
-              isSimple: true,
-              routeText: RouteNames.main,
-            ),
-            Gap(76.h),
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 32.w),
-              width: 180.w,
-              height: 180.h,
-              child: Image.asset(
-                AppIcons.errorImg,
+    return ColoredBox(
+      color: Colors.white,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              CustomSimpleAppBar(
+                isIcon: false,
+                titleText: "Orqaga qaytish",
+                style: AppStyles.introButtonText.copyWith(color: Colors.black),
+                iconColor: Colors.black,
+                isSimple: true,
+                routeText: RouteNames.main,
               ),
-            ),
-            Gap(18.h),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w),
-              child: Text(
-                errorText,
-                textAlign: TextAlign.center,
-                style: AppStyles.smsVerBigTextStyle.copyWith(
-                  fontSize: 24.sp,
-                  fontWeight: FontWeight.w600,
+              Gap(76.h),
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 32.w),
+                width: 180.w,
+                height: 180.h,
+                child: Image.asset(
+                  AppIcons.errorImg,
                 ),
               ),
-            ),
-          ],
-        ),
-        Padding(
-          padding: EdgeInsets.only(bottom: 24.h),
-          child: ElevatedButton(
-            style: AppStyles.introUpButton,
-            onPressed: () {
-              if (status == WarningValues.hisobError) {
-                Navigator.of(context).pushNamed(
-                  RouteNames.payme,
+              Gap(18.h),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                child: Text(
+                  errorText,
+                  textAlign: TextAlign.center,
+                  style: AppStyles.smsVerBigTextStyle.copyWith(
+                    fontSize: 24.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Padding(
+            padding: EdgeInsets.only(bottom: 24.h),
+            child: ElevatedButton(
+              style: AppStyles.introUpButton,
+              onPressed: () {
+                if (status == WarningValues.hisobError) {
+                  Navigator.of(context).pushNamed(
+                    RouteNames.payme,
+                  );
+                  return;
+                }
+                if (status == WarningValues.obunaError) {
+                  context.read<SubscriptionCubit>().getScripts();
+                  Navigator.of(context).pushNamed(
+                    RouteNames.subscripts,
+                  );
+                  return;
+                }
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  RouteNames.signin,
+                  (Route<dynamic> route) => false,
                 );
-                return;
-              }
-              if (status == WarningValues.obunaError) {
-                context.read<SubscriptionCubit>().getScripts();
-                Navigator.of(context).pushNamed(
-                  RouteNames.subscripts,
-                );
-                return;
-              }
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                RouteNames.signin,
-                (Route<dynamic> route) => false,
-              );
-            },
-            child: Text(
-              buttonText,
-              style: AppStyles.introButtonText
-                  .copyWith(color: const Color(0xffFCFCFC)),
+              },
+              child: Text(
+                buttonText,
+                style: AppStyles.introButtonText
+                    .copyWith(color: const Color(0xffFCFCFC)),
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
-  Column onTestEnd() {
+  Widget onTestEnd() {
     return Column(
       children: [
         CustomSimpleAppBar(
@@ -245,7 +249,7 @@ class _TestScreenState extends State<TestScreen> {
     );
   }
 
-  Column onInnerTest(OnTestInnerSuccess state, BuildContext context) {
+  Widget onInnerTest(OnTestInnerSuccess state, BuildContext context) {
     return Column(
       children: [
         CustomSimpleAppBar(

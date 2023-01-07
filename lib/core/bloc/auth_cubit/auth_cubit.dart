@@ -31,7 +31,9 @@ class AuthCubit extends Cubit<AuthState> {
       final rowData = await _urepo.getUserProfile(userOldData.id!);
       final userData = UserInfo.fromJson(rowData.data);
 
-      if (userData.status == userBlocked) {}
+      if (userData.status == userBlocked) {
+        print("blocked");
+      }
 
       emit(UserActive(userInfo: userData));
     } on DioError catch (e) {

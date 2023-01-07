@@ -14,12 +14,17 @@ class OnDtmTestProgress extends DtmState {}
 class OnDtmTestReceived extends DtmState {
   final Subjects subjectData;
   final List<Tests> testList;
-  const OnDtmTestReceived(this.subjectData, this.testList);
+  final bool isTestEnded = false;
+  const OnDtmTestReceived(this.subjectData, this.testList, bool isTestEnded);
   @override
   List<Object> get props => [subjectData, testList];
 
   OnDtmTestReceived copyWith(List<Tests> newTestList) {
-    return OnDtmTestReceived(subjectData, newTestList);
+    return OnDtmTestReceived(subjectData, newTestList, isTestEnded);
+  }
+
+  OnDtmTestReceived changeBool(bool isTestEnd) {
+    return OnDtmTestReceived(subjectData, testList, isTestEnd);
   }
 }
 

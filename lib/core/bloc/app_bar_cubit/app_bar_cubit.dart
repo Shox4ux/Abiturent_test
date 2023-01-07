@@ -23,6 +23,7 @@ class AppBarCubit extends Cubit<AppBarState> {
       emit(OnAppBarRatingError(
           error: e.response?.data["message"] ?? "Tizimda nosozlik"));
     } catch (e) {
+      print(e);
       emit(const OnAppBarRatingError(error: "Tarmoqda nosozlik"));
     }
   }

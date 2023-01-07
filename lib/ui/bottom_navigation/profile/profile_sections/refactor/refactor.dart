@@ -107,7 +107,7 @@ class _RefactorScreenState extends State<RefactorScreen> {
                                           BorderRadius.circular(100.r),
                                     ),
                                     child: Image.network(
-                                      userData!.image!,
+                                      userData!.image ?? "",
                                       fit: BoxFit.fill,
                                       errorBuilder:
                                           (context, error, stackTrace) {

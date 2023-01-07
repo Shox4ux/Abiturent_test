@@ -10,6 +10,7 @@ import '../../../core/bloc/drawer_cubit/drawer_cubit.dart';
 import '../../../core/bloc/mistakes_cubit/mistakes_cubit.dart';
 import '../../../core/domain/mistakes_model/mistakes_model.dart';
 import '../../../res/constants.dart';
+import '../../../res/functions/show_toast.dart';
 import '../../../res/functions/will_pop_function.dart';
 
 class MistakesScreen extends StatefulWidget {
@@ -22,6 +23,20 @@ class MistakesScreen extends StatefulWidget {
 class _MistakesScreenState extends State<MistakesScreen> {
   final GlobalKey<ScaffoldState> scaffKey = GlobalKey<ScaffoldState>();
   var _currentSubjectId = 0;
+
+  DateTime? currentBackPressTime;
+  Future<bool> onWillPop() {
+    DateTime now = DateTime.now();
+    if (currentBackPressTime == null ||
+        now.difference(currentBackPressTime!) > const Duration(seconds: 1)) {
+      currentBackPressTime = now;
+      showToast("Darturdan chiqich uchun tugmani ikki marta bosing");
+      return Future.value(false);
+    } else {
+      return Future.value(true);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
@@ -34,7 +49,7 @@ class _MistakesScreenState extends State<MistakesScreen> {
         key: scaffKey,
         body: WillPopScope(
           onWillPop: () async {
-            return await onWillPop(context);
+            return await onWillPop();
           },
           child: SafeArea(
             child: Column(children: [
