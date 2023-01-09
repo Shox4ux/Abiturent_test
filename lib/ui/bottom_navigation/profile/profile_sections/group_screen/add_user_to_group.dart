@@ -479,6 +479,17 @@ Future<dynamic> alertDialog(
                 TextButton(
                   onPressed: () {
                     Navigator.pop(context);
+                  },
+                  child: const Text(
+                    "Yo'q",
+                    style: TextStyle(
+                      color: AppColors.mainColor,
+                    ),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
                     context.read<GroupCubit>().deleteMember(
                           userId,
                           data.id!,
@@ -491,17 +502,6 @@ Future<dynamic> alertDialog(
                     ),
                   ),
                 ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text(
-                    "Yo'q",
-                    style: TextStyle(
-                      color: AppColors.mainColor,
-                    ),
-                  ),
-                )
               ],
             )
           ],

@@ -89,6 +89,17 @@ class CustomCard extends StatelessWidget {
                   TextButton(
                     onPressed: () {
                       Navigator.pop(context);
+                    },
+                    child: const Text(
+                      "Yo'q",
+                      style: TextStyle(
+                        color: AppColors.mainColor,
+                      ),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
                       context.read<PaymentCubit>().deleteCard(
                             cardModel.id!,
                           );
@@ -101,17 +112,6 @@ class CustomCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text(
-                      "Yo'q",
-                      style: TextStyle(
-                        color: AppColors.mainColor,
-                      ),
-                    ),
-                  )
                 ],
               )
             ],
