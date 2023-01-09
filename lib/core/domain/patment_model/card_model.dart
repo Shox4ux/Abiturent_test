@@ -1,36 +1,46 @@
-class CardModel {
-  int? id;
-  int? userId;
-  String? cardPan;
-  String? cardMonth;
-  int? cardStatus;
-  String? cardName;
+import 'card_list_model.dart';
 
-  CardModel(
-      {this.id,
-      this.userId,
-      this.cardPan,
-      this.cardMonth,
-      this.cardStatus,
-      this.cardName});
+class CardModel {
+  CardListModel? card;
+  Phone? phone;
+
+  CardModel({this.card, this.phone});
 
   CardModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    userId = json['user_id'];
-    cardPan = json['card_pan'];
-    cardMonth = json['card_month'];
-    cardStatus = json['card_status'];
-    cardName = json['card_name'];
+    card = json['card'] != null ? CardListModel.fromJson(json['card']) : null;
+    phone = json['phone'] != null ? Phone.fromJson(json['phone']) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['user_id'] = userId;
-    data['card_pan'] = cardPan;
-    data['card_month'] = cardMonth;
-    data['card_status'] = cardStatus;
-    data['card_name'] = cardName;
+    if (card != null) {
+      data['card'] = card!.toJson();
+    }
+    if (phone != null) {
+      data['phone'] = phone!.toJson();
+    }
+    return data;
+  }
+}
+
+class Phone {
+  bool? sent;
+  String? phone;
+  int? wait;
+
+  Phone({this.sent, this.phone, this.wait});
+
+  Phone.fromJson(Map<String, dynamic> json) {
+    sent = json['sent'];
+    phone = json['phone'];
+    wait = json['wait'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['sent'] = sent;
+    data['phone'] = phone;
+    data['wait'] = wait;
     return data;
   }
 }

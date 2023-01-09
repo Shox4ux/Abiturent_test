@@ -26,9 +26,13 @@ class UserCubit extends Cubit<UserState> {
       await _repo.updateProfil(fullName, u.id!, avatar, t!, tegLink);
       emit(OnUserUpdated());
     } on DioError catch (e) {
-      emit(OnError(error: e.response!.data["message"]));
+      if (e.response?.statusCode == 413) {
+        emit(const OnUserError(error: "Fayl yuklash uchun katta"));
+      } else {
+        emit(OnUserError(error: e.response!.data["message"]));
+      }
     } catch (e) {
-      emit(const OnError(error: "Tizimda nosozlik"));
+      emit(const OnUserError(error: "Tizimda nosozlik"));
     }
   }
 }

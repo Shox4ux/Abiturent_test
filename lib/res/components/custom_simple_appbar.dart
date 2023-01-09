@@ -81,7 +81,7 @@ class CustomSimpleAppBar extends StatelessWidget {
               ),
               InkWell(
                 onTap: () {
-                  Navigator.pushNamed(context, RouteNames.payme);
+                  Navigator.pushNamed(context, RouteNames.addCard);
                 },
                 child: Padding(
                   padding: EdgeInsets.only(right: 20.w),

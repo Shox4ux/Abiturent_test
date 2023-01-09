@@ -559,7 +559,7 @@ Widget whenError(
           onPressed: () {
             if (status == WarningValues.hisobError) {
               Navigator.of(context).pushNamed(
-                RouteNames.payme,
+                RouteNames.addCard,
               );
               return;
             }

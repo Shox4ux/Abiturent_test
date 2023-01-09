@@ -221,12 +221,12 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen>
 
                             context
                                 .read<AuthCubit>()
-                                .forgotPassword(widget.phone);
+                                .refreshSmsCode(widget.phone);
                           },
                           child: Text(
                             "Qayta jo'natish",
                             style: AppStyles.subtitleTextStyle.copyWith(
-                                color: AppColors.mainColor,
+                                color: Color.fromARGB(255, 30, 30, 31),
                                 decoration: TextDecoration.underline),
                           ),
                         )

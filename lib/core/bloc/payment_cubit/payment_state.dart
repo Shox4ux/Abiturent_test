@@ -13,9 +13,10 @@ class OnCardsEmpty extends PaymentState {}
 
 class OnCardProgress extends PaymentState {}
 
+class OnCardConfirmed extends PaymentState {}
+
 class OnCardSelected extends PaymentState {
   final CardModel model;
-
   const OnCardSelected(this.model);
   @override
   List<Object> get props => [model];
@@ -38,7 +39,7 @@ class OnCardAdded extends PaymentState {
 }
 
 class OnCardsReceived extends PaymentState {
-  final List<CardModel> models;
+  final List<CardListModel> models;
 
   const OnCardsReceived(this.models);
   @override
@@ -46,10 +47,10 @@ class OnCardsReceived extends PaymentState {
 }
 
 class OnMadePayment extends PaymentState {
-  final PaymentResponse paymentResponse;
-  const OnMadePayment(this.paymentResponse);
+  final OnPaymentDone onPaymentDone;
+  const OnMadePayment(this.onPaymentDone);
   @override
-  List<Object> get props => [paymentResponse];
+  List<Object> get props => [onPaymentDone];
 }
 
 class OnCardError extends PaymentState {

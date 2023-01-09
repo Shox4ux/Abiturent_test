@@ -108,10 +108,22 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
+  Future<void> refreshSmsCode(String phone) async {
+    var userData = await _storage.getUserInfo();
+    try {
+      await _repo.refreshSmsCode(userData.id!, phone);
+    } on DioError catch (e) {
+      emit(
+          AuthDenied(error: e.response?.data["message"] ?? "Tizimda nosozlik"));
+    } catch (e) {
+      emit(const AuthDenied(error: "Tizimda nosozlik"));
+    }
+  }
+
   Future<void> checkSmsCode(int userId, String phone, String smsCode) async {
     emit(OnAuthProgress());
     try {
-      final response = await _repo.checkSmsCode(userId, phone, smsCode);
+      final response = await _repo.checkRegisterSmsCode(userId, phone, smsCode);
       print("sms data: ${response.data}");
       var userData = UserInfo.fromJson(response.data["user"]);
       print(userData.fullname);
@@ -130,7 +142,7 @@ class AuthCubit extends Cubit<AuthState> {
     emit(OnAuthProgress());
     try {
       final response =
-          await _repo.checkResetPassWord(userId, realPhone, smsCode);
+          await _repo.checkForgotPasswordSmsCode(userId, realPhone, smsCode);
       print("sms data: ${response.data}");
       emit(AuthGranted());
     } on DioError catch (e) {
@@ -162,7 +174,7 @@ class AuthCubit extends Cubit<AuthState> {
     final realPhone = "998$phone";
     emit(OnAuthProgress());
     try {
-      final response = await _repo.resetPassword(realPhone);
+      final response = await _repo.forgotPassword(realPhone);
       final rowData = response.data["id"];
       showToast(response.data["message"]);
       emit(AuthOnSMS(id: rowData, phoneNumber: phone));
@@ -178,12 +190,12 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> changePassword(
       String phone, String newPassword, String confirmPassword) async {
     emit(OnAuthProgress());
+    final user = await _storage.getUserInfo();
+    final authKey = await _storage.getToken();
+
     try {
       await _repo.changePassword(
-        phone,
-        newPassword,
-        confirmPassword,
-      );
+          user.id!, authKey!, phone, newPassword, confirmPassword);
       emit(AuthGranted());
     } on DioError catch (e) {
       emit(AuthDenied(error: e.response?.data["message"] ?? ""));

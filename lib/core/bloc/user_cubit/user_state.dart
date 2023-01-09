@@ -20,9 +20,9 @@ class OnUsersRatingReceived extends UserState {
   List<Object> get props => [ratingModel];
 }
 
-class OnError extends UserState {
+class OnUserError extends UserState {
   final String error;
-  const OnError({required this.error});
+  const OnUserError({required this.error});
   @override
   List<Object> get props => [error];
 }

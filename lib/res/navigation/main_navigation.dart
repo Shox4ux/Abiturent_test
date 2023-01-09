@@ -4,17 +4,19 @@ import 'package:test_app/ui/auth/forgot_password.dart';
 import 'package:test_app/ui/auth/login.dart';
 import 'package:test_app/ui/auth/sign_up.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile.dart';
-import 'package:test_app/ui/bottom_navigation/profile/profile_sections/group/add_user_to_group.dart';
+import 'package:test_app/ui/bottom_navigation/profile/profile_sections/group_screen/add_user_to_group.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/news_screen/inside_news.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/news_screen/news.dart';
-import 'package:test_app/ui/bottom_navigation/profile/profile_sections/payme/payme_screen.dart';
+import 'package:test_app/ui/bottom_navigation/profile/profile_sections/payme_sceens/add_card_screen.dart';
+import 'package:test_app/ui/bottom_navigation/profile/profile_sections/payme_sceens/make_payment_screen.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/payment_history/payment_history.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/subscriptions/subscriptions_screen.dart';
 import 'package:test_app/ui/intro/intro.dart';
 import 'package:test_app/ui/main_screen/main_screen.dart';
 import 'package:test_app/ui/splash/splash.dart';
 
-import '../../ui/bottom_navigation/profile/profile_sections/group/group.dart';
+import '../../ui/bottom_navigation/profile/profile_sections/group_screen/group.dart';
+import '../../ui/bottom_navigation/profile/profile_sections/payme_sceens/card_confirma_screen.dart';
 
 class MainNavigation {
   final routes = <String, Widget Function(BuildContext)>{
@@ -24,7 +26,10 @@ class MainNavigation {
     RouteNames.signup: (context) => const SignUpScreen(),
     RouteNames.signin: (context) => const LoginScreen(),
     RouteNames.news: (context) => NewsScreen(),
-    RouteNames.payme: (context) => const PaymeScreen(),
+    RouteNames.onPaymentDone: (context) => NewsScreen(),
+    RouteNames.addCard: (context) => const AddCardScreen(),
+    RouteNames.confirmCard: (context) => const CardConfirmationSceen(),
+    RouteNames.makePayment: (context) => const MakePaymentScreen(),
     RouteNames.forget: (context) => const ForgotPasswordScreen(),
     RouteNames.subscripts: (context) => const MySubscriptions(),
     RouteNames.budget: (context) => const PaymentHistoryScreen(),
@@ -61,11 +66,12 @@ abstract class RouteNames {
   static const smsVerification = 'sms_verification';
   static const news = "news";
   static const group = "group";
+  static const onPaymentDone = "onPaymentDone";
 
   static const changePassword = "reset";
-  static const payme = "payme";
-  static const paymeInfoConfirm = "paymeInfoConfirm";
-  static const paymeSmsCinfirm = "paymeSmsCinfirm";
+  static const addCard = "addCard";
+  static const confirmCard = "confirmCard";
+  static const makePayment = "makePayment";
   static const forget = "forget";
   static const innerNews = "innerNews";
   static const subscripts = "subscripts";

@@ -113,7 +113,7 @@ class _TestScreenState extends State<TestScreen> {
               onPressed: () {
                 if (status == WarningValues.hisobError) {
                   Navigator.of(context).pushNamed(
-                    RouteNames.payme,
+                    RouteNames.addCard,
                   );
                   return;
                 }
@@ -200,51 +200,44 @@ class _TestScreenState extends State<TestScreen> {
     );
   }
 
-  Expanded onTestCelebration(OnInnerTestCelebrate state, BuildContext context) {
-    return Expanded(
-      child: Container(
-        width: double.maxFinite,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-        ),
-        child: Column(
-          children: [
-            Gap(76.h),
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 32.w),
-              width: 312.w,
-              height: 312.h,
-              child: Image.asset(
-                AppIcons.bi,
-                color: AppColors.greenBackground,
-                scale: 3,
-              ),
+  Widget onTestCelebration(OnInnerTestCelebrate state, BuildContext context) {
+    return ColoredBox(
+      color: Colors.white,
+      child: Column(
+        children: [
+          Gap(76.h),
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 32.w),
+            width: 312.w,
+            height: 312.h,
+            child: Image.asset(
+              AppIcons.bi,
+              color: AppColors.greenBackground,
+              scale: 3,
             ),
-            Gap(18.h),
-            Text("Test yakulandi",
-                style: AppStyles.smsVerBigTextStyle.copyWith(
-                  fontSize: 24.sp,
-                  fontWeight: FontWeight.w600,
-                )),
-            Gap(271.h),
-            (state is OnInnerTestProgress)
-                ? const CircularProgressIndicator(
-                    color: AppColors.mainColor,
-                  )
-                : ElevatedButton(
-                    style: AppStyles.introUpButton,
-                    onPressed: () {
-                      context
-                          .read<InnerTestCubit>()
-                          .getResults(state.testListId);
-                    },
-                    child: Text(
-                      "Natijalarni ko'rish",
-                      style: AppStyles.introButtonText
-                          .copyWith(color: const Color(0xffFCFCFC)),
-                    )),
-          ],
-        ),
+          ),
+          Gap(18.h),
+          Text("Test yakunlandi",
+              style: AppStyles.smsVerBigTextStyle.copyWith(
+                fontSize: 24.sp,
+                fontWeight: FontWeight.w600,
+              )),
+          Gap(271.h),
+          (state is OnInnerTestProgress)
+              ? const CircularProgressIndicator(
+                  color: AppColors.mainColor,
+                )
+              : ElevatedButton(
+                  style: AppStyles.introUpButton,
+                  onPressed: () {
+                    context.read<InnerTestCubit>().getResults(state.testListId);
+                  },
+                  child: Text(
+                    "Natijalarni ko'rish",
+                    style: AppStyles.introButtonText
+                        .copyWith(color: const Color(0xffFCFCFC)),
+                  )),
+        ],
       ),
     );
   }

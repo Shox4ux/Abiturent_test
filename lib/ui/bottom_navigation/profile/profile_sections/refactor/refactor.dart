@@ -60,7 +60,7 @@ class _RefactorScreenState extends State<RefactorScreen> {
               Navigator.pushNamedAndRemoveUntil(
                   context, RouteNames.main, (route) => false);
             }
-            if (state is OnError) {
+            if (state is OnUserError) {
               showToast(state.error);
             }
           },
@@ -210,18 +210,81 @@ class _RefactorScreenState extends State<RefactorScreen> {
                                 ),
                               );
                             }
+                            if (state is OnUserError) {
+                              showToast(state.error);
+                              return (_changedNameController.text.isNotEmpty ||
+                                      _pickedFile != null)
+                                  ? Padding(
+                                      padding: EdgeInsets.only(bottom: 24.h),
+                                      child: ElevatedButton(
+                                        style: AppStyles.introUpButton,
+                                        onPressed: () async {
+                                          if (_tegLinkController.text.isEmpty) {
+                                            await context
+                                                .read<UserCubit>()
+                                                .updateProfile(
+                                                  _changedNameController.text,
+                                                  _pickedFile,
+                                                  "-",
+                                                );
+                                          } else {
+                                            await context
+                                                .read<UserCubit>()
+                                                .updateProfile(
+                                                  _changedNameController.text,
+                                                  _pickedFile,
+                                                  _tegLinkController.text,
+                                                );
+                                          }
+                                        },
+                                        child: Text(
+                                          "Saqlash",
+                                          style: AppStyles.introButtonText
+                                              .copyWith(
+                                                  color:
+                                                      const Color(0xffFCFCFC)),
+                                        ),
+                                      ),
+                                    )
+                                  : Padding(
+                                      padding: EdgeInsets.only(bottom: 24.h),
+                                      child: ElevatedButton(
+                                        style: AppStyles.disabledButton,
+                                        onPressed: null,
+                                        child: Text(
+                                          "Saqlash",
+                                          style: AppStyles.introButtonText
+                                              .copyWith(
+                                                  color:
+                                                      const Color(0xffFCFCFC)),
+                                        ),
+                                      ),
+                                    );
+                            }
                             return (_changedNameController.text.isNotEmpty ||
                                     _pickedFile != null)
                                 ? Padding(
                                     padding: EdgeInsets.only(bottom: 24.h),
                                     child: ElevatedButton(
                                       style: AppStyles.introUpButton,
-                                      onPressed: () {
-                                        context.read<UserCubit>().updateProfile(
-                                              _changedNameController.text,
-                                              _pickedFile,
-                                              _tegLinkController.text,
-                                            );
+                                      onPressed: () async {
+                                        if (_tegLinkController.text.isEmpty) {
+                                          await context
+                                              .read<UserCubit>()
+                                              .updateProfile(
+                                                _changedNameController.text,
+                                                _pickedFile,
+                                                "-",
+                                              );
+                                        } else {
+                                          await context
+                                              .read<UserCubit>()
+                                              .updateProfile(
+                                                _changedNameController.text,
+                                                _pickedFile,
+                                                _tegLinkController.text,
+                                              );
+                                        }
                                       },
                                       child: Text(
                                         "Saqlash",

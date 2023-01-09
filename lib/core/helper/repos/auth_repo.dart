@@ -22,12 +22,12 @@ class AuthRepository {
     return await _dio.post(ApiValues.loginUrl, data: formData);
   }
 
-  Future<Response> resetPassword(String phone) async {
+  Future<Response> forgotPassword(String phone) async {
     var formData = FormData.fromMap({"phone": phone});
     return await _dio.post(ApiValues.resetPasswordUrl, data: formData);
   }
 
-  Future<Response> checkSmsCode(
+  Future<Response> checkRegisterSmsCode(
       int userId, String phone, String smsCode) async {
     var formData = FormData.fromMap({
       "user_id": userId,
@@ -37,14 +37,13 @@ class AuthRepository {
     return await _dio.post(ApiValues.checkSmsUrl, data: formData);
   }
 
-  Future<Response> checkResetPassWord(
+  Future<Response> checkForgotPasswordSmsCode(
       int userId, String phone, String smsCode) async {
     var formData = FormData.fromMap({
       "user_id": userId,
       "phone": phone,
       "sms_live": smsCode,
     });
-
     return await _dio.post(ApiValues.resetPasswordUrl, data: formData);
   }
 
@@ -56,9 +55,24 @@ class AuthRepository {
     return await _dio.post(ApiValues.logoutUrl, data: formData);
   }
 
-  Future<Response> changePassword(
-      String phone, String newPassword, String confirmPassword) async {
+  Future<Response> refreshSmsCode(int userId, String phone) async {
     var formData = FormData.fromMap({
+      "user_id": userId,
+      "phone": phone,
+    });
+    return await _dio.post(ApiValues.refreshSmsCode, data: formData);
+  }
+
+  Future<Response> changePassword(
+    int userId,
+    String authKey,
+    String phone,
+    String newPassword,
+    String confirmPassword,
+  ) async {
+    var formData = FormData.fromMap({
+      "user_id": phone,
+      "auth_token": phone,
       "phone": phone,
       "new_pass": newPassword,
       "confirm_pass": confirmPassword,

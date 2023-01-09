@@ -7,7 +7,6 @@ import 'package:test_app/core/domain/user_model/stat_model.dart';
 import 'package:test_app/core/domain/user_model/user_model.dart';
 import 'package:test_app/res/constants.dart';
 import 'package:test_app/res/functions/number_formatter.dart';
-import 'package:test_app/ui/bottom_navigation/profile/profile_sections/payme/payme_info_confirmation.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/refactor/refactor.dart';
 import 'package:test_app/ui/main_screen/main_screen.dart';
 import '../../../core/bloc/auth_cubit/auth_cubit.dart';
@@ -24,9 +23,7 @@ final _repo = UserRepo();
 List<StatModel>? stats;
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({
-    Key? key,
-  }) : super(key: key);
+  const ProfileScreen({Key? key}) : super(key: key);
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -35,6 +32,19 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   bool isInSubs = false;
   bool isStats = false;
+  DateTime? currentBackPressTime;
+
+  Future<bool> onWillPop() {
+    DateTime now = DateTime.now();
+    if (currentBackPressTime == null ||
+        now.difference(currentBackPressTime!) > const Duration(seconds: 1)) {
+      currentBackPressTime = now;
+      showToast("Darturdan chiqich uchun tugmani ikki marta bosing");
+      return Future.value(false);
+    } else {
+      return Future.value(true);
+    }
+  }
 
   Future<List<StatModel>> getStatistics(int? userId) async {
     try {
@@ -63,25 +73,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AuthCubit, AuthState>(
-      listener: (context, state) {
-        if (state is LogedOut) {
-          Navigator.pushNamedAndRemoveUntil(
-              context, RouteNames.signin, (route) => false);
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<AuthCubit, AuthState>(
+          listener: (context, state) {
+            if (state is LogedOut) {
+              Navigator.pushNamedAndRemoveUntil(
+                  context, RouteNames.signin, (route) => false);
+            }
+          },
+        ),
+        BlocListener<PaymentCubit, PaymentState>(
+          listener: (context, state) {
+            if (state is OnCardsEmpty) {
+              Navigator.pushNamed(context, RouteNames.addCard);
+            }
+            if (state is OnCardsReceived) {
+              Navigator.pushNamed(context, RouteNames.makePayment);
+            }
+          },
+        ),
+      ],
       child: RefreshIndicator(
         onRefresh: () async {
           await context.read<AuthCubit>().getUserData();
         },
         child: Scaffold(
           body: WillPopScope(
-            onWillPop: () async {
-              setState(() {
-                isInSubs = false;
-              });
-              return false;
-            },
+            onWillPop: onWillPop,
             child: SafeArea(
               child: Padding(
                 padding: EdgeInsets.all(20.w),
@@ -171,27 +190,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Gap(19.h),
                           GestureDetector(
                             onTap: () async {
-                              final con = await context
-                                  .read<PaymentCubit>()
-                                  .isConfirmed();
-                              if (con) {
-                                // ignore: use_build_context_synchronously
-                                await context.read<PaymentCubit>().getCards();
-                                // ignore: use_build_context_synchronously
-                                Navigator.push<void>(
-                                  context,
-                                  MaterialPageRoute<void>(
-                                    builder: (BuildContext context) =>
-                                        const PaymeInfoConfirmation(
-                                      null,
-                                      isConfirmed: true,
-                                    ),
-                                  ),
-                                );
-                              } else {
-                                // ignore: use_build_context_synchronously
-                                Navigator.pushNamed(context, RouteNames.payme);
-                              }
+                              context.read<PaymentCubit>().getCards();
                             },
                             child: Container(
                               padding: EdgeInsets.symmetric(
@@ -372,127 +371,116 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget menu(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            InkWell(
-              onTap: () {
-                setState(() {
-                  isStats = true;
-                });
-              },
-              child: Image.asset(
-                AppIcons.sim,
-                scale: 3,
+    return BlocListener<PaymentCubit, PaymentState>(
+      listener: (context, state) {
+        if (state is OnCardsEmpty) {
+          Navigator.pushNamed(context, RouteNames.addCard);
+        }
+      },
+      child: Column(
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              InkWell(
+                onTap: () {
+                  setState(() {
+                    isStats = true;
+                  });
+                },
+                child: Image.asset(AppIcons.sim, scale: 3),
               ),
-            ),
-          ],
-        ),
-        Gap(5.h),
-        Expanded(
-            child: ListView(
-          children: [
-            Container(
-              width: 331.w,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20.r),
-              ),
-              child: SingleChildScrollView(
-                child: Column(children: [
-                  InkWell(
-                    onTap: () async {
-                      setState(() {
-                        isInSubs = true;
-                      });
+            ],
+          ),
+          Gap(5.h),
+          Expanded(
+              child: ListView(
+            children: [
+              Container(
+                width: 331.w,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20.r),
+                ),
+                child: SingleChildScrollView(
+                  child: Column(children: [
+                    InkWell(
+                      onTap: () async {
+                        setState(() {
+                          isInSubs = true;
+                        });
 
-                      context.read<PaymentCubit>().getPaymentHistory();
-                    },
-                    child: rowItem(
-                        AppIcons.purplePocket, "Mening hisoblarim", false),
-                  ),
-                  spacer(),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push<void>(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (BuildContext context) =>
-                              RefactorScreen(user: userData!),
-                        ),
-                      );
-                    },
-                    child: rowItem(AppIcons.edit, "Tahrirlash", false),
-                  ),
-                  spacer(),
-                  InkWell(
-                    onTap: () {
-                      Navigator.pushNamed(
-                        context,
-                        RouteNames.news,
-                      );
-                    },
-                    child: rowItem(AppIcons.gallery, "Yangiliklar", false),
-                  ),
-                  spacer(),
-                  InkWell(
-                    onTap: () {
-                      Navigator.pushNamed(
-                        context,
-                        RouteNames.subscripts,
-                      );
-
-                      // context.read<SubscriptionCubit>().getScripts();
-                    },
-                    child: rowItem(
-                        AppIcons.purpleDone, "Mening obunalarim", false),
-                  ),
-                  spacer(),
-                  InkWell(
-                    onTap: () {
-                      Navigator.pushNamed(context, RouteNames.group);
-                      context.read<GroupCubit>().getGroupsByUserId();
-                    },
-                    child: rowItem(
-                        AppIcons.purpleDone, "Mening guruhlarim", false),
-                  ),
-                  spacer(),
-                  InkWell(
-                    onTap: () async {
-                      if (await context.read<PaymentCubit>().isConfirmed()) {
-                        context.read<PaymentCubit>().getCards();
+                        context.read<PaymentCubit>().getPaymentHistory();
+                      },
+                      child: rowItem(
+                          AppIcons.purplePocket, "Mening hisoblarim", false),
+                    ),
+                    spacer(),
+                    InkWell(
+                      onTap: () {
                         Navigator.push<void>(
                           context,
                           MaterialPageRoute<void>(
                             builder: (BuildContext context) =>
-                                const PaymeInfoConfirmation(
-                              null,
-                              isConfirmed: true,
-                            ),
+                                RefactorScreen(user: userData!),
                           ),
                         );
-                      } else {
-                        Navigator.pushNamed(context, RouteNames.payme);
-                      }
-                    },
-                    child: rowItem(AppIcons.payme, "Hisobni to’ldirish", false),
-                  ),
-                  spacer(),
-                  InkWell(
-                    onTap: () {
-                      logOutBottomSheet(context);
-                    },
-                    child: rowItem(AppIcons.logout, "Tizimdan chiqish", true),
-                  ),
-                ]),
+                      },
+                      child: rowItem(AppIcons.edit, "Tahrirlash", false),
+                    ),
+                    spacer(),
+                    InkWell(
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          RouteNames.news,
+                        );
+                      },
+                      child: rowItem(AppIcons.gallery, "Yangiliklar", false),
+                    ),
+                    spacer(),
+                    InkWell(
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          RouteNames.subscripts,
+                        );
+                      },
+                      child: rowItem(
+                          AppIcons.purpleDone, "Mening obunalarim", false),
+                    ),
+                    spacer(),
+                    InkWell(
+                      onTap: () {
+                        Navigator.pushNamed(context, RouteNames.group);
+                        context.read<GroupCubit>().getGroupsByUserId();
+                      },
+                      child: rowItem(
+                          AppIcons.purpleDone, "Mening guruhlarim", false),
+                    ),
+                    spacer(),
+                    InkWell(
+                      onTap: () {
+                        context.read<PaymentCubit>().getCards();
+                      },
+                      child:
+                          rowItem(AppIcons.payme, "Hisobni to’ldirish", false),
+                    ),
+                    spacer(),
+                    InkWell(
+                      onTap: () {
+                        logOutBottomSheet(context);
+                      },
+                      child: rowItem(AppIcons.logout, "Tizimdan chiqish", true),
+                    ),
+                  ]),
+                ),
               ),
-            ),
-          ],
-        ))
-      ],
+            ],
+          ))
+        ],
+      ),
     );
   }
 
@@ -619,19 +607,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       width: double.maxFinite,
     );
   }
-
-  Future<bool> onWillPop() {
-    DateTime now = DateTime.now();
-    DateTime? currentBackPressTime;
-    if (currentBackPressTime == null ||
-        now.difference(currentBackPressTime) > const Duration(seconds: 1)) {
-      currentBackPressTime = now;
-      showToast("Darturdan chiqich uchun tugmani ikki marta bosing");
-      return Future.value(false);
-    } else {
-      return Future.value(true);
-    }
-  }
 }
 
 Widget statisticsItem(StatModel statModel) {
@@ -714,212 +689,205 @@ Widget statisticsItem(StatModel statModel) {
 }
 
 Widget inHistoryItem(PaymentHistory item) {
-  return AspectRatio(
-    aspectRatio: 331 / 55,
-    child: Container(
-      padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 11.w),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10.r),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.grey,
-            blurRadius: 5.0,
-            offset: Offset(0, 5),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          SizedBox(
-            height: 24.h,
-            width: 24.w,
-            child: Image.asset(Subscriptions.green.iconPath),
-          ),
-          Gap(11.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        item.createdDate!,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w200,
-                            fontSize: 10.sp,
-                            color: const Color(0xff161719)),
-                      ),
-                      Text(
-                        "+${numberFormatter(item.amount)} UZS",
-                        style: TextStyle(
+  return Container(
+    height: 90.h,
+    padding: EdgeInsets.symmetric(vertical: 4.h, horizontal: 8.w),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(10.r),
+      boxShadow: const [
+        BoxShadow(
+          color: Colors.grey,
+          blurRadius: 5.0,
+          offset: Offset(0, 5),
+        ),
+      ],
+    ),
+    child: Row(
+      children: [
+        SizedBox(
+          height: 24.h,
+          width: 24.w,
+          child: Image.asset(Subscriptions.green.iconPath),
+        ),
+        Gap(8.w),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      item.createdDate!,
+                      style: TextStyle(
                           fontWeight: FontWeight.w200,
-                          fontSize: 14.sp,
-                          color: const Color(0xff161719),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Gap(4.h),
-                Expanded(
-                  child: Text(
-                    item.content!,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w200,
-                      fontSize: 14.sp,
-                      color: const Color(0xff161719),
+                          fontSize: 10.sp,
+                          color: const Color(0xff161719)),
                     ),
+                    Text(
+                      "+${numberFormatter(item.amount)} UZS",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w200,
+                        fontSize: 14.sp,
+                        color: const Color(0xff161719),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Text(
+                  item.content!,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w300,
+                    fontSize: 12.sp,
+                    color: const Color(0xff161719),
                   ),
                 ),
-              ],
-            ),
-          )
-        ],
-      ),
+              ),
+            ],
+          ),
+        )
+      ],
     ),
   );
 }
 
 Widget outHistoryItem(PaymentHistory item) {
-  return AspectRatio(
-    aspectRatio: 331 / 55,
-    child: Container(
-      padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 11.w),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10.r),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.grey,
-            blurRadius: 5.0,
-            offset: Offset(0, 5),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          SizedBox(
-            height: 24.h,
-            width: 24.w,
-            child: Image.asset(Subscriptions.red.iconPath),
-          ),
-          Gap(11.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        item.createdDate!,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w200,
-                            fontSize: 10.sp,
-                            color: const Color(0xff161719)),
-                      ),
-                      Text(
-                        "-${numberFormatter(item.amount)} UZS",
-                        style: TextStyle(
+  return Container(
+    height: 90.h,
+    padding: EdgeInsets.symmetric(vertical: 4.h, horizontal: 8.w),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(10.r),
+      boxShadow: const [
+        BoxShadow(
+          color: Colors.grey,
+          blurRadius: 5.0,
+          offset: Offset(0, 5),
+        ),
+      ],
+    ),
+    child: Row(
+      children: [
+        SizedBox(
+          height: 24.h,
+          width: 24.w,
+          child: Image.asset(Subscriptions.red.iconPath),
+        ),
+        Gap(8.w),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      item.createdDate!,
+                      style: TextStyle(
                           fontWeight: FontWeight.w200,
-                          fontSize: 14.sp,
-                          color: const Color(0xff161719),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Gap(4.h),
-                Expanded(
-                  child: Text(
-                    item.content!,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w200,
-                      fontSize: 14.sp,
-                      color: const Color(0xff161719),
+                          fontSize: 10.sp,
+                          color: const Color(0xff161719)),
                     ),
+                    Text(
+                      "-${numberFormatter(item.amount)} UZS",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w200,
+                        fontSize: 14.sp,
+                        color: const Color(0xff161719),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Gap(4.h),
+              Expanded(
+                child: Text(
+                  item.content!,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w300,
+                    fontSize: 12.sp,
+                    color: const Color(0xff161719),
                   ),
                 ),
-              ],
-            ),
-          )
-        ],
-      ),
+              ),
+            ],
+          ),
+        )
+      ],
     ),
   );
 }
 
 Widget bonusHistoryItem(PaymentHistory item) {
-  return AspectRatio(
-    aspectRatio: 331 / 55,
-    child: Container(
-      padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 11.w),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10.r),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.grey,
-            blurRadius: 3.0,
-            offset: Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          SizedBox(
-            height: 24.h,
-            width: 24.w,
-            child: Image.asset(Subscriptions.purple.iconPath),
-          ),
-          Gap(11.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        item.createdDate!,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w200,
-                            fontSize: 10.sp,
-                            color: const Color(0xff161719)),
-                      ),
-                      Text(
-                        "${numberFormatter(item.amount)} UZS",
-                        style: TextStyle(
+  return Container(
+    height: 90.h,
+    padding: EdgeInsets.symmetric(vertical: 4.h, horizontal: 8.w),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(10.r),
+      boxShadow: const [
+        BoxShadow(
+          color: Colors.grey,
+          blurRadius: 3.0,
+          offset: Offset(0, 3),
+        ),
+      ],
+    ),
+    child: Row(
+      children: [
+        SizedBox(
+          height: 24.h,
+          width: 24.w,
+          child: Image.asset(Subscriptions.purple.iconPath),
+        ),
+        Gap(8.w),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      item.createdDate!,
+                      style: TextStyle(
                           fontWeight: FontWeight.w200,
-                          fontSize: 14.sp,
-                          color: const Color(0xff161719),
-                        ),
+                          fontSize: 10.sp,
+                          color: const Color(0xff161719)),
+                    ),
+                    Text(
+                      "${numberFormatter(item.amount)} UZS",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w200,
+                        fontSize: 14.sp,
+                        color: const Color(0xff161719),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                Gap(4.h),
-                Text(
-                  Subscriptions.green.text,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w200,
-                    fontSize: 14.sp,
-                    color: const Color(0xff161719),
-                  ),
+              ),
+              Gap(4.h),
+              Text(
+                Subscriptions.green.text,
+                style: TextStyle(
+                  fontWeight: FontWeight.w300,
+                  fontSize: 12.sp,
+                  color: const Color(0xff161719),
                 ),
-              ],
-            ),
-          )
-        ],
-      ),
+              ),
+            ],
+          ),
+        )
+      ],
     ),
   );
 }

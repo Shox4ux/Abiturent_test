@@ -204,6 +204,8 @@ class ApiValues {
   static const String baseUrl = "http://uzbilim.uz/api/";
   static const String sighUPUrl = "user/signup";
   static const String loginUrl = "user/login";
+  static const String refreshSmsCode = "user/refresh-code";
+
   static const String checkSmsUrl = "user/check-code";
   static const String logoutUrl = "user/logout";
   static const String changePasswordUrl = "user/new-password";
@@ -213,15 +215,15 @@ class ApiValues {
   static const String addMember = "user-group/add-member";
   static const String deleteMember = "user-group/delete-members";
   static const String addCardUrl = "card/add-card";
-  static const String deleteCardUrl = "card/delete";
+  static const String deleteCardUrl = "card/card-remove";
 
   static const String ratingUrl = "user/rating";
   static const String stats = "user/statistics";
   static const String ratingUrlBySubjectId = "user/common-stats";
   static const String updateProfileUrl = "user/update";
 
-  static const String amountUrl = "card/payment";
-  static const String getCardsUrl = "card/index";
+  static const String makePaymentUrl = "card/card-makepay";
+  static const String getCardsUrl = "card/my-cards";
 
   static const String getErrorListUrl = "test/show-mistakes";
 
@@ -230,6 +232,8 @@ class ApiValues {
   static const String makeScript = "subjects/make-subscription";
 
   static const String getHistoryUrl = "user/payment-history";
+  static const String refreshVerifyCardSms = "card/refresh-verify-code";
+  static const String verifyCardSms = "card/verify";
 
   static const String subjectUrl = "subjects/show-subject";
   static const String innerTest = "test/questions";
@@ -242,7 +246,6 @@ class ApiValues {
   static const String getGroupByUserId = "user-group/index";
 //Tests
   static const String testsBySubIdAndTypeIndex = "test/index";
-
   static const int ordinaryTestType = 1;
   static const int dtmTestType = 0;
 }
