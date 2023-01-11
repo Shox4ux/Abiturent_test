@@ -468,18 +468,21 @@ Widget whenReceived(BuildContext context) {
               )),
         ],
       ),
-      ElevatedButton(
-        style: AppStyles.introUpButton,
-        onPressed: () {
-          Navigator.of(context).pushNamedAndRemoveUntil(
-            RouteNames.signin,
-            (Route<dynamic> route) => false,
-          );
-        },
-        child: Text(
-          "Kirish qismiga o’tish",
-          style: AppStyles.introButtonText
-              .copyWith(color: const Color(0xffFCFCFC)),
+      Padding(
+        padding: EdgeInsets.only(bottom: 24.h),
+        child: ElevatedButton(
+          style: AppStyles.introUpButton,
+          onPressed: () {
+            Navigator.of(context).pushNamedAndRemoveUntil(
+              RouteNames.signin,
+              (Route<dynamic> route) => false,
+            );
+          },
+          child: Text(
+            "Kirish qismiga o’tish",
+            style: AppStyles.introButtonText
+                .copyWith(color: const Color(0xffFCFCFC)),
+          ),
         ),
       ),
     ],

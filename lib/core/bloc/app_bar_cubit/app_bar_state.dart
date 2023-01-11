@@ -11,6 +11,8 @@ class AppBarInitial extends AppBarState {}
 
 class OnAppBarRatingProgress extends AppBarState {}
 
+class OnAppBarRatingEmpty extends AppBarState {}
+
 class OnAppBarRatingReceived extends AppBarState {
   final CommonRatingModel model;
   const OnAppBarRatingReceived(this.model);

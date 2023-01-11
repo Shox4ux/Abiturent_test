@@ -38,6 +38,10 @@ class _CustomAppBarState extends State<CustomAppBar> {
             }
             if (state is OnAppBarRatingError) {
               showToast(state.error);
+              return customAppBar(widget.scaffKey, context, "0", "0");
+            }
+            if (state is OnAppBarRatingEmpty) {
+              return customAppBar(widget.scaffKey, context, "0", "0");
             }
             return customAppBar(widget.scaffKey, context, "0", "0");
           },

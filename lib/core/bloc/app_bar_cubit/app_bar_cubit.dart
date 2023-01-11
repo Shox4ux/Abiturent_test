@@ -17,13 +17,16 @@ class AppBarCubit extends Cubit<AppBarState> {
     try {
       final response =
           await _repo.getUserRatingBySubject(subjectId, userData.id!);
+      if (response.data == null) {
+        emit(OnAppBarRatingEmpty());
+        return;
+      }
       final rowData = CommonRatingModel.fromJson(response.data);
       emit(OnAppBarRatingReceived(rowData));
     } on DioError catch (e) {
       emit(OnAppBarRatingError(
           error: e.response?.data["message"] ?? "Tizimda nosozlik"));
     } catch (e) {
-      print(e);
       emit(const OnAppBarRatingError(error: "Tarmoqda nosozlik"));
     }
   }

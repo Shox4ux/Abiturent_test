@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:test_app/res/navigation/main_navigation.dart';
 import '../../core/bloc/group_cubit/group_cubit.dart';
-import '../../core/bloc/subscription_cubit/subscription_cubit.dart';
 import '../constants.dart';
 
 class CustomSimpleAppBar extends StatelessWidget {
@@ -27,8 +26,7 @@ class CustomSimpleAppBar extends StatelessWidget {
   final bool isSimple;
   final bool isIcon;
   bool? isImportant;
-
-  bool? isScript = false;
+  bool? isScript;
 
   @override
   Widget build(BuildContext context) {
@@ -50,16 +48,17 @@ class CustomSimpleAppBar extends StatelessWidget {
                           Navigator.pop(context);
                           return;
                         }
-                        if (isScript!) {
-                          context.read<SubscriptionCubit>().getScripts();
-                          Navigator.pop(context);
-                          return;
-                        }
-                        Navigator.pushNamedAndRemoveUntil(
-                          context,
-                          routeText!,
-                          (route) => false,
-                        );
+                        // if (isScript!) {
+                        //   context.read<SubscriptionCubit>().getScripts();
+                        //   Navigator.pop(context);
+                        //   return;
+                        // }
+                        // Navigator.pushNamedAndRemoveUntil(
+                        //   context,
+                        //   routeText!,
+                        //   (route) => false,
+                        // );
+                        Navigator.pop(context);
                       },
                       icon: Image.asset(
                         AppIcons.arrowBack,

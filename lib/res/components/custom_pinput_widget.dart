@@ -83,8 +83,8 @@ class _PinPutWidgetState extends State<PinPutWidget> {
 
     return GestureDetector(
       onTap: () {
-        FocusScope.of(context).requestFocus(focusNode);
-        print("object");
+        focusNode.requestFocus();
+        print("focus");
       },
       child: Column(
         children: [

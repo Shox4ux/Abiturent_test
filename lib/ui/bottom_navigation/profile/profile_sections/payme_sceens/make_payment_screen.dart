@@ -49,7 +49,9 @@ class _MakePaymentScreenState extends State<MakePaymentScreen> {
             Navigator.pushNamedAndRemoveUntil(
                 context, RouteNames.main, (route) => false);
           }
-          if (state is OnMadePayment) {}
+          // if (state is OnCardError) {
+          //   setState(() {});
+          // }
         },
         builder: (context, state) {
           if (state is OnMadePayment) {

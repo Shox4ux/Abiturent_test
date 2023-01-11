@@ -49,6 +49,26 @@ class DtmCubit extends Cubit<DtmState> {
     }
   }
 
+  Future<void> onRefresh(int subId) async {
+    _currentPage = 1;
+    _isPaginationEnded = false;
+    emit(OnDtmTestProgress());
+    _currentSubjectId = subId;
+    try {
+      final response = await _repo.getTestPaginationByType(
+          subId, _testType, _currentPage, _perPage);
+
+      final allTestData = TestModel.fromJson(response.data);
+      _testLimit = allTestData.subjects!.testLimit!;
+      emit(OnDtmTestReceived(allTestData.subjects!, allTestData.tests!, false));
+      _currentPage++;
+    } on DioError catch (e) {
+      emit(OnDtmTestError(e.response!.data["message"]));
+    } catch (e) {
+      emit(const OnDtmTestError("Tizimda nosozlik"));
+    }
+  }
+
   Future<void> startDtmPagination(int subId) async {
     if (_isPaginationEnded) {
       showToast("Boshqa testlar mavjud emas");

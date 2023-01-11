@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
@@ -176,6 +175,10 @@ class AuthCubit extends Cubit<AuthState> {
     try {
       final response = await _repo.forgotPassword(realPhone);
       final rowData = response.data["id"];
+      await _storage.saveToken(response.data["auth_key"]);
+
+      print(await _storage.getToken());
+
       showToast(response.data["message"]);
       emit(AuthOnSMS(id: rowData, phoneNumber: phone));
     } on DioError catch (e) {

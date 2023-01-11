@@ -100,10 +100,7 @@ class CustomCard extends StatelessWidget {
                   TextButton(
                     onPressed: () {
                       Navigator.pop(context);
-                      context.read<PaymentCubit>().deleteCard(
-                            cardModel.id!,
-                          );
-                      context.read<PaymentCubit>().getCards();
+                      context.read<PaymentCubit>().deleteCard(cardModel.id!);
                     },
                     child: const Text(
                       "Ha",

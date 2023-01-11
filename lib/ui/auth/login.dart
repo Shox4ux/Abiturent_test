@@ -47,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is UserActive) {
-          showToast("Muvaffaqiyatli tizimga kirildi");
+          showToast("Tizimga muvaffaqiyatli kirildi");
           Navigator.of(context).pushNamedAndRemoveUntil(
             RouteNames.main,
             arguments: 2,

@@ -50,7 +50,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             child: BlocListener<AuthCubit, AuthState>(
               listener: (context, state) {
                 if (state is AuthOnSMS) {
-                  showToast("Muvaffaqiyatli ro'yxattan o'tildi");
+                  showToast("Ro'yxatdan muvaffaqiyatli  o'tildi");
 
                   Navigator.push(
                     context,

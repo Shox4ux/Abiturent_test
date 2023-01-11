@@ -110,17 +110,9 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen>
     final phoneNumber = '998${widget.phone}';
     final id = widget.id;
     if (widget.fromWhere == RouteNames.forget) {
-      context.read<AuthCubit>().checkResetPassword(
-            id,
-            phoneNumber,
-            _pinCode,
-          );
+      context.read<AuthCubit>().checkResetPassword(id, phoneNumber, _pinCode);
     } else {
-      context.read<AuthCubit>().checkSmsCode(
-            id,
-            phoneNumber,
-            _pinCode,
-          );
+      context.read<AuthCubit>().checkSmsCode(id, phoneNumber, _pinCode);
     }
   }
 
@@ -218,7 +210,6 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen>
                               () => myDuration = const Duration(minutes: 3),
                             );
                             startTimer();
-
                             context
                                 .read<AuthCubit>()
                                 .refreshSmsCode(widget.phone);
@@ -226,7 +217,7 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen>
                           child: Text(
                             "Qayta jo'natish",
                             style: AppStyles.subtitleTextStyle.copyWith(
-                                color: Color.fromARGB(255, 30, 30, 31),
+                                color: AppColors.mainColor,
                                 decoration: TextDecoration.underline),
                           ),
                         )

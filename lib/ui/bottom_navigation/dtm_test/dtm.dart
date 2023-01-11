@@ -84,7 +84,7 @@ class _DtmScreenState extends State<DtmScreen>
 
     return RefreshIndicator(
       onRefresh: () async {
-        setState(() {});
+        await context.read<DtmCubit>().onRefresh(_currentSubjectId!);
       },
       child: Scaffold(
         key: scaffKey,

@@ -53,7 +53,6 @@ class SubscriptionCubit extends Cubit<SubscriptionState> {
     emit(OnScriptProgress());
     final u = await _storage.getUserInfo();
     final k = await _storage.getToken();
-
     try {
       final response = await _repo.makeScript(u.id!, k!, subId);
 

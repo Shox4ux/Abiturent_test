@@ -28,7 +28,6 @@ class TestCubit extends Cubit<TestState> {
     }
 
     if (_isPaginationEnded) {
-      showToast("Testlarni bori shu");
       return;
     }
     if (_currentPage == 1) {
@@ -38,6 +37,7 @@ class TestCubit extends Cubit<TestState> {
 
   Future<void> onRefresh(int subId) async {
     _currentPage = 1;
+    _isPaginationEnded = false;
     emit(OnTestProgress());
     _currentSubjectId = subId;
     try {

@@ -46,7 +46,9 @@ class PaymentCubit extends Cubit<PaymentState> {
       showToast(response.data["message"]);
       await getCards();
     } on DioError catch (e) {
-      emit(OnCardError(e.response?.data["message"] ?? ""));
+      // emit(OnCardError(e.response?.data["message"] ?? ""));
+      showToast(e.response?.data["message"] ?? "");
+      await getCards();
     } on SocketException {
       emit(const OnCardError("Tarmoqda nosozlik"));
     } catch (e) {

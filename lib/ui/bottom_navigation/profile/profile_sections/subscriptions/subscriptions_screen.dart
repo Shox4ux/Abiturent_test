@@ -19,6 +19,7 @@ class MySubscriptions extends StatefulWidget {
 }
 
 class _MySubscriptionsState extends State<MySubscriptions> {
+  List<SubscriptionModel> subList = [];
   @override
   void initState() {
     context.read<SubscriptionCubit>().getScripts();
@@ -33,12 +34,13 @@ class _MySubscriptionsState extends State<MySubscriptions> {
           Navigator.push(
             context,
             MaterialPageRoute<void>(
-                builder: (BuildContext context) => const WaitingScreen(
-                      status: WarningValues.subFirstDone,
-                      alertText: "",
-                      buttonText: "",
-                      extraText: "",
-                    )),
+              builder: (BuildContext context) => const WaitingScreen(
+                status: WarningValues.subFirstDone,
+                alertText: "",
+                buttonText: "",
+                extraText: "",
+              ),
+            ),
           );
         }
       },
@@ -67,7 +69,12 @@ class _MySubscriptionsState extends State<MySubscriptions> {
                       topRight: Radius.circular(28.r),
                     ),
                   ),
-                  child: BlocBuilder<SubscriptionCubit, SubscriptionState>(
+                  child: BlocConsumer<SubscriptionCubit, SubscriptionState>(
+                    listener: (context, state) {
+                      if (state is OnReceivedScript) {
+                        subList = state.scriptList;
+                      }
+                    },
                     builder: (context, state) {
                       if (state is OnScriptProgress) {
                         return const Center(child: Text("Iltimos kuting..."));
@@ -75,33 +82,30 @@ class _MySubscriptionsState extends State<MySubscriptions> {
                       if (state is OnScriptError) {
                         return Center(child: Text(state.error));
                       }
-                      if (state is OnReceivedScript) {
-                        return Column(
-                          children: [
-                            Expanded(
-                              child: ListView.builder(
-                                  padding: EdgeInsets.only(
-                                    bottom: 20.h,
-                                    top: 30.h,
-                                  ),
-                                  itemCount: state.scriptList.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    if (state.scriptList[index]
-                                            .subscriptionData ==
-                                        null) {
-                                      return unSubedItem(
-                                          state.scriptList[index], context);
-                                    }
-                                    return subedItem(state.scriptList[index]);
-                                  }),
-                            ),
-                          ],
-                        );
-                      }
 
-                      return const Center(
-                          child: Text("Hozircha obunalar yo'q"));
+                      return subList.isNotEmpty
+                          ? Column(
+                              children: [
+                                Expanded(
+                                  child: ListView.builder(
+                                      padding: EdgeInsets.only(
+                                        bottom: 20.h,
+                                        top: 30.h,
+                                      ),
+                                      itemCount: subList.length,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        if (subList[index].subscriptionData ==
+                                            null) {
+                                          return unSubedItem(
+                                              subList[index], context);
+                                        }
+                                        return subedItem(subList[index]);
+                                      }),
+                                ),
+                              ],
+                            )
+                          : const Center(child: Text("Hozircha obunalar yo'q"));
                     },
                   ),
                 ),

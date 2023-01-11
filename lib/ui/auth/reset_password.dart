@@ -47,7 +47,7 @@ class _ResetPassWordState extends State<ResetPassWord> {
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is AuthGranted) {
-          showToast("Muvaffaqiyatli ro'yxattan o'tildi");
+          showToast("Maxfiy so'z muvaffaqiyatli o'zgartirildi");
           Navigator.pushAndRemoveUntil<void>(
             context,
             MaterialPageRoute<void>(
