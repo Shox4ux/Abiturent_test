@@ -1,11 +1,7 @@
-import 'dart:io';
-
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:test_app/core/domain/mistakes_model/mistakes_model.dart';
-
-import '../../domain/test_model/test_result_model.dart';
 import '../../helper/database/app_storage.dart';
 import '../../helper/repos/test_repo.dart';
 
@@ -21,7 +17,7 @@ class MistakesCubit extends Cubit<MistakesState> {
     emit(OnMistakesProgress());
     final userId = await _storage.getUserId();
     try {
-      final response = await _repo.getErrorList(userId, subjectId);
+      final response = await _repo.getErrorList(userId!, subjectId);
       if (response.data["data"].isEmpty) {
         emit(OnMistakesEmpty(response.data["subject_name"]));
         return;

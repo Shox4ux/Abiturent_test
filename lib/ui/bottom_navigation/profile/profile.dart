@@ -106,7 +106,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 padding: EdgeInsets.all(20.w),
                 child: BlocBuilder<AuthCubit, AuthState>(
                   builder: (context, state) {
-                    if (state is OnAuthProgress) {
+                    if (state is OnUserDataProgress) {
                       return const Center(
                         child: CircularProgressIndicator.adaptive(),
                       );
@@ -277,7 +277,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       itemBuilder: (context, index) {
         return InkWell(
             onTap: () {
-              context.read<DrawerCubit>().chooseSubject(index);
+              context
+                  .read<DrawerCubit>()
+                  .chooseStatisticSubjectIdForIndex(statList[index].subjectId!);
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -371,31 +373,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget menu(BuildContext context) {
-    return BlocListener<PaymentCubit, PaymentState>(
-      listener: (context, state) {
-        if (state is OnCardsEmpty) {
-          Navigator.pushNamed(context, RouteNames.addCard);
-        }
-      },
-      child: Column(
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              InkWell(
-                onTap: () {
-                  setState(() {
-                    isStats = true;
-                  });
-                },
-                child: Image.asset(AppIcons.sim, scale: 3),
-              ),
-            ],
-          ),
-          Gap(5.h),
-          Expanded(
-              child: ListView(
+    return Column(
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            InkWell(
+              onTap: () {
+                setState(() {
+                  isStats = true;
+                });
+              },
+              child: Image.asset(AppIcons.sim, scale: 3),
+            ),
+          ],
+        ),
+        Gap(5.h),
+        Expanded(
+          child: ListView(
             children: [
               Container(
                 width: 331.w,
@@ -432,20 +428,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     spacer(),
                     InkWell(
                       onTap: () {
-                        Navigator.pushNamed(
-                          context,
-                          RouteNames.news,
-                        );
+                        Navigator.pushNamed(context, RouteNames.news);
                       },
                       child: rowItem(AppIcons.gallery, "Yangiliklar", false),
                     ),
                     spacer(),
                     InkWell(
                       onTap: () {
-                        Navigator.pushNamed(
-                          context,
-                          RouteNames.subscripts,
-                        );
+                        Navigator.pushNamed(context, RouteNames.subscripts);
                       },
                       child: rowItem(
                           AppIcons.purpleDone, "Mening obunalarim", false),
@@ -478,9 +468,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
             ],
-          ))
-        ],
-      ),
+          ),
+        )
+      ],
     );
   }
 

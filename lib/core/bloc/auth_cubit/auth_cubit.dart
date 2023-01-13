@@ -16,18 +16,17 @@ class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthInitial()) {
     getUserData();
   }
-//  userInActive = 8;
   final userBlocked = 9;
 
   Future<void> getUserData() async {
-    emit(OnAuthProgress());
+    emit(OnUserDataProgress());
     try {
-      final userOldData = await _storage.getUserInfo();
+      final userId = await _storage.getUserId();
 
-      if (userOldData == null) {
+      if (userId == null) {
         return;
       }
-      final rowData = await _urepo.getUserProfile(userOldData.id!);
+      final rowData = await _urepo.getUserProfile(userId);
       final userData = UserInfo.fromJson(rowData.data);
 
       if (userData.status == userBlocked) {
@@ -55,11 +54,10 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> authSignUp(
       String fullName, String phone, String password) async {
-    final realNumber = "998$phone";
     emit(OnAuthProgress());
 
     try {
-      final response = await _repo.sighUp(fullName, realNumber, password);
+      final response = await _repo.sighUp(fullName, phone, password);
       emit(OnWaitingSmsResult());
       print(response.data);
       final tempId = response.data["user_id"];
@@ -79,26 +77,19 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void> authLogin(String phone, String password) async {
-    final realNumber = "998$phone";
     emit(OnAuthProgress());
-    print("login");
-
     try {
-      final response = await _repo.logIn(realNumber, password);
-      print("login end");
-      print(response.data["user_info"]);
+      final response = await _repo.logIn(phone, password);
       await _storage.saveToken(response.data["user_auth"]);
+      final userInfo = UserInfo.fromJson(response.data["user_info"]);
       await _storage.saveUserInfo(jsonEncode(response.data["user_info"]));
-
+      await _storage.saveUserId(userInfo.id!);
       print("from storage: ${await _storage.getToken()}");
       print("from storage: ${await _storage.getUserInfo()}");
-
-      var userData = await _storage.getUserInfo();
-      print(userData.fullname);
-      emit(UserActive(userInfo: userData));
+      emit(UserActive(userInfo: userInfo));
     } on DioError catch (e) {
-      if (e.response?.statusCode == 400) {
-        emit(OnAuthBlocked(message: e.message));
+      if (e.response?.data["code"] == 0) {
+        emit(OnAuthBlocked(message: e.response?.data["message"]));
       }
       emit(
           AuthDenied(error: e.response?.data["message"] ?? "Tizimda nosozlik"));
@@ -108,9 +99,9 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void> refreshSmsCode(String phone) async {
-    var userData = await _storage.getUserInfo();
+    var userId = await _storage.getUserId();
     try {
-      await _repo.refreshSmsCode(userData.id!, phone);
+      await _repo.refreshSmsCode(userId!, phone);
     } on DioError catch (e) {
       emit(
           AuthDenied(error: e.response?.data["message"] ?? "Tizimda nosozlik"));
@@ -123,9 +114,6 @@ class AuthCubit extends Cubit<AuthState> {
     emit(OnAuthProgress());
     try {
       final response = await _repo.checkRegisterSmsCode(userId, phone, smsCode);
-      print("sms data: ${response.data}");
-      var userData = UserInfo.fromJson(response.data["user"]);
-      print(userData.fullname);
       await _storage.saveUserInfo(jsonEncode(response.data["user"]));
       emit(AuthGranted());
     } on DioError catch (e) {
@@ -153,15 +141,12 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> authLogOut() async {
     emit(OnAuthProgress());
-    var user = await _storage.getUserInfo();
+    var userId = await _storage.getUserId();
     var authKey = await _storage.getToken();
-    print("logout: ${user.fullname}");
     try {
-      var response = await _repo.logOut(user.id!, authKey!);
-      if (response.statusCode == 200) {
-        emit(LogedOut());
-        await _storage.clearToken();
-      }
+      await _repo.logOut(userId!, authKey!);
+      emit(LogedOut());
+      await _storage.clearToken();
     } on DioError catch (e) {
       emit(AuthDenied(error: e.response?.data["message"] ?? ""));
     } catch (e) {
@@ -174,13 +159,13 @@ class AuthCubit extends Cubit<AuthState> {
     emit(OnAuthProgress());
     try {
       final response = await _repo.forgotPassword(realPhone);
-      final rowData = response.data["id"];
+      final userId = response.data["id"];
+
+      await _storage.saveUserId(userId);
       await _storage.saveToken(response.data["auth_key"]);
 
-      print(await _storage.getToken());
-
       showToast(response.data["message"]);
-      emit(AuthOnSMS(id: rowData, phoneNumber: phone));
+      emit(AuthOnSMS(id: userId, phoneNumber: phone));
     } on DioError catch (e) {
       emit(AuthDenied(
           error: e.response?.data["message"] ??

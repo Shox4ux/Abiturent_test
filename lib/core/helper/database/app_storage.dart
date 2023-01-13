@@ -5,24 +5,19 @@ import 'package:test_app/core/domain/user_model/user_model.dart';
 import 'package:test_app/res/constants.dart';
 
 class AppStorage {
-  Future<void> savePassword(String password) async {
+  Future<void> saveUserId(int userId) async {
     var prefs = await SharedPreferences.getInstance();
-    await prefs.setString(AppStorageConstants.passwordKey, password);
+    await prefs.setInt(AppStorageConstants.userIdKey, userId);
   }
 
-  Future<String?> getPassword() async {
+  Future<int?> getUserId() async {
     var prefs = await SharedPreferences.getInstance();
-    return prefs.getString(AppStorageConstants.passwordKey);
-  }
-
-  Future<void> clearPassword() async {
-    var prefs = await SharedPreferences.getInstance();
-    prefs.remove(AppStorageConstants.passwordKey);
+    final data = prefs.getInt(AppStorageConstants.userIdKey);
+    return data;
   }
 
   Future<void> saveUserInfo(String data) async {
     // await clearUserInfo();
-
     var prefs = await SharedPreferences.getInstance();
     await prefs.setString(AppStorageConstants.userKey, data);
   }
@@ -43,13 +38,6 @@ class AppStorage {
   Future<void> clearUserInfo() async {
     var prefs = await SharedPreferences.getInstance();
     prefs.remove(AppStorageConstants.userKey);
-  }
-
-  Future<int> getUserId() async {
-    var prefs = await SharedPreferences.getInstance();
-    final data = prefs.getString(AppStorageConstants.userKey);
-    final u = UserInfo.fromJson(jsonDecode(data!));
-    return u.id!;
   }
 
   Future<void> saveToken(String? token) async {

@@ -41,7 +41,7 @@ class _MistakesScreenState extends State<MistakesScreen> {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async {
-        await context.read<AuthCubit>().getUserData();
+        await context.read<MistakesCubit>().getErrorList(_currentSubjectId);
       },
       child: Scaffold(
         drawer: CustomDrawer(mainWidth: MediaQuery.of(context).size.width),

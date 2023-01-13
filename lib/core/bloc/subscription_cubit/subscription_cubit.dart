@@ -19,9 +19,9 @@ class SubscriptionCubit extends Cubit<SubscriptionState> {
 
   Future<void> getScripts() async {
     emit(OnScriptProgress());
-    final u = await _storage.getUserId();
+    final userId = await _storage.getUserId();
     try {
-      final response = await _repo.getScripts(u);
+      final response = await _repo.getScripts(userId!);
       final rowData = response.data as List;
       final rowList =
           rowData.map((e) => SubscriptionModel.fromJson(e)).toList();

@@ -41,7 +41,7 @@ class _RatingScreenState extends State<RatingScreen> {
 
     return RefreshIndicator(
       onRefresh: () async {
-        await context.read<AuthCubit>().getUserData();
+        await context.read<RatingCubit>().callUserRating(currentSubjectId);
       },
       child: Scaffold(
         backgroundColor: AppColors.mainColor,

@@ -13,10 +13,9 @@ class AppBarCubit extends Cubit<AppBarState> {
 
   Future<void> getRatingBySubject(int subjectId) async {
     emit(OnAppBarRatingProgress());
-    final userData = await _storage.getUserInfo();
+    final userId = await _storage.getUserId();
     try {
-      final response =
-          await _repo.getUserRatingBySubject(subjectId, userData.id!);
+      final response = await _repo.getUserRatingBySubject(subjectId, userId!);
       if (response.data == null) {
         emit(OnAppBarRatingEmpty());
         return;

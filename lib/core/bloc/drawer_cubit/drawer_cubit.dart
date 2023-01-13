@@ -23,12 +23,11 @@ class DrawerCubit extends Cubit<DrawerState> {
       ///
       var lastSelectedIndex = await _storage.getDrawerIndex();
       if (lastSelectedIndex == null) {
-        emit(DrawerSubjectsLoadedState(0, rowList));
+        const initialSubjectIndex = 0;
+        emit(DrawerSubjectsLoadedState(initialSubjectIndex, rowList));
       } else {
         emit(DrawerSubjectsLoadedState(lastSelectedIndex, rowList));
       }
-
-      ///
     } on DioError catch (e) {
       emit(OnDrawerError(e.response?.data["message"] ?? "Tizimda nosozlik"));
     } catch (e) {
@@ -42,7 +41,18 @@ class DrawerCubit extends Cubit<DrawerState> {
       final lastSelectedIndex = await _storage.getDrawerIndex();
       print("Drawer saved is: $lastSelectedIndex");
       final oldState = (state as DrawerSubjectsLoadedState);
-      final newState = oldState.copyWith(lastSelectedIndex);
+      final newState = oldState.copyWith(lastSelectedIndex!);
+      emit(newState);
+    }
+  }
+
+  void chooseStatisticSubjectIdForIndex(int sunjectId) async {
+    if (state is DrawerSubjectsLoadedState) {
+      await _saveDrawerIndex(sunjectId - 2);
+      final lastSelectedIndex = await _storage.getDrawerIndex();
+      print("Drawer saved is: $lastSelectedIndex");
+      final oldState = (state as DrawerSubjectsLoadedState);
+      final newState = oldState.copyWith(lastSelectedIndex!);
       emit(newState);
     }
   }

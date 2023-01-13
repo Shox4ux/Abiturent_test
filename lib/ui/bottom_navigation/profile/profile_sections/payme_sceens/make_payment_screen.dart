@@ -42,9 +42,6 @@ class _MakePaymentScreenState extends State<MakePaymentScreen> {
       backgroundColor: AppColors.mainColor,
       body: BlocConsumer<PaymentCubit, PaymentState>(
         listener: (context, state) {
-          if (state is OnCardDeleted) {
-            context.read<PaymentCubit>().getCards();
-          }
           if (state is OnCardsEmpty) {
             Navigator.pushNamedAndRemoveUntil(
                 context, RouteNames.main, (route) => false);

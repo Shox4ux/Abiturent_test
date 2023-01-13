@@ -13,6 +13,8 @@ class OnSmsTimeOut extends AuthState {}
 
 class OnAuthProgress extends AuthState {}
 
+class OnUserDataProgress extends AuthState {}
+
 class OnAuthTime extends AuthState {}
 
 class OnAuthBlocked extends AuthState {

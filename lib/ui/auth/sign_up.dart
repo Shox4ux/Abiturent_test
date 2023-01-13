@@ -253,9 +253,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             return ElevatedButton(
                               style: AppStyles.introUpButton,
                               onPressed: () async {
-                                context
-                                    .read<AuthCubit>()
-                                    .authSignUp(_fulnameC, _phoneC, _passwordC);
+                                context.read<AuthCubit>().authSignUp(
+                                    _fulnameC, "998$_phoneC", _passwordC);
                               },
                               child: Text(
                                 AppStrings.introUpButtonText,

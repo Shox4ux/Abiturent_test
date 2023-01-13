@@ -143,11 +143,9 @@ class _GroupScreenState extends State<GroupScreen> {
                                       },
                                     ),
                                   )
-                                : const Expanded(
-                                    child: Center(
-                                      child: Text(
-                                          "Hozircha guruhlar mavjud emas..."),
-                                    ),
+                                : const Center(
+                                    child: Text(
+                                        "Hozircha guruhlar mavjud emas..."),
                                   ),
                             Gap(10.h),
                             ElevatedButton(

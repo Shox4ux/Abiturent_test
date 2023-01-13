@@ -16,8 +16,8 @@ class DrawerSubjectsLoadedState extends DrawerState {
   @override
   List<Object> get props => [index, subjectList];
 
-  DrawerSubjectsLoadedState copyWith(int? index) {
-    return DrawerSubjectsLoadedState(index ?? this.index, subjectList);
+  DrawerSubjectsLoadedState copyWith(int staticSubId) {
+    return DrawerSubjectsLoadedState(staticSubId, subjectList);
   }
 }
 

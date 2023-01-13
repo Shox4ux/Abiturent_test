@@ -58,7 +58,7 @@ class _SplashScreenState extends State<SplashScreen> {
               showToast("Siz operator tomonidan bloklangansiz");
               Navigator.pushNamedAndRemoveUntil(
                 context,
-                RouteNames.signin,
+                RouteNames.userBlockedWarning,
                 (route) => false,
               );
             }

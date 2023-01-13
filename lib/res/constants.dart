@@ -254,6 +254,8 @@ class AppStorageConstants {
   static const String tokenKey = "token";
   static const String paymeKey = "paymeKey";
   static const String userKey = "user";
+  static const String userIdKey = "userIdKey";
+
   static const String drawerIndexKey = "index_key";
   static const String passwordKey = "password";
 }

@@ -156,7 +156,7 @@ class _AddUserToGroupState extends State<AddUserToGroup> {
                               children: [
                                 Image.asset(
                                   AppIcons.tab,
-                                  scale: 2.5,
+                                  scale: 3,
                                 ),
                                 Gap(10.w),
                                 Text(state.group.subjectTitle!,
@@ -169,7 +169,7 @@ class _AddUserToGroupState extends State<AddUserToGroup> {
                               children: [
                                 Image.asset(
                                   AppIcons.user,
-                                  scale: 2.5,
+                                  scale: 3,
                                 ),
                                 Gap(10.w),
                                 Text("${state.group.membersCount} ishtirokchi",
@@ -296,13 +296,8 @@ class _AddUserToGroupState extends State<AddUserToGroup> {
   }
 }
 
-Widget memberItem(
-  String index,
-  MembersArray data,
-  bool isAdmin,
-  BuildContext context,
-  int userId,
-) {
+Widget memberItem(String index, MembersArray data, bool isAdmin,
+    BuildContext context, int userId) {
   if (isAdmin) {
     return Container(
       margin: EdgeInsets.only(bottom: 10.h),
@@ -311,7 +306,7 @@ Widget memberItem(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            index,
+            "$index)",
             style: AppStyles.subtitleTextStyle.copyWith(
               fontSize: 13.sp,
             ),
@@ -342,7 +337,7 @@ Widget memberItem(
                           .copyWith(color: AppColors.smsVerColor),
                     ),
                     Gap(5.h),
-                    data.telegramLink!.isNotEmpty
+                    (data.telegramLink != "-")
                         ? InkWell(
                             onTap: () {
                               _launcher(data.telegramLink!);

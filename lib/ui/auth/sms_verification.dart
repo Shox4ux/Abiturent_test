@@ -6,7 +6,6 @@ import 'package:gap/gap.dart';
 import 'package:test_app/res/functions/show_toast.dart';
 import 'package:test_app/ui/auth/reset_password.dart';
 import 'package:test_app/res/components/custom_pinput_widget.dart';
-import 'package:test_app/res/components/waiting.dart';
 import '../../core/bloc/auth_cubit/auth_cubit.dart';
 import '../../res/constants.dart';
 import '../../res/components/custom_simple_appbar.dart';
@@ -34,7 +33,7 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen>
   var _isFilled = false;
 
   void _checkFields() {
-    if (_pinCode.length == 6) {
+    if (_pinCode.length >= 6) {
       setState(() {
         _isFilled = true;
       });
@@ -109,7 +108,7 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen>
   void sendMessage() {
     final phoneNumber = '998${widget.phone}';
     final id = widget.id;
-    if (widget.fromWhere == RouteNames.forget) {
+    if (widget.fromWhere == RouteNames.forgetPassword) {
       context.read<AuthCubit>().checkResetPassword(id, phoneNumber, _pinCode);
     } else {
       context.read<AuthCubit>().checkSmsCode(id, phoneNumber, _pinCode);
@@ -130,26 +129,18 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen>
           startTimer();
         }
         if (state is AuthGranted) {
-          if (widget.fromWhere == RouteNames.forget) {
+          if (widget.fromWhere == RouteNames.forgetPassword) {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => ResetPassWord(
-                        phone: "998${widget.phone}",
-                      )),
+                builder: (context) => ResetPassWord(
+                  phone: "998${widget.phone}",
+                ),
+              ),
             );
           } else {
-            Navigator.pushAndRemoveUntil<void>(
-              context,
-              MaterialPageRoute<void>(
-                  builder: (BuildContext context) => const WaitingScreen(
-                        status: WarningValues.smsDone,
-                        alertText: "",
-                        buttonText: "",
-                        extraText: "",
-                      )),
-              (Route<dynamic> route) => false,
-            );
+            Navigator.pushNamedAndRemoveUntil(
+                context, RouteNames.onSmsCodeVarified, (route) => false);
           }
         }
         if (state is AuthDenied) {
@@ -212,7 +203,7 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen>
                             startTimer();
                             context
                                 .read<AuthCubit>()
-                                .refreshSmsCode(widget.phone);
+                                .refreshSmsCode("998${widget.phone}");
                           },
                           child: Text(
                             "Qayta jo'natish",

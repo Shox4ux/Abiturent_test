@@ -6,7 +6,6 @@ import 'package:test_app/core/domain/p_h_model/payment_history_model.dart';
 import 'package:test_app/core/domain/patment_model/card_list_model.dart';
 import 'package:test_app/core/domain/patment_model/card_model.dart';
 import 'package:test_app/core/domain/patment_model/on_payment_done.dart';
-import 'package:test_app/core/domain/patment_model/payment_response.dart';
 import 'package:test_app/core/helper/database/app_storage.dart';
 import 'package:test_app/core/helper/repos/payme_repo.dart';
 import 'package:test_app/res/functions/show_toast.dart';
@@ -24,7 +23,7 @@ class PaymentCubit extends Cubit<PaymentState> {
     final userId = await _storage.getUserId();
     final realAmount = amount.replaceAll(",", "");
     try {
-      final response = await _repo.makePayment(userId, cardId, realAmount);
+      final response = await _repo.makePayment(userId!, cardId, realAmount);
       final rowData = OnPaymentDone.fromJson(response.data);
       emit(OnMadePayment(rowData));
     } on DioError catch (e) {
@@ -40,9 +39,9 @@ class PaymentCubit extends Cubit<PaymentState> {
 
   Future<void> deleteCard(int cardId) async {
     emit(OnCardProgress());
-    final u = await _storage.getUserInfo();
+    final userId = await _storage.getUserId();
     try {
-      final response = await _repo.deleteCard(u.id!, cardId);
+      final response = await _repo.deleteCard(userId!, cardId);
       showToast(response.data["message"]);
       await getCards();
     } on DioError catch (e) {
@@ -58,9 +57,9 @@ class PaymentCubit extends Cubit<PaymentState> {
 
   Future<void> getCards() async {
     emit(OnCardProgress());
-    final u = await _storage.getUserInfo();
+    final userId = await _storage.getUserId();
     try {
-      final response = await _repo.getCards(u.id!);
+      final response = await _repo.getCards(userId!);
 
       if (response.data.isEmpty) {
         emit(OnCardsEmpty());
@@ -126,7 +125,7 @@ class PaymentCubit extends Cubit<PaymentState> {
     emit(OnPayHistoryProgress());
     final userId = await _storage.getUserId();
     try {
-      final response = await _repo.getPaymentHistory(userId);
+      final response = await _repo.getPaymentHistory(userId!);
       final rowData = response.data as List;
       final rowList = rowData.map((e) => PaymentHistory.fromJson(e)).toList();
       emit(OnPayHistoryReceived(rowList));

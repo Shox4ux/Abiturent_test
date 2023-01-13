@@ -47,7 +47,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => SmsVerificationScreen(
-                      fromWhere: RouteNames.forget,
+                      fromWhere: RouteNames.forgetPassword,
                       id: state.id,
                       phone: state.phoneNumber,
                     ),

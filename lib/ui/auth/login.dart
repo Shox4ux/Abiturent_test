@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:test_app/res/components/waiting.dart';
 import 'package:test_app/res/navigation/main_navigation.dart';
 import '../../core/bloc/auth_cubit/auth_cubit.dart';
 import '../../res/constants.dart';
@@ -58,15 +57,11 @@ class _LoginScreenState extends State<LoginScreen> {
           showToast(state.error);
         }
         if (state is OnAuthBlocked) {
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => WaitingScreen(
-                      status: WarningValues.authError,
-                      extraText: "",
-                      alertText: state.message,
-                      buttonText: "Operatorga yuzlanish")),
-              (route) => false);
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            RouteNames.userBlockedWarning,
+            (route) => false,
+          );
         }
       },
       child: Scaffold(
@@ -169,7 +164,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             onPressed: () {
                               context
                                   .read<AuthCubit>()
-                                  .authLogin(_phoneNumber, _password);
+                                  .authLogin("998$_phoneNumber", _password);
                             },
                             child: Text(
                               "Kirish",
@@ -193,7 +188,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   onTap: () {
                     Navigator.pushNamed(
                       context,
-                      RouteNames.forget,
+                      RouteNames.forgetPassword,
                     );
                   },
                   child: Text(
