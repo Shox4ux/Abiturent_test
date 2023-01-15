@@ -178,12 +178,13 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> changePassword(
       String phone, String newPassword, String confirmPassword) async {
     emit(OnAuthProgress());
-    final user = await _storage.getUserInfo();
+    final userId = await _storage.getUserId();
     final authKey = await _storage.getToken();
 
     try {
-      await _repo.changePassword(
-          user.id!, authKey!, phone, newPassword, confirmPassword);
+      final response = await _repo.changePassword(
+          userId!, authKey!, phone, newPassword, confirmPassword);
+      showToast(response.data["message"]);
       emit(AuthGranted());
     } on DioError catch (e) {
       emit(AuthDenied(error: e.response?.data["message"] ?? ""));
