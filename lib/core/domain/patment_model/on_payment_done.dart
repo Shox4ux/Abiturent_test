@@ -29,8 +29,8 @@ class Receipt {
   int? type;
   bool? external;
   int? operation;
-  Null? category;
-  Null? error;
+  dynamic category;
+  dynamic error;
   String? description;
   Detail? detail;
   int? amount;
@@ -39,32 +39,33 @@ class Receipt {
   List<Account>? account;
   Card? card;
   Payer? payer;
-  Merchant? merchant;
-  Meta? meta;
-  int? processingId;
+  // Merchant? merchant;
+  // Meta? meta;
+  // int? processingId;
 
-  Receipt(
-      {this.sId,
-      this.createTime,
-      this.payTime,
-      this.cancelTime,
-      this.state,
-      this.type,
-      this.external,
-      this.operation,
-      this.category,
-      this.error,
-      this.description,
-      this.detail,
-      this.amount,
-      this.currency,
-      this.commission,
-      this.account,
-      this.card,
-      this.payer,
-      this.merchant,
-      this.meta,
-      this.processingId});
+  Receipt({
+    this.sId,
+    this.createTime,
+    this.payTime,
+    this.cancelTime,
+    this.state,
+    this.type,
+    this.external,
+    this.operation,
+    this.category,
+    this.error,
+    this.description,
+    this.detail,
+    this.amount,
+    this.currency,
+    this.commission,
+    this.account,
+    this.card,
+    this.payer,
+    // this.merchant,
+    // this.meta,
+    // this.processingId
+  });
 
   Receipt.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
@@ -90,10 +91,10 @@ class Receipt {
     }
     card = json['card'] != null ? Card.fromJson(json['card']) : null;
     payer = json['payer'] != null ? Payer.fromJson(json['payer']) : null;
-    merchant =
-        json['merchant'] != null ? Merchant.fromJson(json['merchant']) : null;
-    meta = json['meta'] != null ? Meta.fromJson(json['meta']) : null;
-    processingId = json['processing_id'];
+    // merchant =
+    //     json['merchant'] != null ? Merchant.fromJson(json['merchant']) : null;
+    // meta = json['meta'] != null ? Meta.fromJson(json['meta']) : null;
+    // processingId = json['processing_id'];
   }
 
   Map<String, dynamic> toJson() {
@@ -124,20 +125,20 @@ class Receipt {
     if (payer != null) {
       data['payer'] = payer!.toJson();
     }
-    if (merchant != null) {
-      data['merchant'] = merchant!.toJson();
-    }
-    if (meta != null) {
-      data['meta'] = meta!.toJson();
-    }
-    data['processing_id'] = processingId;
+    // if (merchant != null) {
+    //   data['merchant'] = merchant!.toJson();
+    // }
+    // if (meta != null) {
+    //   data['meta'] = meta!.toJson();
+    // }
+    // data['processing_id'] = processingId;
     return data;
   }
 }
 
 class Detail {
-  Null? discount;
-  Null? shipping;
+  dynamic discount;
+  dynamic shipping;
   List<Items>? items;
 
   Detail({this.discount, this.shipping, this.items});
@@ -269,9 +270,9 @@ class Merchant {
   String? businessId;
   Epos? epos;
   int? date;
-  Null? logo;
+  dynamic logo;
   String? type;
-  Null? terms;
+  dynamic terms;
 
   Merchant(
       {this.sId,

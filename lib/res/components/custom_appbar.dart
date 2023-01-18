@@ -43,7 +43,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
             if (state is OnAppBarRatingEmpty) {
               return customAppBar(widget.scaffKey, context, "0", "0");
             }
-            return customAppBar(widget.scaffKey, context, "0", "0");
+            return customAppBar(widget.scaffKey, context, "", "");
           },
         );
       },

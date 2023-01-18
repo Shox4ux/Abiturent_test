@@ -7,12 +7,13 @@ class TestRepo {
   final _dio = DioClient.getDio();
 
   Future<Response> getTestPaginationByType(
-      int subId, int typeIndex, int page, int perPage) async {
+      int subId, int typeIndex, int page, int perPage, int userId) async {
     final Map<String, dynamic> params = {
       "id": subId,
       "page": page,
       "per-page": perPage,
       "type": typeIndex,
+      "user_id": userId,
     };
     return await _dio.get(ApiValues.testsBySubIdAndTypeIndex,
         queryParameters: params);

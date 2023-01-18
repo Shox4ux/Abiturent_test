@@ -321,7 +321,7 @@ class _CardConfirmationSceenState extends State<CardConfirmationSceen>
               builder: ((context, followLink) => InkWell(
                     onTap: followLink,
                     child: Text(
-                      "Публичная оферта",
+                      "Ommaviy taklif",
                       style: AppStyles.subtitleTextStyle.copyWith(
                         color: AppColors.mainColor,
                         fontSize: 12.sp,
@@ -362,7 +362,7 @@ class _CardConfirmationSceenState extends State<CardConfirmationSceen>
                   Gap(10.w),
                   Expanded(
                     child: Text(
-                      "I confirm my consent to the processing of the payment transaction through",
+                      "Payme orqali toʻlov tranzaksiyasini qayta ishlashga roziligimni tasdiqlayman",
                       style: AppStyles.subtitleTextStyle
                           .copyWith(fontSize: 12.sp, color: Colors.black),
                     ),

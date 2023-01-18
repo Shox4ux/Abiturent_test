@@ -1,15 +1,16 @@
-import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:test_app/res/constants.dart';
 import '../../../res/functions/show_toast.dart';
 import '../../domain/test_model/test_model.dart';
+import '../../helper/database/app_storage.dart';
 import '../../helper/repos/test_repo.dart';
 part 'dtm_state.dart';
 
 class DtmCubit extends Cubit<DtmState> {
   DtmCubit() : super(DtmInitial());
+  final _storage = AppStorage();
   final _repo = TestRepo();
   final _perPage = 10;
   var _currentPage = 1;
@@ -35,9 +36,11 @@ class DtmCubit extends Cubit<DtmState> {
   Future<void> _getDtmTestsFirstTime(int subId) async {
     _currentSubjectId = subId;
     emit(OnDtmTestProgress());
+    final userId = await _storage.getUserId();
     try {
       final response = await _repo.getTestPaginationByType(
-          subId, _testType, _currentPage, _perPage);
+          subId, _testType, _currentPage, _perPage, userId!);
+
       final allTestData = TestModel.fromJson(response.data);
       _testLimit = allTestData.subjects!.testLimit!;
 
@@ -54,9 +57,11 @@ class DtmCubit extends Cubit<DtmState> {
     _isPaginationEnded = false;
     emit(OnDtmTestProgress());
     _currentSubjectId = subId;
+    final userId = await _storage.getUserId();
+
     try {
       final response = await _repo.getTestPaginationByType(
-          subId, _testType, _currentPage, _perPage);
+          subId, _testType, _currentPage, _perPage, userId!);
 
       final allTestData = TestModel.fromJson(response.data);
       _testLimit = allTestData.subjects!.testLimit!;
@@ -74,9 +79,11 @@ class DtmCubit extends Cubit<DtmState> {
       showToast("Boshqa testlar mavjud emas");
       return;
     }
+    final userId = await _storage.getUserId();
+
     try {
       final response = await _repo.getTestPaginationByType(
-          subId, _testType, _currentPage, _perPage);
+          subId, _testType, _currentPage, _perPage, userId!);
       final allTestData = TestModel.fromJson(response.data);
       _combineDtmNewList(allTestData.tests!);
     } on DioError catch (e) {

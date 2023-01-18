@@ -70,7 +70,7 @@ class _GroupScreenState extends State<GroupScreen> {
           showToast(state.error);
         }
 
-        if (state is OnGroupTapped) {
+        if (state is OnInsideGroup) {
           Navigator.of(context).pushNamed(
             RouteNames.addMembers,
           );
@@ -86,18 +86,15 @@ class _GroupScreenState extends State<GroupScreen> {
         backgroundColor: AppColors.mainColor,
         body: SafeArea(
           child: Column(children: [
-            Padding(
-              padding: EdgeInsets.only(left: 20.w),
-              child: CustomSimpleAppBar(
-                isIcon: false,
-                isSimple: false,
-                titleText: "Guruhlarim",
-                iconColor: Colors.white,
-                routeText: RouteNames.main,
-                style: AppStyles.subtitleTextStyle.copyWith(
-                  color: Colors.white,
-                  fontSize: 24.sp,
-                ),
+            CustomSimpleAppBar(
+              isIcon: false,
+              isSimple: false,
+              titleText: "Guruhlarim",
+              iconColor: Colors.white,
+              routeText: RouteNames.main,
+              style: AppStyles.subtitleTextStyle.copyWith(
+                color: Colors.white,
+                fontSize: 24.sp,
               ),
             ),
             Expanded(
@@ -148,28 +145,30 @@ class _GroupScreenState extends State<GroupScreen> {
                                         "Hozircha guruhlar mavjud emas..."),
                                   ),
                             Gap(10.h),
-                            ElevatedButton(
-                              style: AppStyles.introUpButton,
-                              onPressed: () {
-                                showModalBottomSheet(
-                                  isScrollControlled: true,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(
-                                      16.r,
-                                    ),
-                                  )),
-                                  context: context,
-                                  builder: ((context) => bottomSheet()),
-                                );
-                              },
-                              child: Text(
-                                "Yangi guruh yaratish",
-                                style: AppStyles.introButtonText
-                                    .copyWith(color: const Color(0xffFCFCFC)),
+                            Padding(
+                              padding: EdgeInsets.only(bottom: 24.h),
+                              child: ElevatedButton(
+                                style: AppStyles.introUpButton,
+                                onPressed: () {
+                                  showModalBottomSheet(
+                                    isScrollControlled: true,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.vertical(
+                                      top: Radius.circular(
+                                        16.r,
+                                      ),
+                                    )),
+                                    context: context,
+                                    builder: ((context) => bottomSheet()),
+                                  );
+                                },
+                                child: Text(
+                                  "Yangi guruh yaratish",
+                                  style: AppStyles.introButtonText
+                                      .copyWith(color: const Color(0xffFCFCFC)),
+                                ),
                               ),
                             ),
-                            Gap(10.h),
                           ],
                         );
                       }

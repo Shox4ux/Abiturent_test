@@ -46,9 +46,6 @@ class _MakePaymentScreenState extends State<MakePaymentScreen> {
             Navigator.pushNamedAndRemoveUntil(
                 context, RouteNames.main, (route) => false);
           }
-          // if (state is OnCardError) {
-          //   setState(() {});
-          // }
         },
         builder: (context, state) {
           if (state is OnMadePayment) {
@@ -162,8 +159,10 @@ class _MakePaymentScreenState extends State<MakePaymentScreen> {
                               padding: EdgeInsets.only(bottom: 24.h),
                               child: ElevatedButton(
                                 style: AppStyles.introUpButton,
-                                onPressed: () {
-                                  context.read<PaymentCubit>().makePayment(
+                                onPressed: () async {
+                                  await context
+                                      .read<PaymentCubit>()
+                                      .makePayment(
                                         state.models[_currentCardIndex!].id,
                                         _amountController.text,
                                       );
@@ -201,7 +200,7 @@ class _MakePaymentScreenState extends State<MakePaymentScreen> {
   }
 }
 
-Widget onPaymentDone(BuildContext context, OnPaymentDone onPaymentDone) {
+Widget onPaymentDone(BuildContext context, OnPaymentDone state) {
   return Container(
     width: MediaQuery.of(context).size.width,
     height: MediaQuery.of(context).size.height,
@@ -234,8 +233,7 @@ Widget onPaymentDone(BuildContext context, OnPaymentDone onPaymentDone) {
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text:
-                        _amountProcessing(onPaymentDone.receipt?.amount) ?? "",
+                    text: _amountProcessing(state.receipt?.amount) ?? "",
                     style: AppStyles.introButtonText
                         .copyWith(color: Colors.black, fontSize: 48.sp),
                   ),
@@ -273,7 +271,12 @@ Widget onPaymentDone(BuildContext context, OnPaymentDone onPaymentDone) {
 }
 
 String? _amountProcessing(num? amount) {
-  var processedNum = numberFormatter(amount);
-  var formattedAmount = processedNum.substring(0, processedNum.length - 2);
-  return formattedAmount;
+  String sAmaont = amount.toString();
+  if (sAmaont.length - 2 == 4) {
+    return sAmaont.substring(0, sAmaont.length - 2);
+  } else {
+    var processedNum = numberFormatter(amount);
+    var formattedAmount = processedNum.substring(0, processedNum.length - 2);
+    return formattedAmount;
+  }
 }

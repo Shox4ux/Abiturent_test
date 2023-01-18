@@ -27,8 +27,6 @@ class PaymentCubit extends Cubit<PaymentState> {
       final rowData = OnPaymentDone.fromJson(response.data);
       emit(OnMadePayment(rowData));
     } on DioError catch (e) {
-      // emit(OnCardError(e.response?.data["message"] ?? ""));
-      getCards();
       showToast(e.response?.data["message"]);
     } on SocketException {
       emit(const OnCardError("Tarmoqda nosozlik"));

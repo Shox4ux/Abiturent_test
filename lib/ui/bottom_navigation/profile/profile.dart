@@ -89,6 +89,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Navigator.pushNamed(context, RouteNames.addCard);
             }
             if (state is OnCardsReceived) {
+              print(OnCardsReceived);
               Navigator.pushNamed(context, RouteNames.makePayment);
             }
           },
@@ -190,7 +191,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Gap(19.h),
                           GestureDetector(
                             onTap: () async {
-                              context.read<PaymentCubit>().getCards();
+                              await context.read<PaymentCubit>().getCards();
                             },
                             child: Container(
                               padding: EdgeInsets.symmetric(

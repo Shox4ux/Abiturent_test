@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gap/gap.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:test_app/core/bloc/app_bar_cubit/app_bar_cubit.dart';
 import 'package:test_app/core/bloc/dtm_cubit/dtm_cubit.dart';
 import 'package:test_app/core/bloc/test_cubit/test_cubit.dart';
-import 'package:test_app/res/components/custom_simple_appbar.dart';
-import 'package:test_app/res/constants.dart';
 import 'package:test_app/res/navigation/main_navigation.dart';
 import 'package:test_app/ui/splash/splash.dart';
 import 'core/bloc/auth_cubit/auth_cubit.dart';
@@ -24,6 +21,8 @@ import 'core/bloc/user_cubit/user_cubit.dart';
 void main() async {
   await Hive.initFlutter();
   runApp(const MyApp());
+
+  
 }
 
 class MyApp extends StatelessWidget {

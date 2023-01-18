@@ -1,16 +1,15 @@
 import 'dart:io';
-
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/animation.dart';
+import 'package:flutter/foundation.dart';
 import 'package:test_app/core/domain/group_model/group_item.dart';
 import 'package:test_app/core/domain/group_model/group_member_model.dart';
 import 'package:test_app/core/domain/group_model/group_model.dart';
 import 'package:test_app/core/domain/subject_models/subject_model.dart';
 import 'package:test_app/core/helper/database/app_storage.dart';
 import 'package:test_app/core/helper/repos/group_repo.dart';
-
+import 'package:test_app/res/functions/show_toast.dart';
 part 'group_state.dart';
 
 class GroupCubit extends Cubit<GroupState> {
@@ -29,13 +28,17 @@ class GroupCubit extends Cubit<GroupState> {
         subjectId = y.id!;
       }
     }
-    final u = await _storage.getUserInfo();
+
+    final userId = await _storage.getUserId();
 
     try {
-      final response = await _repo.createGroup(u.id!, subjectId!, groupTitle);
+      final response = await _repo.createGroup(userId!, subjectId!, groupTitle);
 
-      final rowData = GroupModel.fromJson(response.data);
-      emit(OnGroupAdded(rowData, u.id!));
+      final rowData = Group.fromJson(response.data["group"]);
+      showToast(response.data["message"]);
+
+      final isAdmin = userId == rowData.ownerId as int;
+      emit(OnInsideGroup(rowData, isAdmin));
     } on DioError catch (e) {
       emit(OnError(e.response!.data["message"]));
     } catch (e) {
@@ -45,13 +48,15 @@ class GroupCubit extends Cubit<GroupState> {
 
   Future<void> addMember(String memberId, int groupId) async {
     emit(OnProgress());
-    final u = await _storage.getUserInfo();
+    final userId = await _storage.getUserId();
 
     try {
       final response = await _repo.addGroupMember(memberId, groupId);
-      final rowData = GroupModel.fromJson(response.data);
+      final rowData = Group.fromJson(response.data["group"]);
+      showToast(response.data["message"]);
 
-      emit(OnGroupAdded(rowData, u.id!));
+      final isAdmin = userId == rowData.ownerId;
+      emit(OnInsideGroup(rowData, isAdmin));
     } on DioError catch (e) {
       emit(OnError(e.response!.data["message"]));
       getGroupMembers(groupId);
@@ -64,12 +69,16 @@ class GroupCubit extends Cubit<GroupState> {
 
   Future<void> deleteMember(int userId, int memberId) async {
     emit(OnProgress());
-    final u = await _storage.getUserInfo();
 
     try {
       final response = await _repo.deleteGroupMember(userId, memberId);
-      final rowData = GroupModel.fromJson(response.data);
-      emit(OnGroupAdded(rowData, u.id!));
+
+      final rowData = Group.fromJson(response.data["group"]);
+
+      showToast(response.data["message"]);
+      final isAdmin = userId == rowData.ownerId;
+
+      emit(OnInsideGroup(rowData, isAdmin));
     } on DioError catch (e) {
       emit(OnError(e.response?.data["message"] ?? "Tizimda nosozlik"));
     } on SocketException {
@@ -81,10 +90,9 @@ class GroupCubit extends Cubit<GroupState> {
 
   Future<void> getGroupsByUserId() async {
     emit(OnProgress());
-    final u = await _storage.getUserInfo();
-    var userId = u.id!;
+    final userId = await _storage.getUserId();
     try {
-      final response = await _repo.getGroup(userId);
+      final response = await _repo.getGroup(userId!);
       final rowData = response.data as List;
       final rowList = rowData.map((e) => GroupItem.fromJson(e)).toList();
 
@@ -98,12 +106,13 @@ class GroupCubit extends Cubit<GroupState> {
 
   Future<void> getGroupMembers(int groupId) async {
     emit(OnProgress());
-    final u = await _storage.getUserInfo();
+    final userId = await _storage.getUserId();
     try {
       final response = await _repo.getGroupMembers(groupId);
       final rowData = Group.fromJson(response.data);
 
-      emit(OnGroupTapped(rowData, u.id!));
+      final isAdmin = userId == rowData.ownerId as int;
+      emit(OnInsideGroup(rowData, isAdmin));
     } on DioError catch (e) {
       emit(OnError(e.response?.data["message"] ?? "Tizimda nosozlik"));
     } on SocketException {

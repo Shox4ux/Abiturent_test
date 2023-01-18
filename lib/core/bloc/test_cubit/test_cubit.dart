@@ -1,11 +1,10 @@
-import 'dart:isolate';
-
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:test_app/core/domain/test_model/test_inner_model.dart';
 import 'package:test_app/core/domain/test_model/test_model.dart';
 import 'package:test_app/core/domain/test_model/test_result_model.dart';
+import 'package:test_app/core/helper/database/app_storage.dart';
 import 'package:test_app/core/helper/repos/test_repo.dart';
 import 'package:test_app/res/constants.dart';
 import 'package:test_app/res/functions/show_toast.dart';
@@ -13,6 +12,7 @@ part 'test_state.dart';
 
 class TestCubit extends Cubit<TestState> {
   TestCubit() : super(TestInitial());
+  final _storage = AppStorage();
   final _repo = TestRepo();
   final _perPage = 10;
   var _testLimit = 0;
@@ -40,9 +40,10 @@ class TestCubit extends Cubit<TestState> {
     _isPaginationEnded = false;
     emit(OnTestProgress());
     _currentSubjectId = subId;
+    final userId = await _storage.getUserId();
     try {
       final response = await _repo.getTestPaginationByType(
-          subId, _testType, _currentPage, _perPage);
+          subId, _testType, _currentPage, _perPage, userId!);
 
       final allTestData = TestModel.fromJson(response.data);
       _testLimit = allTestData.subjects!.testLimit!;
@@ -64,9 +65,11 @@ class TestCubit extends Cubit<TestState> {
   Future<void> _getTestsFirstTime(int subId) async {
     emit(OnTestProgress());
     _currentSubjectId = subId;
+    final userId = await _storage.getUserId();
+
     try {
       final response = await _repo.getTestPaginationByType(
-          subId, _testType, _currentPage, _perPage);
+          subId, _testType, _currentPage, _perPage, userId!);
 
       final allTestData = TestModel.fromJson(response.data);
       _testLimit = allTestData.subjects!.testLimit!;
@@ -90,9 +93,11 @@ class TestCubit extends Cubit<TestState> {
       showToast("Boshqa testlar mavjud emas");
       return;
     }
+    final userId = await _storage.getUserId();
+
     try {
       final response = await _repo.getTestPaginationByType(
-          subId, _testType, _currentPage, _perPage);
+          subId, _testType, _currentPage, _perPage, userId!);
       final allTestData = TestModel.fromJson(response.data);
       await _combineTestNewList(allTestData.tests!);
     } on DioError catch (e) {

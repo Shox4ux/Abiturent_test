@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:test_app/core/bloc/subscription_cubit/subscription_cubit.dart';
 import 'package:test_app/core/domain/news_models/main_news_model.dart';
 import 'package:test_app/ui/auth/forgot_password.dart';
 import 'package:test_app/ui/auth/login.dart';
 import 'package:test_app/ui/auth/sign_up.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile.dart';
-import 'package:test_app/ui/bottom_navigation/profile/profile_sections/group_screen/add_user_to_group.dart';
+import 'package:test_app/ui/bottom_navigation/profile/profile_sections/group_screen/inside_group.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/news_screen/inside_news.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/news_screen/news.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/payme_sceens/add_card_screen.dart';
@@ -44,7 +43,7 @@ class MainNavigation {
     RouteNames.paymentsHistory: (context) => const PaymentHistoryScreen(),
     RouteNames.group: (context) => const GroupScreen(),
     RouteNames.main: (context) => const MainScreen(2),
-    RouteNames.addMembers: (context) => const AddUserToGroup(),
+    RouteNames.addMembers: (context) => const InsideGroup(),
   };
 
   Route? onGenerateRoute(RouteSettings settings) {

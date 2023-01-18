@@ -25,6 +25,7 @@ class GroupModel {
 class Group {
   int? id;
   String? groupCreated;
+  int? ownerId;
   String? subjectTitle;
   String? groupTitle;
   int? membersCount;
@@ -33,6 +34,7 @@ class Group {
   Group(
       {this.id,
       this.groupCreated,
+      this.ownerId,
       this.subjectTitle,
       this.groupTitle,
       this.membersCount,
@@ -41,6 +43,11 @@ class Group {
   Group.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     groupCreated = json['group_created'];
+    if (json['owner_id'] is String || json['owner_id'] is String?) {
+      ownerId = int.parse(json['owner_id']);
+    } else {
+      ownerId = json['owner_id'];
+    }
     subjectTitle = json['subject_title'];
     groupTitle = json['group_title'];
     membersCount = json['members_count'];
@@ -56,6 +63,7 @@ class Group {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['group_created'] = groupCreated;
+    data['owner_id'] = ownerId;
     data['subject_title'] = subjectTitle;
     data['group_title'] = groupTitle;
     data['members_count'] = membersCount;
