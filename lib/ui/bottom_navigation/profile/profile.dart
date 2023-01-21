@@ -267,6 +267,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  Widget body(List<StatModel> statList) {
+    if (isStats) {
+      return statistics(statList);
+    }
+    return isInSubs ? subs() : menu(context);
+  }
+
   Widget statistics(List<StatModel> statList) {
     if (statList.isEmpty) {
       return const Center(
@@ -291,13 +298,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: statisticsItem(statList[index]));
       },
     );
-  }
-
-  Widget body(List<StatModel> statList) {
-    if (isStats) {
-      return statistics(statList);
-    }
-    return isInSubs ? subs() : menu(context);
   }
 
   Widget subs() {

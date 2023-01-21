@@ -8,6 +8,7 @@ class InnerTestModel {
   String? content;
   int? prior;
   List<Answers>? answers;
+  String? image;
 
   InnerTestModel(
       {this.id,
@@ -35,6 +36,7 @@ class InnerTestModel {
         answers!.add(Answers.fromJson(v));
       });
     }
+    image = json['image'];
   }
 
   Map<String, dynamic> toJson() {
@@ -50,6 +52,7 @@ class InnerTestModel {
     if (answers != null) {
       data['answers_array'] = answers!.map((v) => v.toJson()).toList();
     }
+    data['image'] = image;
     return data;
   }
 }

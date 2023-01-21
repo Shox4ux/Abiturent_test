@@ -302,17 +302,45 @@ class _TestScreenState extends State<TestScreen> {
                     ),
                   ),
                   Gap(8.h),
+                  // state.innerTest.image != null
+                  //     ? const SizedBox.shrink()
+                  //     : SizedBox(
+                  //         height: 150.h,
+                  //         width: double.maxFinite,
+                  //         child: Image.network(
+                  //           state.innerTest.image!,
+                  //           fit: BoxFit.cover,
+                  //         ),
+                  //       ),
+
+                  if (state.innerTest.image != null)
+                    Container(
+                      height: 160.h,
+                      width: double.maxFinite,
+                      clipBehavior: Clip.hardEdge,
+                      decoration: BoxDecoration(
+                        color: Colors.amber,
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                      child: Image.network(
+                        state.innerTest.image ?? "",
+                        fit: BoxFit.cover,
+                      ),
+                    )
+                  else
+                    SizedBox.shrink(),
+
                   Padding(
-                    padding: EdgeInsets.only(left: 10.w),
+                    padding: EdgeInsets.only(left: 10.w, top: 4.h),
                     child: Text(
                       state.innerTest.content!,
                       style: AppStyles.subtitleTextStyle.copyWith(
-                        fontSize: 15.sp,
+                        fontSize: 14.sp,
                         color: Colors.black,
                       ),
                     ),
                   ),
-                  Gap(50.h),
+                  Gap(45.h),
                   Column(
                     children: [
                       for (var i = 0; i < state.innerTest.answers!.length; i++)
