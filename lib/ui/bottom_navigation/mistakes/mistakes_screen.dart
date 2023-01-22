@@ -159,7 +159,6 @@ class _MistakesScreenState extends State<MistakesScreen> {
               return testItem(
                 errorList[index],
                 errorList[index].answersDetail!,
-                errorList[index].questionContent!,
               );
             },
           ),
@@ -168,7 +167,7 @@ class _MistakesScreenState extends State<MistakesScreen> {
     );
   }
 
-  Widget testItem(Data result, List<AnswersDetail> ansList, String testQ) {
+  Widget testItem(Data mistakeData, List<AnswersDetail> ansList) {
     return Container(
       margin: EdgeInsets.only(bottom: 15.h),
       child: Column(
@@ -185,7 +184,7 @@ class _MistakesScreenState extends State<MistakesScreen> {
                   Gap(9.w),
                   Expanded(
                     child: Text(
-                      "Test: ${result.testContent}",
+                      "Test: ${mistakeData.testContent}",
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                       style: AppStyles.subtitleTextStyle.copyWith(
@@ -200,7 +199,7 @@ class _MistakesScreenState extends State<MistakesScreen> {
               Row(
                 children: [
                   Text(
-                    "Savol #: ${result.questionPrior}",
+                    "Savol #: ${mistakeData.questionPrior}",
                     style: AppStyles.subtitleTextStyle.copyWith(
                       color: AppColors.titleColor,
                       fontSize: 14.sp,
@@ -209,7 +208,7 @@ class _MistakesScreenState extends State<MistakesScreen> {
                   Gap(10.w),
                   Expanded(
                     child: Text(
-                      "Fan #: ${result.subjectName}",
+                      "Fan #: ${mistakeData.subjectName}",
                       overflow: TextOverflow.ellipsis,
                       style: AppStyles.subtitleTextStyle.copyWith(
                         color: AppColors.titleColor,
@@ -237,15 +236,29 @@ class _MistakesScreenState extends State<MistakesScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  testQ,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppStyles.subtitleTextStyle.copyWith(
-                    color: AppColors.titleColor,
-                    fontSize: 12.sp,
+                if (mistakeData.image != null)
+                  Container(
+                    height: 150.h,
+                    width: double.maxFinite,
+                    clipBehavior: Clip.hardEdge,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                    child: Image.network(
+                      mistakeData.image ?? "",
+                      fit: BoxFit.cover,
+                    ),
+                  )
+                else
+                  Text(
+                    mistakeData.questionContent ?? "",
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppStyles.subtitleTextStyle.copyWith(
+                      color: AppColors.titleColor,
+                      fontSize: 12.sp,
+                    ),
                   ),
-                ),
                 Gap(14.h),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

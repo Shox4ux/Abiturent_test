@@ -184,7 +184,7 @@ class _TestScreenState extends State<TestScreen> {
                             itemBuilder: (BuildContext context, int index) {
                               return ordinaryAnswer(
                                   state.resultTest[index].answersDetail!,
-                                  state.resultTest[index].questionContent!,
+                                  state.resultTest[index],
                                   (index + 1).toString());
                             }),
                       ),
@@ -302,24 +302,12 @@ class _TestScreenState extends State<TestScreen> {
                     ),
                   ),
                   Gap(8.h),
-                  // state.innerTest.image != null
-                  //     ? const SizedBox.shrink()
-                  //     : SizedBox(
-                  //         height: 150.h,
-                  //         width: double.maxFinite,
-                  //         child: Image.network(
-                  //           state.innerTest.image!,
-                  //           fit: BoxFit.cover,
-                  //         ),
-                  //       ),
-
                   if (state.innerTest.image != null)
                     Container(
-                      height: 160.h,
+                      height: 200.h,
                       width: double.maxFinite,
                       clipBehavior: Clip.hardEdge,
                       decoration: BoxDecoration(
-                        color: Colors.amber,
                         borderRadius: BorderRadius.circular(10.r),
                       ),
                       child: Image.network(
@@ -328,19 +316,17 @@ class _TestScreenState extends State<TestScreen> {
                       ),
                     )
                   else
-                    SizedBox.shrink(),
-
-                  Padding(
-                    padding: EdgeInsets.only(left: 10.w, top: 4.h),
-                    child: Text(
-                      state.innerTest.content!,
-                      style: AppStyles.subtitleTextStyle.copyWith(
-                        fontSize: 14.sp,
-                        color: Colors.black,
+                    Padding(
+                      padding: EdgeInsets.only(left: 10.w, top: 4.h),
+                      child: Text(
+                        state.innerTest.content!,
+                        style: AppStyles.subtitleTextStyle.copyWith(
+                          fontSize: 14.sp,
+                          color: Colors.black,
+                        ),
                       ),
                     ),
-                  ),
-                  Gap(45.h),
+                  Gap(40.h),
                   Column(
                     children: [
                       for (var i = 0; i < state.innerTest.answers!.length; i++)
@@ -406,7 +392,7 @@ class _TestScreenState extends State<TestScreen> {
   }
 
   Widget ordinaryAnswer(
-      List<AnswersDetail> model, String questionText, String index) {
+      List<AnswersDetail> model, TestResult testResult, String index) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -444,13 +430,27 @@ class _TestScreenState extends State<TestScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                questionText,
-                style: AppStyles.subtitleTextStyle.copyWith(
-                  color: Colors.black,
-                  fontSize: 12.sp,
+              if (testResult.image != null)
+                Container(
+                  height: 150.h,
+                  width: double.maxFinite,
+                  clipBehavior: Clip.hardEdge,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.r),
+                  ),
+                  child: Image.network(
+                    testResult.image ?? "",
+                    fit: BoxFit.cover,
+                  ),
+                )
+              else
+                Text(
+                  testResult.questionContent!,
+                  style: AppStyles.subtitleTextStyle.copyWith(
+                    color: Colors.black,
+                    fontSize: 12.sp,
+                  ),
                 ),
-              ),
               Gap(18.h),
               Container(
                 margin: EdgeInsets.only(left: 20.w),

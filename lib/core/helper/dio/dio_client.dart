@@ -37,7 +37,8 @@ class DioClient {
                   case 409:
                     throw ConflictException(error.requestOptions);
                   case 422:
-                    debugPrint(error.response?.data ?? "Tizimda nosozlik");
+                    debugPrint(
+                        error.response?.data['message'] ?? "Tizimda nosozlik");
                     break;
                   case 500:
                     throw InternalServerErrorException(error.requestOptions);

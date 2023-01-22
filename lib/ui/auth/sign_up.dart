@@ -94,7 +94,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         });
                       },
                       decoration: InputDecoration(
-                        labelText: "Abiturent FISH",
+                        labelText: "O'quvchi FISH",
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(16.h),
                           borderSide: BorderSide(color: Colors.red, width: 2.w),
@@ -253,8 +253,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             return ElevatedButton(
                               style: AppStyles.introUpButton,
                               onPressed: () async {
-                                context.read<AuthCubit>().authSignUp(
-                                    _fulnameC, "998$_phoneC", _passwordC);
+                                context
+                                    .read<AuthCubit>()
+                                    .authSignUp(_fulnameC, _phoneC, _passwordC);
                               },
                               child: Text(
                                 AppStrings.introUpButtonText,

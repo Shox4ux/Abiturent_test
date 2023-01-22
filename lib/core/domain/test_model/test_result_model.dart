@@ -2,6 +2,7 @@ class TestResult {
   int? questionId;
   String? questionContent;
   int? questionPrior;
+  String? image;
   String? testContent;
   String? subjectName;
   List<AnswersDetail>? answersDetail;
@@ -10,6 +11,7 @@ class TestResult {
       {this.questionId,
       this.questionContent,
       this.questionPrior,
+      this.image,
       this.testContent,
       this.subjectName,
       this.answersDetail});
@@ -18,6 +20,7 @@ class TestResult {
     questionId = json['question_id'];
     questionContent = json['question_content'];
     questionPrior = json['question_prior'];
+    image = json['image'];
     testContent = json['test_content'];
     subjectName = json['subject_name'];
     if (json['answers_detail'] != null) {
@@ -33,6 +36,7 @@ class TestResult {
     data['question_id'] = questionId;
     data['question_content'] = questionContent;
     data['question_prior'] = questionPrior;
+    data['image'] = image;
     data['test_content'] = testContent;
     data['subject_name'] = subjectName;
     if (answersDetail != null) {

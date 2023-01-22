@@ -57,7 +57,7 @@ class AuthCubit extends Cubit<AuthState> {
     emit(OnAuthProgress());
 
     try {
-      final response = await _repo.sighUp(fullName, phone, password);
+      final response = await _repo.sighUp(fullName, "998$phone", password);
       emit(OnWaitingSmsResult());
       print(response.data);
       final tempId = response.data["user_id"];
