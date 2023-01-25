@@ -158,7 +158,7 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen>
                   CustomSimpleAppBar(
                     isIcon: false,
                     isSimple: true,
-                    titleText: "Abiturentni tasniqlash",
+                    titleText: "o`quvchini tasdiqlash",
                     routeText: "routeText",
                     style: AppStyles.introButtonText.copyWith(
                       color: AppColors.titleColor,

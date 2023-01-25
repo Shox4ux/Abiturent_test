@@ -32,7 +32,7 @@ class _RatingScreenState extends State<RatingScreen> {
       if (currentBackPressTime == null ||
           now.difference(currentBackPressTime!) > const Duration(seconds: 1)) {
         currentBackPressTime = now;
-        showToast("Darturdan chiqich uchun tugmani ikki marta bosing");
+        showToast("Dasturdan chiqich uchun tugmani ikki marta bosing");
         return Future.value(false);
       } else {
         return Future.value(true);

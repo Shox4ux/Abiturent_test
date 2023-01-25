@@ -42,7 +42,11 @@ class AppStorage {
 
   Future<void> saveToken(String? token) async {
     var prefs = await SharedPreferences.getInstance();
-    await prefs.setString(AppStorageConstants.tokenKey, token!);
+    if (token == null) {
+      print("Token is null");
+      return;
+    }
+    await prefs.setString(AppStorageConstants.tokenKey, token);
   }
 
   Future<String?> getToken() async {

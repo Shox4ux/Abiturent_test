@@ -320,34 +320,37 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
                           : const SizedBox.shrink(),
                     ],
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => TestScreen(
-                            testId: tests.id!,
-                            subName: tests.subjectName!,
-                            testIndex: testIndex,
-                            questionCount: tests.questionsCount!,
+                  if (tests.questionsCount == 0)
+                    const SizedBox.shrink()
+                  else
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TestScreen(
+                              testId: tests.id!,
+                              subName: tests.subjectName!,
+                              testIndex: testIndex,
+                              questionCount: tests.questionsCount!,
+                            ),
                           ),
+                        );
+                        context.read<InnerTestCubit>().getTestById(tests.id!);
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                            vertical: 11.h, horizontal: 16.w),
+                        height: 32.h,
+                        decoration: BoxDecoration(
+                          color: AppColors.mainColor,
+                          borderRadius: BorderRadius.circular(120.r),
                         ),
-                      );
-                      context.read<InnerTestCubit>().getTestById(tests.id!);
-                    },
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                          vertical: 11.h, horizontal: 16.w),
-                      height: 32.h,
-                      decoration: BoxDecoration(
-                        color: AppColors.mainColor,
-                        borderRadius: BorderRadius.circular(120.r),
+                        child: Image.asset(
+                          AppIcons.arrow,
+                        ),
                       ),
-                      child: Image.asset(
-                        AppIcons.arrow,
-                      ),
-                    ),
-                  )
+                    )
                 ],
               ),
               Gap(10.h),

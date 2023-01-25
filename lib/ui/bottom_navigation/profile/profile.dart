@@ -77,7 +77,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       listeners: [
         BlocListener<AuthCubit, AuthState>(
           listener: (context, state) {
-            if (state is LogedOut) {
+            if (state is OnLogOut) {
               Navigator.pushNamedAndRemoveUntil(
                   context, RouteNames.signin, (route) => false);
             }
@@ -277,7 +277,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget statistics(List<StatModel> statList) {
     if (statList.isEmpty) {
       return const Center(
-        child: Text("Fanlarga obuna bo'linmagan..."),
+        child: Text("Fanlarga bo`yicha obunalar mavjud emas..."),
       );
     }
     return ListView.builder(
@@ -365,7 +365,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 );
               }
 
-              return const Center(child: Text("Hozircha bu oyna bo'sh"));
+              return const Center(child: Text("Hozircha bu oyna bo'sh..."));
             },
           ),
         ),
@@ -501,7 +501,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 Gap(20.h),
                 Text(
-                  "Tizimda chiqish xoxlaysizmi ?",
+                  "Tizimdan chiqish xoxlaysizmi ?",
                   style: AppStyles.introButtonText.copyWith(
                     color: Colors.black,
                   ),

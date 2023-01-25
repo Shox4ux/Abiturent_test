@@ -69,10 +69,10 @@ class AppStrings {
   static const String secondHeadIntro = "Turli xil fanlar";
   static const String thirdHeadIntro = "O’z ustida ishlash";
 
-  static const String introUpButtonText = "Ro’yhatdan o’tish";
+  static const String introUpButtonText = "Ro’yxatdan o’tish";
 
   static const String checkBoxText =
-      "Barcha ma’lumotlarinmi qayta ishlash uchun va foydalanishga ruxsat etaman";
+      "Barcha ma’lumotlarni qayta ishlashga va foydalanishga ruxsat beraman";
 
   static const String firstFootIntro =
       "Eng yaqin test markazi, sizning telefoningizda";
@@ -81,12 +81,6 @@ class AppStrings {
 
   static const String thirdFootIntro =
       "Agar siz testdan o'tgan bo'lsangiz,natijangizni tekshiring va o’z ustingizda ishlang";
-
-  static const String smsText =
-      "Bizning telegon +99899 *** ** 88 raqamingizga sms-kod xabarnomasini jo’natdik.";
-
-  static const String newsString =
-      "NASA yaqin 10 yillikning asosiy missiyasi – Artemis dasturi ishga tushirilganini e’lon qildi. U uchta bosqichdan iborat: uchuvchisiz parvoz, ekipajning Oy atrofidagi parvozi va astronavtlarning Oyga qo‘nishi. Uchuvchisiz parvoz 27 sentabr kuni start oladi";
 }
 
 class AppIntroImages {

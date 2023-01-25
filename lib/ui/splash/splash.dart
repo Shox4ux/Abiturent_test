@@ -62,6 +62,13 @@ class _SplashScreenState extends State<SplashScreen> {
                 (route) => false,
               );
             }
+            if (state is OnLoginDataEmpty) {
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                RouteNames.signin,
+                (route) => false,
+              );
+            }
           },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
