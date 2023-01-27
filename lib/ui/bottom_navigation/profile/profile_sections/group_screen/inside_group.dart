@@ -407,7 +407,7 @@ Future<dynamic> alertDialog(
   return showDialog(
     context: context,
     builder: ((context) => AlertDialog(
-          title: const Text("Ishtirokchini chiqarmoqchimisiz"),
+          title: const Text("Ishtirokchini chiqarmoqchimisiz?"),
           actions: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

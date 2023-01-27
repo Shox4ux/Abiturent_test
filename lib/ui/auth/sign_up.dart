@@ -50,7 +50,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             child: BlocListener<AuthCubit, AuthState>(
               listener: (context, state) {
                 if (state is AuthOnSMS) {
-                  showToast("Ro'yxatdan muvaffaqiyatli  o'tildi");
+                  showToast("Ro'yxatdan muvaffaqiyatli o'tildi");
 
                   Navigator.push(
                     context,
@@ -94,7 +94,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         });
                       },
                       decoration: InputDecoration(
-                        labelText: "O'quvchi FISH",
+                        labelText: "O'quvchi F.I.O",
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(16.h),
                           borderSide: BorderSide(color: Colors.red, width: 2.w),
@@ -285,7 +285,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     children: [
                       RichText(
                         text: TextSpan(
-                          text: "Ro’yhatdan o’tganmisiz? ",
+                          text: "Ro’yxatdan o’tganmisiz? ",
                           style: AppStyles.subtitleTextStyle,
                           children: [
                             TextSpan(

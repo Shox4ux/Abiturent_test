@@ -17,6 +17,8 @@ class OnUserDataProgress extends AuthState {}
 
 class OnAuthTime extends AuthState {}
 
+class OnLoginDataEmpty extends AuthState {}
+
 class OnAuthBlocked extends AuthState {
   final String message;
   const OnAuthBlocked({required this.message});
@@ -52,7 +54,7 @@ class AuthOnSMS extends AuthState {
   List<Object> get props => [phoneNumber, id];
 }
 
-class LogedOut extends AuthState {
+class OnLogOut extends AuthState {
   @override
   List<Object> get props => [];
 }

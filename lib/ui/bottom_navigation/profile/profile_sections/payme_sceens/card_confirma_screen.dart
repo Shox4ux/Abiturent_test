@@ -371,7 +371,7 @@ class _CardConfirmationSceenState extends State<CardConfirmationSceen>
               ),
             ),
             Gap(40.h),
-            const Text("Powered by"),
+            const Text("Tomonidan qo'llab quvvatlanadi"),
             Image.asset(
               AppIcons.big,
               scale: 4.5,

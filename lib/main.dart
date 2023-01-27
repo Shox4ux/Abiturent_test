@@ -21,8 +21,6 @@ import 'core/bloc/user_cubit/user_cubit.dart';
 void main() async {
   await Hive.initFlutter();
   runApp(const MyApp());
-
-  
 }
 
 class MyApp extends StatelessWidget {
@@ -34,55 +32,42 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          lazy: true,
           create: (context) => AuthCubit(),
         ),
         BlocProvider(
-          lazy: true,
           create: (context) => DtmCubit(),
         ),
         BlocProvider(
-          lazy: true,
           create: (context) => AppBarCubit(),
         ),
         BlocProvider(
-          lazy: true,
           create: (context) => InnerTestCubit(),
         ),
         BlocProvider(
-          lazy: true,
           create: (context) => BookCubit(),
         ),
         BlocProvider(
-          lazy: true,
           create: (context) => UserCubit(),
         ),
         BlocProvider(
-          lazy: true,
           create: (context) => GroupCubit(),
         ),
         BlocProvider(
-          lazy: true,
           create: (context) => DrawerCubit(),
         ),
         BlocProvider(
-          lazy: true,
           create: (context) => TestCubit(),
         ),
         BlocProvider(
-          lazy: true,
           create: (context) => RatingCubit(),
         ),
         BlocProvider(
-          lazy: true,
           create: (context) => MistakesCubit(),
         ),
         BlocProvider(
-          lazy: true,
           create: (context) => SubscriptionCubit(),
         ),
         BlocProvider(
-          lazy: true,
           create: (context) => PaymentCubit(),
         ),
       ],

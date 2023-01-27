@@ -18,9 +18,6 @@ allprojects {
     }
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.1'
-}
 
 rootProject.buildDir = '../build'
 subprojects {
@@ -30,6 +27,4 @@ subprojects {
     project.evaluationDependsOn(':app')
 }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
+

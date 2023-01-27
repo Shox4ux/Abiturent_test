@@ -80,7 +80,7 @@ class _ResetPassWordState extends State<ResetPassWord> {
           child: CustomSimpleAppBar(
             isIcon: false,
             isSimple: true,
-            titleText: "Abiturentni tasdiqlash",
+            titleText: "O`quvchini tasdiqlash",
             routeText: "routeText",
             style: AppStyles.introButtonText.copyWith(
               color: AppColors.titleColor,

@@ -78,7 +78,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20.w),
                     child: Text(
-                      "Xavotir olmang.Telefon raqamingizga sms kod xabarnomasini jo’natamiz!",
+                      "Xavotir olmang, telefon raqamizga sms kod xabarnomasini jo’natamiz!",
                       style: AppStyles.introButtonText.copyWith(
                         color: Colors.black,
                         fontSize: 24.sp,
@@ -95,7 +95,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     },
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
-                      labelText: "Telefon raqam",
+                      labelText: "Telefon raqami",
                       prefixText: "+998 ",
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16.h),
@@ -147,4 +147,3 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     );
   }
 }
-// 

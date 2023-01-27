@@ -9,7 +9,6 @@ import 'package:test_app/ui/bottom_navigation/profile/profile_sections/news_scre
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/news_screen/news.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/payme_sceens/add_card_screen.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/payme_sceens/make_payment_screen.dart';
-import 'package:test_app/ui/bottom_navigation/profile/profile_sections/payment_history/payment_history.dart';
 import 'package:test_app/ui/intro/intro.dart';
 import 'package:test_app/ui/main_screen/main_screen.dart';
 import 'package:test_app/ui/splash/blocked_warning.dart';
@@ -40,7 +39,6 @@ class MainNavigation {
     RouteNames.makePayment: (context) => const MakePaymentScreen(),
     RouteNames.forgetPassword: (context) => const ForgotPasswordScreen(),
     RouteNames.subscripts: (context) => const MySubscriptions(),
-    RouteNames.paymentsHistory: (context) => const PaymentHistoryScreen(),
     RouteNames.group: (context) => const GroupScreen(),
     RouteNames.main: (context) => const MainScreen(2),
     RouteNames.addMembers: (context) => const InsideGroup(),
@@ -87,7 +85,6 @@ abstract class RouteNames {
   static const forgetPassword = "forgetPassword";
   static const innerNews = "innerNews";
   static const subscripts = "subscripts";
-  static const paymentsHistory = "paymentsHistory";
   static const addMembers = "addMembers";
   static const testEnd = "testEnd";
   static const editProfile = "editProfile";

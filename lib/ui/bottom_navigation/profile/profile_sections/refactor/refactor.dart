@@ -205,7 +205,7 @@ class _RefactorScreenState extends State<RefactorScreen> {
                 controller: _changedNameController,
                 keyboardType: TextInputType.name,
                 decoration: InputDecoration(
-                  labelText: "Abiturent F.I.O",
+                  labelText: "O`quvchi F.I.O",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(16.h),
                   ),
@@ -299,7 +299,7 @@ class _RefactorScreenState extends State<RefactorScreen> {
       margin: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
       child: Column(children: [
         const Text(
-          "Profil uchun Rasm tanlang",
+          "Profil uchun rasm tanlang",
         ),
         Gap(20.h),
         Row(

@@ -27,6 +27,10 @@ class AuthCubit extends Cubit<AuthState> {
         return;
       }
       final rowData = await _urepo.getUserProfile(userId);
+      if (rowData.data == null) {
+        emit(OnLoginDataEmpty());
+        return;
+      }
       final userData = UserInfo.fromJson(rowData.data);
 
       if (userData.status == userBlocked) {
@@ -88,9 +92,9 @@ class AuthCubit extends Cubit<AuthState> {
       print("from storage: ${await _storage.getUserInfo()}");
       emit(UserActive(userInfo: userInfo));
     } on DioError catch (e) {
-      if (e.response?.data["code"] == 0) {
-        emit(OnAuthBlocked(message: e.response?.data["message"]));
-      }
+      // if (e.response?.data["code"] == 0) {
+      //   emit(OnAuthBlocked(message: e.response?.data["message"]));
+      // }
       emit(
           AuthDenied(error: e.response?.data["message"] ?? "Tizimda nosozlik"));
     } catch (e) {
@@ -145,7 +149,7 @@ class AuthCubit extends Cubit<AuthState> {
     var authKey = await _storage.getToken();
     try {
       await _repo.logOut(userId!, authKey!);
-      emit(LogedOut());
+      emit(OnLogOut());
       await _storage.clearToken();
     } on DioError catch (e) {
       emit(AuthDenied(error: e.response?.data["message"] ?? ""));
@@ -160,9 +164,10 @@ class AuthCubit extends Cubit<AuthState> {
     try {
       final response = await _repo.forgotPassword(realPhone);
       final userId = response.data["id"];
+      final authKey = response.data["auth_key"];
 
       await _storage.saveUserId(userId);
-      await _storage.saveToken(response.data["auth_key"]);
+      await _storage.saveToken(authKey);
 
       showToast(response.data["message"]);
       emit(AuthOnSMS(id: userId, phoneNumber: phone));
