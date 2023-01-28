@@ -9,13 +9,10 @@ import 'package:test_app/res/constants.dart';
 import 'package:test_app/res/components/custom_appbar.dart';
 import 'package:test_app/res/components/custom_drawer.dart';
 import 'package:test_app/ui/bottom_navigation/training_tests/test_screens/test.dart';
-import '../../../core/bloc/auth_cubit/auth_cubit.dart';
 import '../../../core/bloc/drawer_cubit/drawer_cubit.dart';
 import '../../../core/domain/test_model/test_model.dart';
 import '../../../core/helper/repos/test_repo.dart';
 import '../../../res/functions/show_toast.dart';
-import '../../../res/functions/will_pop_function.dart';
-import '../../../res/components/custom_circle_painter.dart';
 
 int? _currentSubjectId;
 
@@ -67,7 +64,7 @@ class _DtmScreenState extends State<DtmScreen>
     if (currentBackPressTime == null ||
         now.difference(currentBackPressTime!) > const Duration(seconds: 1)) {
       currentBackPressTime = now;
-      showToast("Darturdan chiqich uchun tugmani ikki marta bosing");
+      showToast("Dasturdan chiqich uchun tugmani ikki marta bosing");
       return Future.value(false);
     } else {
       return Future.value(true);

@@ -5,13 +5,11 @@ import 'package:gap/gap.dart';
 import 'package:test_app/res/components/custom_appbar.dart';
 import 'package:test_app/res/components/custom_dot.dart';
 import 'package:test_app/res/components/custom_drawer.dart';
-import '../../../core/bloc/auth_cubit/auth_cubit.dart';
 import '../../../core/bloc/drawer_cubit/drawer_cubit.dart';
 import '../../../core/bloc/mistakes_cubit/mistakes_cubit.dart';
 import '../../../core/domain/mistakes_model/mistakes_model.dart';
 import '../../../res/constants.dart';
 import '../../../res/functions/show_toast.dart';
-import '../../../res/functions/will_pop_function.dart';
 
 class MistakesScreen extends StatefulWidget {
   const MistakesScreen({Key? key}) : super(key: key);
@@ -30,7 +28,7 @@ class _MistakesScreenState extends State<MistakesScreen> {
     if (currentBackPressTime == null ||
         now.difference(currentBackPressTime!) > const Duration(seconds: 1)) {
       currentBackPressTime = now;
-      showToast("Darturdan chiqich uchun tugmani ikki marta bosing");
+      showToast("Dasturdan chiqich uchun tugmani ikki marta bosing");
       return Future.value(false);
     } else {
       return Future.value(true);

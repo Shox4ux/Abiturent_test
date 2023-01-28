@@ -98,14 +98,25 @@ class MembersArray {
   });
 
   MembersArray.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    userId = json['user_id'];
+    if (json['id'] is String || json['id'] is String?) {
+      id = int.parse(json['owner_id']);
+    } else {
+      id = json['owner_id'];
+    }
+    if (json['user_id'] is String || json['user_id'] is String?) {
+      userId = int.parse(json['user_id']);
+    } else {
+      userId = json['user_id'];
+    }
     fullname = json['fullname'];
     rating = json['rating'];
-    type = json['type'];
+    if (json['type'] is String || json['type'] is String?) {
+      type = int.parse(json['type']);
+    } else {
+      type = json['type'];
+    }
     created = json['created'];
     groupTitle = json['group_title'];
-    subjectTitle = json['subject_title'];
     subjectTitle = json['subject_title'];
     telegramLink = json['telegram_link'];
   }

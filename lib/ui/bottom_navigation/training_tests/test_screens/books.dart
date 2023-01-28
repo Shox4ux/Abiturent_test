@@ -19,6 +19,8 @@ class BookScreen extends StatefulWidget {
 
 double progress = 10;
 
+int? pressedIndex;
+
 bool isLoaded = false;
 
 class _BookScreenState extends State<BookScreen> {
@@ -58,8 +60,11 @@ class _BookScreenState extends State<BookScreen> {
                     Expanded(
                       child: ListView.builder(
                         itemCount: widget.bookList.length,
-                        itemBuilder: (context, index) =>
-                            bookItem(widget.bookList[index]),
+                        itemBuilder: (context, index) => bookItem(
+                          widget.bookList[index],
+                          (index == pressedIndex && pressedIndex != null),
+                          index,
+                        ),
                       ),
                     ),
                   ],
@@ -72,54 +77,49 @@ class _BookScreenState extends State<BookScreen> {
     );
   }
 
-  Widget bookItem(Books book) {
+  Widget bookItem(Books book, bool isOnLoading, int bookIndex) {
     return Container(
       alignment: Alignment.center,
       height: 70.h,
       width: double.maxFinite,
-      child: Row(
-        children: [
-          BlocConsumer<BookCubit, BookState>(
-            listener: (context, state) {
-              if (state is OnError) {
-                showToast(state.error);
-              }
-              if (state is OnDownloadCompleted) {
-                showToast("Kitob yuklab olindi");
-              }
-              if (state is OnProgress) {
+      child: BlocListener<BookCubit, BookState>(
+        listener: (context, state) {
+          if (state is OnError) {
+            showToast(state.error);
+          }
+          if (state is OnDownloadCompleted) {
+            showToast("Kitob yuklab olindi");
+          }
+          if (state is OnProgress) {
+            setState(() {
+              progress = state.progress;
+            });
+          }
+        },
+        child: Row(children: [
+          GestureDetector(
+              onTap: () async {
                 setState(() {
-                  progress = state.progress;
+                  pressedIndex = bookIndex;
                 });
-              }
-            },
-            builder: (context, state) {
-              if (state is OnProgress) {
-                return CircularProgressIndicator(
-                  valueColor: const AlwaysStoppedAnimation<Color>(
-                    AppColors.mainColor,
-                  ),
-                  value: state.progress,
-                );
-              }
-              return GestureDetector(
-                onTap: () async {
-                  context
-                      .read<BookCubit>()
-                      .downloadFile(book.files!, book.title!, book.id!);
-                },
-                child: isLoaded
-                    ? Image.asset(
-                        AppIcons.bd,
-                        scale: 3.5,
-                      )
-                    : Image.asset(
-                        AppIcons.rdb,
-                        scale: 3.5,
+                showToast("Iltimos kuting");
+                await context
+                    .read<BookCubit>()
+                    .downloadFile(book.files!, book.title!, book.id!);
+                setState(() {
+                  pressedIndex = null;
+                });
+              },
+              child: !isOnLoading
+                  ? Image.asset(
+                      AppIcons.rdb,
+                      scale: 3.5,
+                    )
+                  : const CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        AppColors.mainColor,
                       ),
-              );
-            },
-          ),
+                    )),
           Gap(9.w),
           Text(
             book.title!,
@@ -128,7 +128,7 @@ class _BookScreenState extends State<BookScreen> {
               fontSize: 13.sp,
             ),
           )
-        ],
+        ]),
       ),
     );
   }
