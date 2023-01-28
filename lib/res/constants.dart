@@ -215,6 +215,7 @@ class ApiValues {
   static const String stats = "user/statistics";
   static const String ratingUrlBySubjectId = "user/common-stats";
   static const String updateProfileUrl = "user/update";
+  static const String deleteUserUrl = "user/delete-user";
 
   static const String makePaymentUrl = "card/card-makepay";
   static const String getCardsUrl = "card/my-cards";

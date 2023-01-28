@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:test_app/core/bloc/user_cubit/user_cubit.dart';
 import 'package:test_app/core/domain/p_h_model/payment_history_model.dart';
 import 'package:test_app/core/domain/user_model/stat_model.dart';
 import 'package:test_app/core/domain/user_model/user_model.dart';
@@ -80,6 +81,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
             if (state is OnLogOut) {
               Navigator.pushNamedAndRemoveUntil(
                   context, RouteNames.signin, (route) => false);
+            }
+          },
+        ),
+        BlocListener<UserCubit, UserState>(
+          listener: (context, state) {
+            if (state is OnUserDeleted) {
+              Navigator.pushNamedAndRemoveUntil(
+                  context, RouteNames.intro, (route) => false);
             }
           },
         ),
@@ -461,9 +470,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     spacer(),
                     InkWell(
                       onTap: () {
-                        logOutBottomSheet(context);
+                        alertBottomSheet(context, isLogout: true);
                       },
                       child: rowItem(AppIcons.logout, "Tizimdan chiqish", true),
+                    ),
+                    spacer(),
+                    InkWell(
+                      onTap: () {
+                        alertBottomSheet(context, isLogout: false);
+                      },
+                      child:
+                          rowItem(AppIcons.delete, "Akauntni o`chirish", true),
                     ),
                   ]),
                 ),
@@ -475,7 +492,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  logOutBottomSheet(BuildContext context) {
+  alertBottomSheet(BuildContext context, {required bool isLogout}) {
     showModalBottomSheet(
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
@@ -501,7 +518,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 Gap(20.h),
                 Text(
-                  "Tizimdan chiqish xoxlaysizmi ?",
+                  isLogout
+                      ? "Tizimdan chiqish xoxlaysizmi ?"
+                      : "Barcha ma`lumotlaringiz (obunalar, guruhlar, ratinglar...) o`chirilishga rozilig berasizmi?",
                   style: AppStyles.introButtonText.copyWith(
                     color: Colors.black,
                   ),
@@ -535,7 +554,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     InkWell(
                       onTap: () async {
                         Navigator.pop(context);
-                        await context.read<AuthCubit>().authLogOut();
+
+                        if (isLogout) {
+                          await context.read<AuthCubit>().authLogOut();
+                        } else {
+                          await context.read<UserCubit>().deleteUser();
+                        }
                       },
                       child: Container(
                         height: 56.h,

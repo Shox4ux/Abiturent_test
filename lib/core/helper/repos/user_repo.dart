@@ -33,25 +33,23 @@ class UserRepo {
 
   Future<Response> updateProfil(String fullName, int userId, File? avatar,
       String authKey, String telegramLink) async {
-    if (avatar == null) {
-      var formData = FormData.fromMap({
-        "fullname": fullName,
-        "user_id": userId,
-        "avatar": null,
-        "auth_key": authKey,
-        "telegram_link": telegramLink,
-      });
-      return _dio.post(ApiValues.updateProfileUrl, data: formData);
-    }
-
     var formData = FormData.fromMap({
       "fullname": fullName,
       "user_id": userId,
-      "avatar": await MultipartFile.fromFile(avatar.path),
+      "avatar":
+          (avatar != null) ? await MultipartFile.fromFile(avatar.path) : null,
       "auth_key": authKey,
       "telegram_link": telegramLink,
     });
 
     return _dio.post(ApiValues.updateProfileUrl, data: formData);
+  }
+
+  Future<Response> deleteUser(int userId, String authKey) async {
+    var formData = FormData.fromMap({
+      "user_id": userId,
+      "auth_key": authKey,
+    });
+    return _dio.post(ApiValues.deleteUserUrl, data: formData);
   }
 }

@@ -77,10 +77,9 @@ class PaymentCubit extends Cubit<PaymentState> {
 
   Future<void> addCard(String cardPan, String cardMonth) async {
     emit(OnCardProgress());
-    final u = await _storage.getUserInfo();
+    final userId = await _storage.getUserId();
     try {
-      final resonse =
-          await _repo.addCard(u.id!, cardPan, cardMonth, u.fullname!);
+      final resonse = await _repo.addCard(userId!, cardPan, cardMonth, "");
       final rowData = CardModel.fromJson(resonse.data);
       emit(OnCardAdded(rowData));
     } on DioError catch (e) {
@@ -94,9 +93,9 @@ class PaymentCubit extends Cubit<PaymentState> {
 
   Future<void> refreshCardSms(int cardId) async {
     emit(OnCardProgress());
-    final u = await _storage.getUserInfo();
+    final userId = await _storage.getUserId();
     try {
-      final response = await _repo.refreshCardSms(u.id!, cardId);
+      await _repo.refreshCardSms(userId!, cardId);
     } on DioError catch (e) {
       emit(OnCardError(e.response?.data["message"] ?? ""));
     } catch (e) {
@@ -106,9 +105,9 @@ class PaymentCubit extends Cubit<PaymentState> {
 
   Future<void> verifyCardSmsCode(int cardId, String smsCode) async {
     emit(OnCardProgress());
-    final u = await _storage.getUserInfo();
+    final userId = await _storage.getUserId();
     try {
-      final response = await _repo.verifyCardSmsCode(u.id!, cardId, smsCode);
+      final response = await _repo.verifyCardSmsCode(userId!, cardId, smsCode);
       showToast(response.data["message"]);
       emit(OnCardConfirmed());
       await getCards();

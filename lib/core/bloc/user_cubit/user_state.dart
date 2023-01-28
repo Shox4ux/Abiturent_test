@@ -13,6 +13,8 @@ class OnUserProgress extends UserState {}
 
 class OnUserUpdated extends UserState {}
 
+class OnUserDeleted extends UserState {}
+
 class OnUsersRatingReceived extends UserState {
   final RatingModel ratingModel;
   const OnUsersRatingReceived({required this.ratingModel});

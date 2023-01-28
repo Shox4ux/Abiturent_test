@@ -47,15 +47,6 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  Future<void> isLogged() async {
-    final t = await _storage.getUserInfo();
-    if (t.fullname != null) {
-      emit(UserActive(userInfo: t));
-    } else {
-      emit(const AuthDenied(error: "No data"));
-    }
-  }
-
   Future<void> authSignUp(
       String fullName, String phone, String password) async {
     emit(OnAuthProgress());
@@ -86,10 +77,9 @@ class AuthCubit extends Cubit<AuthState> {
       final response = await _repo.logIn(phone, password);
       await _storage.saveToken(response.data["user_auth"]);
       final userInfo = UserInfo.fromJson(response.data["user_info"]);
-      await _storage.saveUserInfo(jsonEncode(response.data["user_info"]));
       await _storage.saveUserId(userInfo.id!);
       print("from storage: ${await _storage.getToken()}");
-      print("from storage: ${await _storage.getUserInfo()}");
+      print("from storage: ${await _storage.getUserId()}");
       emit(UserActive(userInfo: userInfo));
     } on DioError catch (e) {
       // if (e.response?.data["code"] == 0) {
@@ -117,8 +107,7 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> checkSmsCode(int userId, String phone, String smsCode) async {
     emit(OnAuthProgress());
     try {
-      final response = await _repo.checkRegisterSmsCode(userId, phone, smsCode);
-      await _storage.saveUserInfo(jsonEncode(response.data["user"]));
+      await _repo.checkRegisterSmsCode(userId, phone, smsCode);
       emit(AuthGranted());
     } on DioError catch (e) {
       emit(

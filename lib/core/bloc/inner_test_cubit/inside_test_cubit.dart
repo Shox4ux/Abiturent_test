@@ -18,9 +18,9 @@ class InnerTestCubit extends Cubit<InsideTestState> {
 
   Future<void> getTestById(int testId) async {
     emit(OnInnerTestProgress());
-    final u = await _storage.getUserInfo();
+    final userId = await _storage.getUserId();
     try {
-      final response = await _repo.getTestById(testId, u.id!);
+      final response = await _repo.getTestById(testId, userId!);
       final test = InnerTestModel.fromJson(response.data);
       emit(OnTestInnerSuccess(test));
     } on DioError catch (e) {
@@ -35,10 +35,10 @@ class InnerTestCubit extends Cubit<InsideTestState> {
   Future<void> sendTestAnswer(
       int questionId, int answerId, int testListId) async {
     emit(OnInnerTestProgress());
-    final u = await _storage.getUserInfo();
+    final userId = await _storage.getUserId();
     try {
       final response =
-          await _repo.sendTestAnswer(questionId, answerId, u.id!, testListId);
+          await _repo.sendTestAnswer(questionId, answerId, userId!, testListId);
 
       if (response.data == 0) {
         emit(OnInnerTestCelebrate(testListId));
@@ -57,9 +57,9 @@ class InnerTestCubit extends Cubit<InsideTestState> {
 
   Future<void> getResults(int testListId) async {
     emit(OnInnerTestProgress());
-    final u = await _storage.getUserInfo();
+    final userId = await _storage.getUserId();
     try {
-      final response = await _repo.getResults(u.id!, testListId);
+      final response = await _repo.getResults(userId!, testListId);
       final rowList = response.data as List;
       final resultList = rowList.map((e) => TestResult.fromJson(e)).toList();
       emit(OnInnerTestCompleted(resultList));

@@ -51,10 +51,10 @@ class SubscriptionCubit extends Cubit<SubscriptionState> {
 
   Future<void> makeScript(int subId) async {
     emit(OnScriptProgress());
-    final u = await _storage.getUserInfo();
-    final k = await _storage.getToken();
+    final userId = await _storage.getUserId();
+    final token = await _storage.getToken();
     try {
-      final response = await _repo.makeScript(u.id!, k!, subId);
+      final response = await _repo.makeScript(userId!, token!, subId);
 
       final rowData = MadeScript.fromJson(response.data);
       emit(OnScriptMade(rowData));
