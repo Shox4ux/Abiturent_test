@@ -34,11 +34,9 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Need to upload image</string>
-	<key>NSMicroPhoneUsageDescription</key>
-	<string>Need to upload image</string>
+	<string>Needs permission for taking photo and upload to update profile of the current user</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Need to upload image</string>
+	<string>Needs permission for picking photo and upload to update profile of the current user</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
