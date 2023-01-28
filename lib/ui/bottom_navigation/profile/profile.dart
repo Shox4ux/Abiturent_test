@@ -598,10 +598,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
               color: isRed ? const Color(0xffFFE2E4) : AppColors.secondaryColor,
               borderRadius: BorderRadius.circular(16.r),
             ),
-            child: Image.asset(
-              imagePath,
-              scale: 3.h,
-            ),
+            child: isRed
+                ? Image.asset(
+                    imagePath,
+                    scale: 3.h,
+                    color: Colors.red,
+                  )
+                : Image.asset(
+                    imagePath,
+                    scale: 3.h,
+                  ),
           ),
           Gap(9.w),
           Text(

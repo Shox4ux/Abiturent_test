@@ -57,8 +57,6 @@ class UserCubit extends Cubit<UserState> {
     } on DioError catch (e) {
       if (e.response?.statusCode == 413) {
         emit(const OnUserError(error: "Fayl yuklash uchun katta"));
-      } else {
-        emit(OnUserError(error: e.response!.data["message"]));
       }
     } catch (e) {
       emit(const OnUserError(error: "Tizimda nosozlik"));
