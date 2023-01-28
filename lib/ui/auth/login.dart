@@ -210,7 +210,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: AppStyles.subtitleTextStyle,
                         children: [
                           TextSpan(
-                              text: "Ro’yhatdan o’tish",
+                              text: "Ro’yxatdan o’tish",
                               style: AppStyles.subtitleTextStyle.copyWith(
                                   color: AppColors.mainColor,
                                   decoration: TextDecoration.underline),

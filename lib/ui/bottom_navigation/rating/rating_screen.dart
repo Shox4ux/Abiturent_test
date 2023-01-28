@@ -6,12 +6,10 @@ import 'package:test_app/core/domain/user_model/rating_model.dart';
 import 'package:test_app/res/components/custom_drawer.dart';
 import 'package:test_app/res/functions/show_toast.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../../core/bloc/auth_cubit/auth_cubit.dart';
 import '../../../core/bloc/drawer_cubit/drawer_cubit.dart';
 import '../../../core/bloc/rating_cubit/rating_cubit.dart';
 import '../../../res/constants.dart';
 import '../../../res/components/custom_appbar.dart';
-import '../../../res/functions/will_pop_function.dart';
 
 class RatingScreen extends StatefulWidget {
   const RatingScreen({Key? key}) : super(key: key);
