@@ -252,5 +252,7 @@ class AppStorageConstants {
   static const String userIdKey = "userIdKey";
 
   static const String drawerIndexKey = "index_key";
+  static const String subjectIdKey = "subject_key";
+
   static const String passwordKey = "password";
 }

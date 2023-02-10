@@ -101,7 +101,7 @@ class _DtmScreenState extends State<DtmScreen>
                 BlocBuilder<DrawerCubit, DrawerState>(
                   builder: (context, state) {
                     if (state is DrawerSubjectsLoadedState) {
-                      _currentSubjectId = state.index + 2;
+                      _currentSubjectId = state.selectedSubjectId;
                       _startPagination();
                     }
                     return Expanded(

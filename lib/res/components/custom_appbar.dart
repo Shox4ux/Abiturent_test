@@ -22,7 +22,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
     return BlocBuilder<DrawerCubit, DrawerState>(
       builder: (context, state) {
         if (state is DrawerSubjectsLoadedState) {
-          final selectedSubjectId = state.index + 2;
+          final selectedSubjectId = state.selectedSubjectId;
           context.read<AppBarCubit>().getRatingBySubject(selectedSubjectId);
         }
         return BlocBuilder<AppBarCubit, AppBarState>(

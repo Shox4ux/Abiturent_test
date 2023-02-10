@@ -257,6 +257,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ),
                                 );
                               }
+                              if (snapshot.hasError) {
+                                return const Center(
+                                    child: Text("Tizimda nosozlik"));
+                              }
                               return Expanded(child: body(stats!));
                             },
                           )
@@ -294,9 +298,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       itemBuilder: (context, index) {
         return InkWell(
             onTap: () {
-              context
-                  .read<DrawerCubit>()
-                  .chooseStatisticSubjectIdForIndex(statList[index].subjectId!);
+              context.read<DrawerCubit>().chooseStatisticSubjectIdForIndex(
+                  index, statList[index].subjectId!);
               Navigator.push(
                 context,
                 MaterialPageRoute(

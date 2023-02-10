@@ -59,4 +59,20 @@ class AppStorage {
       return int.parse(data);
     }
   }
+
+  ///////////
+  ///
+  Future<void> saveLastSelectedSubjectId(int subjectID) async {
+    await storage.write(
+        key: AppStorageConstants.subjectIdKey, value: subjectID.toString());
+  }
+
+  Future<int?> getLastSelectedSubjectId() async {
+    final data = await storage.read(key: AppStorageConstants.subjectIdKey);
+    if (data == null) {
+      return null;
+    } else {
+      return int.parse(data);
+    }
+  }
 }

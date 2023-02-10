@@ -10,14 +10,21 @@ abstract class DrawerState extends Equatable {
 class DrawerInitial extends DrawerState {}
 
 class DrawerSubjectsLoadedState extends DrawerState {
-  final int index;
+  final int selectedSubjectId;
+  final int selectedSubjectIndex;
   final List<SubjectModel> subjectList;
-  const DrawerSubjectsLoadedState(this.index, this.subjectList);
-  @override
-  List<Object> get props => [index, subjectList];
 
-  DrawerSubjectsLoadedState copyWith(int staticSubId) {
-    return DrawerSubjectsLoadedState(staticSubId, subjectList);
+  const DrawerSubjectsLoadedState(
+    this.selectedSubjectIndex,
+    this.subjectList,
+    this.selectedSubjectId,
+  );
+  @override
+  List<Object> get props =>
+      [selectedSubjectIndex, subjectList, selectedSubjectId];
+
+  DrawerSubjectsLoadedState copyWith(int subjectIndex, int subjectId) {
+    return DrawerSubjectsLoadedState(subjectIndex, subjectList, subjectId);
   }
 }
 

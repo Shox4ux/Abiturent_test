@@ -53,7 +53,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                       );
                     }
                     if (state is DrawerSubjectsLoadedState) {
-                      final selectedIndex = state.index;
+                      final selectedIndex = state.selectedSubjectIndex;
                       final subjectList = state.subjectList;
 
                       return Expanded(
@@ -62,9 +62,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
                           itemBuilder: (context, index) {
                             return GestureDetector(
                               onTap: () {
-                                context
-                                    .read<DrawerCubit>()
-                                    .chooseSubject(index);
+                                context.read<DrawerCubit>().chooseSubject(
+                                    index, subjectList[index].id!);
                                 Navigator.pop(context);
                               },
                               child: drawerItem(

@@ -55,7 +55,7 @@ class _MistakesScreenState extends State<MistakesScreen> {
               BlocBuilder<DrawerCubit, DrawerState>(
                 builder: (context, state) {
                   if (state is DrawerSubjectsLoadedState) {
-                    _currentSubjectId = state.index + 2;
+                    _currentSubjectId = state.selectedSubjectId;
                     context
                         .read<MistakesCubit>()
                         .getErrorList(_currentSubjectId);
@@ -300,6 +300,9 @@ class _MistakesScreenState extends State<MistakesScreen> {
     if (selectedId == answerId && answerId != correctId) {
       return AppStyles.subtitleTextStyle
           .copyWith(fontSize: 12.sp, color: Colors.red);
+    } else if (answerId == correctId) {
+      return AppStyles.subtitleTextStyle
+          .copyWith(fontSize: 12.sp, color: Colors.green);
     }
     return AppStyles.subtitleTextStyle
         .copyWith(fontSize: 12.sp, color: Colors.grey);
@@ -308,6 +311,8 @@ class _MistakesScreenState extends State<MistakesScreen> {
   Color getColor(int selectedId, int answerId, int correctId) {
     if (selectedId == answerId && answerId != correctId) {
       return Colors.red;
+    } else if (answerId == correctId) {
+      return Colors.green;
     }
     return Colors.grey;
   }

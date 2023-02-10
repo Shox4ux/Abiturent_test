@@ -55,7 +55,7 @@ class _RatingScreenState extends State<RatingScreen> {
               BlocBuilder<DrawerCubit, DrawerState>(
                 builder: (context, state) {
                   if (state is DrawerSubjectsLoadedState) {
-                    currentSubjectId = state.index + 2;
+                    currentSubjectId = state.selectedSubjectId;
                     context
                         .read<RatingCubit>()
                         .callUserRating(currentSubjectId);

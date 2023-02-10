@@ -22,11 +22,22 @@ class DrawerCubit extends Cubit<DrawerState> {
 
       ///
       var lastSelectedIndex = await _storage.getDrawerIndex();
-      if (lastSelectedIndex == null) {
+      var lastSelectedSubjectId = await _storage.getLastSelectedSubjectId();
+
+      if (lastSelectedIndex == null || lastSelectedSubjectId == null) {
         const initialSubjectIndex = 0;
-        emit(DrawerSubjectsLoadedState(initialSubjectIndex, rowList));
+
+        emit(DrawerSubjectsLoadedState(
+          initialSubjectIndex,
+          rowList,
+          rowList.first.id!,
+        ));
       } else {
-        emit(DrawerSubjectsLoadedState(lastSelectedIndex, rowList));
+        emit(DrawerSubjectsLoadedState(
+          lastSelectedIndex,
+          rowList,
+          lastSelectedSubjectId,
+        ));
       }
     } on DioError catch (e) {
       emit(OnDrawerError(e.response?.data["message"] ?? "Tizimda nosozlik"));
@@ -35,30 +46,42 @@ class DrawerCubit extends Cubit<DrawerState> {
     }
   }
 
-  void chooseSubject(int index) async {
+  void chooseSubject(int index, int subjectId) async {
     if (state is DrawerSubjectsLoadedState) {
       await _saveDrawerIndex(index);
+      await _saveSubjectId(subjectId);
+
       final lastSelectedIndex = await _storage.getDrawerIndex();
       print("Drawer saved is: $lastSelectedIndex");
       final oldState = (state as DrawerSubjectsLoadedState);
-      final newState = oldState.copyWith(lastSelectedIndex!);
+      final newState = oldState.copyWith(lastSelectedIndex!, subjectId);
       emit(newState);
     }
   }
 
-  void chooseStatisticSubjectIdForIndex(int sunjectId) async {
+  void chooseStatisticSubjectIdForIndex(int index, int sunjectId) async {
     if (state is DrawerSubjectsLoadedState) {
-      await _saveDrawerIndex(sunjectId - 2);
+      await _saveDrawerIndex(index);
+      await _saveSubjectId(sunjectId);
+
       final lastSelectedIndex = await _storage.getDrawerIndex();
+      final lastSelectedsubjectId = await _storage.getLastSelectedSubjectId();
+
       print("Drawer saved is: $lastSelectedIndex");
       final oldState = (state as DrawerSubjectsLoadedState);
-      final newState = oldState.copyWith(lastSelectedIndex!);
+      final newState =
+          oldState.copyWith(lastSelectedIndex!, lastSelectedsubjectId!);
       emit(newState);
     }
   }
 
   Future<void> _saveDrawerIndex(int index) async {
     await _storage.saveDrawerIndex(index);
+    print("Drawer Index is saved");
+  }
+
+  Future<void> _saveSubjectId(int subjectId) async {
+    await _storage.saveLastSelectedSubjectId(subjectId);
     print("Drawer Index is saved");
   }
 }
