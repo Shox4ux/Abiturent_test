@@ -256,3 +256,9 @@ class AppStorageConstants {
 
   static const String passwordKey = "password";
 }
+
+class PaymentHistoryConsts {
+  static const int income = 0;
+  static const int bonus = 2;
+  static const int expense = 1;
+}

@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:test_app/core/bloc/app_bar_cubit/app_bar_cubit.dart';
 import 'package:test_app/core/bloc/dtm_cubit/dtm_cubit.dart';
+import 'package:test_app/core/bloc/statistics_cubit/statistics_cubit.dart';
 import 'package:test_app/core/bloc/test_cubit/test_cubit.dart';
 import 'package:test_app/res/navigation/main_navigation.dart';
 import 'package:test_app/ui/splash/splash.dart';
@@ -42,6 +43,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => InnerTestCubit(),
+        ),
+        BlocProvider(
+          create: (context) => StatisticsCubit(),
         ),
         BlocProvider(
           create: (context) => BookCubit(),

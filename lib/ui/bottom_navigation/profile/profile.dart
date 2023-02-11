@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:test_app/core/bloc/statistics_cubit/statistics_cubit.dart';
 import 'package:test_app/core/bloc/user_cubit/user_cubit.dart';
 import 'package:test_app/core/domain/p_h_model/payment_history_model.dart';
 import 'package:test_app/core/domain/user_model/stat_model.dart';
@@ -9,19 +10,18 @@ import 'package:test_app/core/domain/user_model/user_model.dart';
 import 'package:test_app/res/constants.dart';
 import 'package:test_app/res/functions/number_formatter.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/refactor/refactor.dart';
+import 'package:test_app/ui/bottom_navigation/profile/widgets/payment_history_widger.dart';
+import 'package:test_app/ui/bottom_navigation/profile/widgets/statistics_widget.dart';
 import 'package:test_app/ui/main_screen/main_screen.dart';
 import '../../../core/bloc/auth_cubit/auth_cubit.dart';
 import '../../../core/bloc/drawer_cubit/drawer_cubit.dart';
 import '../../../core/bloc/group_cubit/group_cubit.dart';
 import '../../../core/bloc/payment_cubit/payment_cubit.dart';
-import '../../../core/helper/repos/user_repo.dart';
 import '../../../res/enum.dart';
 import '../../../res/functions/show_toast.dart';
 import '../../../res/navigation/main_navigation.dart';
 
 UserInfo? userData;
-final _repo = UserRepo();
-List<StatModel>? stats;
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -44,25 +44,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       return Future.value(false);
     } else {
       return Future.value(true);
-    }
-  }
-
-  Future<List<StatModel>> getStatistics(int? userId) async {
-    try {
-      if (userId != null) {
-        final response = await _repo.getStats(userId);
-
-        if (response.statusCode == 200) {
-          final rowData = response.data as List;
-
-          final rowList = rowData.map((e) => StatModel.fromJson(e)).toList();
-          stats = rowList;
-          return stats!;
-        }
-      }
-      return stats!;
-    } catch (e) {
-      return stats!;
     }
   }
 
@@ -247,23 +228,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                           ),
                           Gap(20.h),
-                          FutureBuilder(
-                            future: getStatistics(userData!.id),
-                            builder: (context, snapshot) {
-                              if (!snapshot.hasData) {
+                          BlocBuilder<StatisticsCubit, StatisticsState>(
+                            builder: (context, state) {
+                              if (state is OnStatsSuccess) {
+                                return Expanded(child: body(state.statsList));
+                              }
+                              if (state is OnStatsProgress) {
                                 return const Center(
                                   child: CircularProgressIndicator(
                                     color: AppColors.mainColor,
                                   ),
                                 );
                               }
-                              if (snapshot.hasError) {
-                                return const Center(
-                                    child: Text("Tizimda nosozlik"));
+                              if (state is OnStatsError) {
+                                return Center(
+                                  child: Text(state.message),
+                                );
                               }
-                              return Expanded(child: body(stats!));
+                              return Container();
                             },
-                          )
+                          ),
                         ],
                       );
                     }
@@ -288,11 +272,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget statistics(List<StatModel> statList) {
-    if (statList.isEmpty) {
-      return const Center(
-        child: Text("Fanlarga bo`yicha obunalar mavjud emas..."),
-      );
-    }
     return ListView.builder(
       itemCount: statList.length,
       itemBuilder: (context, index) {
@@ -307,7 +286,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               );
             },
-            child: statisticsItem(statList[index]));
+            child: StatisticsWidget(statModel: statList[index]));
       },
     );
   }
@@ -354,24 +333,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               }
 
               if (state is OnPayHistoryReceived) {
+                final historyList = state.list;
                 return ListView.separated(
                   padding: EdgeInsets.only(
                       bottom: 20.h, top: 10.h, right: 10.w, left: 10.w),
-                  itemCount: state.list.length,
+                  itemCount: historyList.length,
                   itemBuilder: (BuildContext context, int index) {
-                    if (state.list[index].type == 2) {
-                      return Padding(
-                          padding: EdgeInsets.only(bottom: 5.h),
-                          child: bonusHistoryItem(state.list[index]));
-                    }
-                    if (state.list[index].type == 1) {
-                      return Padding(
-                          padding: EdgeInsets.only(bottom: 5.h),
-                          child: outHistoryItem(state.list[index]));
-                    }
-                    return Padding(
-                        padding: EdgeInsets.only(bottom: 5.h),
-                        child: inHistoryItem(state.list[index]));
+                    return historyItem(historyList[index], index);
                   },
                   separatorBuilder: (context, index) => SizedBox(height: 6.h),
                 );
@@ -383,6 +351,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ],
     );
+  }
+
+  Widget historyItem(PaymentHistory historyItem, int index) {
+    if (historyItem.type == PaymentHistoryConsts.income) {
+      return PaymentHistoryWidget(
+          item: historyItem, type: Subscriptions.income);
+    }
+    if (historyItem.type == PaymentHistoryConsts.expense) {
+      return PaymentHistoryWidget(
+          item: historyItem, type: Subscriptions.expense);
+    }
+    return PaymentHistoryWidget(item: historyItem, type: Subscriptions.bonus);
   }
 
   Widget menu(BuildContext context) {
@@ -602,23 +582,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               borderRadius: BorderRadius.circular(16.r),
             ),
             child: isRed
-                ? Image.asset(
-                    imagePath,
-                    scale: 3.h,
-                    color: Colors.red,
-                  )
-                : Image.asset(
-                    imagePath,
-                    scale: 3.h,
-                  ),
+                ? Image.asset(imagePath, scale: 3.h, color: Colors.red)
+                : Image.asset(imagePath, scale: 3.h),
           ),
           Gap(9.w),
-          Text(
-            text,
-            style: AppStyles.subtitleTextStyle.copyWith(
-              color: const Color(0xff292B2D),
-            ),
-          )
+          Text(text,
+              style: AppStyles.subtitleTextStyle
+                  .copyWith(color: const Color(0xff292B2D)))
         ],
       ),
     );
@@ -626,292 +596,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget spacer() {
     return Container(
-      color: AppColors.backgroundColor,
-      height: 2.h,
-      width: double.maxFinite,
-    );
+        color: AppColors.backgroundColor, height: 2.h, width: double.maxFinite);
   }
-}
-
-Widget statisticsItem(StatModel statModel) {
-  return Container(
-    margin: EdgeInsets.only(bottom: 10.h),
-    padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 15.w),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(14.r),
-    ),
-    child: Row(
-      children: [
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.network(
-              statModel.medalImg!,
-              width: 48.w,
-              height: 48.h,
-            ),
-            Gap(10.h),
-            Text(
-              statModel.medalName!,
-              style: AppStyles.subtitleTextStyle.copyWith(fontSize: 12.sp),
-            ),
-          ],
-        ),
-        Gap(40.w),
-        Expanded(
-          child: Column(
-            children: [
-              Text(
-                "${statModel.subjectText}",
-                style: AppStyles.introButtonText.copyWith(
-                  color: Colors.black,
-                  fontSize: 18.sp,
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    children: [
-                      Text(
-                        "Umumiy:",
-                        style: AppStyles.introButtonText.copyWith(
-                          fontSize: 12.sp,
-                        ),
-                      ),
-                      Text(
-                        "${statModel.rating}",
-                        style: AppStyles.introButtonText
-                            .copyWith(color: Colors.green, fontSize: 18.sp),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      Text(
-                        "So’ngi haftalik:",
-                        style: AppStyles.introButtonText.copyWith(
-                          fontSize: 12.sp,
-                        ),
-                      ),
-                      Text(
-                        "${statModel.ratingWeek}",
-                        style: AppStyles.introButtonText
-                            .copyWith(color: Colors.black, fontSize: 18.sp),
-                      ),
-                    ],
-                  )
-                ],
-              )
-            ],
-          ),
-        )
-      ],
-    ),
-  );
-}
-
-Widget inHistoryItem(PaymentHistory item) {
-  return Container(
-    height: 90.h,
-    padding: EdgeInsets.symmetric(vertical: 4.h, horizontal: 8.w),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(10.r),
-      boxShadow: const [
-        BoxShadow(
-          color: Colors.grey,
-          blurRadius: 5.0,
-          offset: Offset(0, 5),
-        ),
-      ],
-    ),
-    child: Row(
-      children: [
-        SizedBox(
-          height: 24.h,
-          width: 24.w,
-          child: Image.asset(Subscriptions.green.iconPath),
-        ),
-        Gap(8.w),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      item.createdDate!,
-                      style: TextStyle(
-                          fontWeight: FontWeight.w200,
-                          fontSize: 10.sp,
-                          color: const Color(0xff161719)),
-                    ),
-                    Text(
-                      "+${numberFormatter(item.amount)} UZS",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w200,
-                        fontSize: 14.sp,
-                        color: const Color(0xff161719),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Text(
-                  item.content!,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w300,
-                    fontSize: 12.sp,
-                    color: const Color(0xff161719),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        )
-      ],
-    ),
-  );
-}
-
-Widget outHistoryItem(PaymentHistory item) {
-  return Container(
-    height: 90.h,
-    padding: EdgeInsets.symmetric(vertical: 4.h, horizontal: 8.w),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(10.r),
-      boxShadow: const [
-        BoxShadow(
-          color: Colors.grey,
-          blurRadius: 5.0,
-          offset: Offset(0, 5),
-        ),
-      ],
-    ),
-    child: Row(
-      children: [
-        SizedBox(
-          height: 24.h,
-          width: 24.w,
-          child: Image.asset(Subscriptions.red.iconPath),
-        ),
-        Gap(8.w),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      item.createdDate!,
-                      style: TextStyle(
-                          fontWeight: FontWeight.w200,
-                          fontSize: 10.sp,
-                          color: const Color(0xff161719)),
-                    ),
-                    Text(
-                      "-${numberFormatter(item.amount)} UZS",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w200,
-                        fontSize: 14.sp,
-                        color: const Color(0xff161719),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Gap(4.h),
-              Expanded(
-                child: Text(
-                  item.content!,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w300,
-                    fontSize: 12.sp,
-                    color: const Color(0xff161719),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        )
-      ],
-    ),
-  );
-}
-
-Widget bonusHistoryItem(PaymentHistory item) {
-  return Container(
-    height: 90.h,
-    padding: EdgeInsets.symmetric(vertical: 4.h, horizontal: 8.w),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(10.r),
-      boxShadow: const [
-        BoxShadow(
-          color: Colors.grey,
-          blurRadius: 3.0,
-          offset: Offset(0, 3),
-        ),
-      ],
-    ),
-    child: Row(
-      children: [
-        SizedBox(
-          height: 24.h,
-          width: 24.w,
-          child: Image.asset(Subscriptions.purple.iconPath),
-        ),
-        Gap(8.w),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      item.createdDate!,
-                      style: TextStyle(
-                          fontWeight: FontWeight.w200,
-                          fontSize: 10.sp,
-                          color: const Color(0xff161719)),
-                    ),
-                    Text(
-                      "${numberFormatter(item.amount)} UZS",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w200,
-                        fontSize: 14.sp,
-                        color: const Color(0xff161719),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Gap(4.h),
-              Text(
-                Subscriptions.green.text,
-                style: TextStyle(
-                  fontWeight: FontWeight.w300,
-                  fontSize: 12.sp,
-                  color: const Color(0xff161719),
-                ),
-              ),
-            ],
-          ),
-        )
-      ],
-    ),
-  );
 }
