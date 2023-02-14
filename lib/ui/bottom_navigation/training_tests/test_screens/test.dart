@@ -267,123 +267,128 @@ class _TestScreenState extends State<TestScreen> {
                 topRight: Radius.circular(28.r),
               ),
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Gap(28.h),
-                  Container(
-                    padding: EdgeInsets.all(6.h),
-                    width: 116.w,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(32.r),
-                      border: Border.all(
-                        width: 1,
-                        color: AppColors.textFieldBorderColor,
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CustomDot(
-                          hight: 14.h,
-                          width: 14.w,
-                          color: AppColors.mainColor,
-                        ),
-                        Gap(7.w),
-                        Text(
-                          "${state.innerTest.prior}.Savol",
-                          style: AppStyles.subtitleTextStyle.copyWith(
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Gap(8.h),
-                  if (state.innerTest.image != null)
-                    Container(
-                      height: 200.h,
-                      width: double.maxFinite,
-                      clipBehavior: Clip.hardEdge,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.r),
-                      ),
-                      child: Image.network(
-                        state.innerTest.image ?? "",
-                        fit: BoxFit.cover,
-                      ),
-                    )
-                  else
-                    Padding(
-                      padding: EdgeInsets.only(left: 10.w, top: 4.h),
-                      child: Text(
-                        state.innerTest.content!,
-                        style: AppStyles.subtitleTextStyle.copyWith(
-                          fontSize: 14.sp,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  Gap(40.h),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
                   Column(
-                    children: [
-                      for (var i = 0; i < state.innerTest.answers!.length; i++)
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              if (_selectedAnswerIndex == i) {
-                                _selectedAnswerIndex = null;
-                              } else {
-                                _selectedAnswerIndex = i;
-                              }
-                            });
-                          },
-                          child: testItem(state.innerTest.answers![i],
-                              (i == _selectedAnswerIndex)),
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Gap(28.h),
+                        Container(
+                          padding: EdgeInsets.all(6.h),
+                          width: 116.w,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(32.r),
+                            border: Border.all(
+                              width: 1,
+                              color: AppColors.textFieldBorderColor,
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CustomDot(
+                                hight: 14.h,
+                                width: 14.w,
+                                color: AppColors.mainColor,
+                              ),
+                              Gap(7.w),
+                              Text(
+                                "${state.innerTest.prior}.Savol",
+                                style: AppStyles.subtitleTextStyle.copyWith(
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                    ],
-                  ),
-                ]),
-                _selectedAnswerIndex != null
-                    ? Padding(
-                        padding: EdgeInsets.only(bottom: 24.h),
-                        child: ElevatedButton(
-                          style: AppStyles.introUpButton,
-                          onPressed: () {
-                            setState(() {
-                              _questionNumber = _questionNumber + 1;
-                            });
-                            context.read<InnerTestCubit>().sendTestAnswer(
-                                  state.innerTest.id!,
-                                  state.innerTest
-                                      .answers![_selectedAnswerIndex!].id!,
-                                  state.innerTest.testListId!,
-                                );
+                        Gap(8.h),
+                        (state.innerTest.image != null)
+                            ? Container(
+                                height: 200.h,
+                                width: double.maxFinite,
+                                clipBehavior: Clip.hardEdge,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10.r),
+                                ),
+                                child: Image.network(
+                                  state.innerTest.image ?? "",
+                                  fit: BoxFit.cover,
+                                ),
+                              )
+                            : Padding(
+                                padding: EdgeInsets.only(left: 10.w, top: 4.h),
+                                child: Text(
+                                  state.innerTest.content!,
+                                  style: AppStyles.subtitleTextStyle.copyWith(
+                                    fontSize: 14.sp,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                        Gap(40.h),
+                        Column(
+                          children: [
+                            for (var i = 0;
+                                i < state.innerTest.answers!.length;
+                                i++)
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    if (_selectedAnswerIndex == i) {
+                                      _selectedAnswerIndex = null;
+                                    } else {
+                                      _selectedAnswerIndex = i;
+                                    }
+                                  });
+                                },
+                                child: testItem(state.innerTest.answers![i],
+                                    (i == _selectedAnswerIndex)),
+                              ),
+                          ],
+                        ),
+                      ]),
+                  _selectedAnswerIndex != null
+                      ? Padding(
+                          padding: EdgeInsets.only(bottom: 24.h),
+                          child: ElevatedButton(
+                            style: AppStyles.introUpButton,
+                            onPressed: () {
+                              setState(() {
+                                _questionNumber = _questionNumber + 1;
+                              });
+                              context.read<InnerTestCubit>().sendTestAnswer(
+                                    state.innerTest.id!,
+                                    state.innerTest
+                                        .answers![_selectedAnswerIndex!].id!,
+                                    state.innerTest.testListId!,
+                                  );
 
-                            _selectedAnswerIndex = null;
-                          },
-                          child: Text(
-                            "Keyingi savol",
-                            style: AppStyles.introButtonText
-                                .copyWith(color: const Color(0xffFCFCFC)),
+                              _selectedAnswerIndex = null;
+                            },
+                            child: Text(
+                              "Keyingi savol",
+                              style: AppStyles.introButtonText
+                                  .copyWith(color: const Color(0xffFCFCFC)),
+                            ),
+                          ),
+                        )
+                      : Padding(
+                          padding: EdgeInsets.only(bottom: 24.h),
+                          child: ElevatedButton(
+                            style: AppStyles.disabledButton,
+                            onPressed: null,
+                            child: Text(
+                              "Keyingi savol",
+                              style: AppStyles.introButtonText
+                                  .copyWith(color: const Color(0xffFCFCFC)),
+                            ),
                           ),
                         ),
-                      )
-                    : Padding(
-                        padding: EdgeInsets.only(bottom: 24.h),
-                        child: ElevatedButton(
-                          style: AppStyles.disabledButton,
-                          onPressed: null,
-                          child: Text(
-                            "Keyingi savol",
-                            style: AppStyles.introButtonText
-                                .copyWith(color: const Color(0xffFCFCFC)),
-                          ),
-                        ),
-                      ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

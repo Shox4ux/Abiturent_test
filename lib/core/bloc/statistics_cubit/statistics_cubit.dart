@@ -28,16 +28,12 @@ class StatisticsCubit extends Cubit<StatisticsState> {
 
         final rowList = rowData.map((e) => StatModel.fromJson(e)).toList();
 
-        if (rowList.isNotEmpty) {
-          for (StatModel element in rowList) {
-            if (element.subjectText != "(deleted)") {
-              dataList.add(element);
-            }
+        for (StatModel element in rowList) {
+          if (element.subjectText != "(deleted)") {
+            dataList.add(element);
           }
-          emit(OnStatsSuccess(dataList));
-        } else {
-          emit(const OnStatsError("Fanlarga bo`yicha obunalar mavjud emas..."));
         }
+        emit(OnStatsSuccess(dataList));
       }
     } on DioError catch (e) {
       emit(OnStatsError(e.response?.data["message"] ?? "Tizimda nosozlik"));

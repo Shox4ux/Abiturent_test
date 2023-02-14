@@ -231,7 +231,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           BlocBuilder<StatisticsCubit, StatisticsState>(
                             builder: (context, state) {
                               if (state is OnStatsSuccess) {
-                                return Expanded(child: body(state.statsList));
+                                return Expanded(
+                                  child: body(state.statsList),
+                                );
                               }
                               if (state is OnStatsProgress) {
                                 return const Center(
@@ -241,11 +243,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 );
                               }
                               if (state is OnStatsError) {
-                                return Center(
-                                  child: Text(state.message),
-                                );
+                                return isInSubs
+                                    ? Center(child: Text(state.message))
+                                    : menu(context);
                               }
-                              return Container();
+
+                              return const Center(
+                                child: Text(
+                                    "Fanlarga bo`yicha obunalar mavjud emas..."),
+                              );
                             },
                           ),
                         ],
@@ -266,9 +272,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget body(List<StatModel> statList) {
     if (isStats) {
-      return statistics(statList);
+      return statList.isNotEmpty
+          ? statistics(statList)
+          : const Center(
+              child: Text("Fanlarga bo`yicha obunalar mavjud emas..."),
+            );
+    } else {
+      return isInSubs ? subs() : menu(context);
     }
-    return isInSubs ? subs() : menu(context);
   }
 
   Widget statistics(List<StatModel> statList) {
@@ -300,7 +311,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             InkWell(
               onTap: () {
                 setState(() {
-                  isInSubs = false;
+                  isInSubs = true;
                 });
               },
               child: Image.asset(

@@ -34,29 +34,29 @@ class _PinPutWidgetState extends State<PinPutWidget> {
   @override
   void initState() {
     super.initState();
-    smsUserConsent = SmsUserConsent(
-      phoneNumberListener: () => setState(() {}),
-      smsListener: () => setState(
-        () {
-          code = smsUserConsent.receivedSms ?? "";
-          if (code.length > 6) {
-            var result = "";
-            for (var j = 0; j < code.length; j++) {
-              if (double.tryParse(code[j]) != null) {
-                result += code[j];
-              }
-            }
-            code = result;
-            if (code.length == 6) {
-              focusNode.unfocus();
-            }
-            widget.onChanged(code);
-            _pinController.setText(code);
-          }
-        },
-      ),
-    );
-    smsUserConsent.requestSms();
+    // smsUserConsent = SmsUserConsent(
+    //   phoneNumberListener: () => setState(() {}),
+    //   smsListener: () => setState(
+    //     () {
+    //       code = smsUserConsent.receivedSms ?? "";
+    //       if (code.length > 6) {
+    //         var result = "";
+    //         for (var j = 0; j < code.length; j++) {
+    //           if (double.tryParse(code[j]) != null) {
+    //             result += code[j];
+    //           }
+    //         }
+    //         code = result;
+    //         if (code.length == 6) {
+    //           focusNode.unfocus();
+    //         }
+    //         widget.onChanged(code);
+    //         _pinController.setText(code);
+    //       }
+    //     },
+    //   ),
+    // );
+    // smsUserConsent.requestSms();
   }
 
   void changeCode(String value) {
@@ -68,7 +68,7 @@ class _PinPutWidgetState extends State<PinPutWidget> {
   @override
   void dispose() {
     focusNode.dispose();
-    smsUserConsent.dispose();
+    // smsUserConsent.dispose();
     _pinController.dispose();
     super.dispose();
   }
