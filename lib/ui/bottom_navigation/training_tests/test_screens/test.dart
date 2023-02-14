@@ -410,11 +410,7 @@ class _TestScreenState extends State<TestScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              CustomDot(
-                hight: 14.h,
-                width: 14.w,
-                color: AppColors.mainColor,
-              ),
+              CustomDot(hight: 14.h, width: 14.w, color: AppColors.mainColor),
               Gap(7.w),
               Text(
                 "$index )Savol",
@@ -461,8 +457,11 @@ class _TestScreenState extends State<TestScreen> {
                       Container(
                         margin: EdgeInsets.only(bottom: 10.h),
                         child: Text(model[t].content!,
-                            style: returnStyle(model[t].selectedAnswer!,
-                                model[t].answerId!, model[t].correctAnswer!)),
+                            style: returnStyle(
+                              model[t].selectedAnswer!,
+                              model[t].answerId!,
+                              model[t].correctAnswer!,
+                            )),
                       ),
                   ],
                 ),
@@ -475,12 +474,16 @@ class _TestScreenState extends State<TestScreen> {
   }
 
   TextStyle returnStyle(int selectedId, int answerId, int correctId) {
-    if (answerId == correctId && answerId == selectedId) {
+    if (answerId == correctId && selectedId == answerId) {
       return AppStyles.subtitleTextStyle
           .copyWith(fontSize: 12.sp, color: Colors.green);
     } else if (selectedId == answerId && answerId != correctId) {
       return AppStyles.subtitleTextStyle
           .copyWith(fontSize: 12.sp, color: Colors.red);
+    }
+    if (answerId == correctId) {
+      return AppStyles.subtitleTextStyle
+          .copyWith(fontSize: 12.sp, color: Colors.green);
     }
     return AppStyles.subtitleTextStyle
         .copyWith(fontSize: 12.sp, color: Colors.grey);

@@ -72,6 +72,5 @@ class PaymentHistoryWidget extends StatelessWidget {
         ],
       ),
     );
-    ;
   }
 }

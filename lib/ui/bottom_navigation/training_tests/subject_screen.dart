@@ -7,7 +7,6 @@ import 'package:test_app/core/bloc/inner_test_cubit/inside_test_cubit.dart';
 import 'package:test_app/res/components/custom_dot.dart';
 import 'package:test_app/res/components/custom_drawer.dart';
 import 'package:test_app/ui/bottom_navigation/training_tests/test_screens/books.dart';
-import '../../../core/bloc/auth_cubit/auth_cubit.dart';
 import '../../../core/bloc/drawer_cubit/drawer_cubit.dart';
 import '../../../core/bloc/test_cubit/test_cubit.dart';
 import '../../../core/domain/test_model/test_model.dart';
@@ -113,9 +112,8 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
                                   return _testBody(subjectData, testList);
                                 }
                                 return const Expanded(
-                                  child: Center(
-                                    child: Text("Iltimos kuting..."),
-                                  ),
+                                  child:
+                                      Center(child: Text("Iltimos kuting...")),
                                 );
                               },
                             )
