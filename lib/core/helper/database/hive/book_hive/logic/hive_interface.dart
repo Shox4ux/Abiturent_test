@@ -1,5 +1,5 @@
 import 'package:hive/hive.dart';
-import 'package:test_app/core/helper/database/hive/model/hive_book_model.dart';
+import 'package:test_app/core/helper/database/hive/book_hive/model/hive_book_model.dart';
 
 abstract class HiveInterfaceStorage {
   Future<Box> openBox();

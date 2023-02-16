@@ -1,4 +1,5 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_app/res/constants.dart';
 
 class AppStorage {
@@ -75,4 +76,7 @@ class AppStorage {
       return int.parse(data);
     }
   }
+
+  ////
+  Future<void> saveNewsCreatedDate(String createdDate) async {}
 }

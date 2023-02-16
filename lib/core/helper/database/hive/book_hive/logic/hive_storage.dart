@@ -1,6 +1,6 @@
 import 'package:hive/hive.dart';
-import 'package:test_app/core/helper/database/hive/logic/hive_interface.dart';
-import 'package:test_app/core/helper/database/hive/model/hive_book_model.dart';
+import 'package:test_app/core/helper/database/hive/book_hive/logic/hive_interface.dart';
+import 'package:test_app/core/helper/database/hive/book_hive/model/hive_book_model.dart';
 
 class HiveStorage extends HiveInterfaceStorage {
   String boxName = "bookBox";

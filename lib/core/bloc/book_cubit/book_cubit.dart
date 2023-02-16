@@ -3,8 +3,8 @@ import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:open_file_plus/open_file_plus.dart';
 import 'package:path_provider/path_provider.dart' as pathProvider;
-import 'package:test_app/core/helper/database/hive/logic/hive_storage.dart';
-import 'package:test_app/core/helper/database/hive/model/hive_book_model.dart';
+import 'package:test_app/core/helper/database/hive/book_hive/logic/hive_storage.dart';
+import 'package:test_app/core/helper/database/hive/book_hive/model/hive_book_model.dart';
 import 'package:test_app/core/helper/dio/dio_client.dart';
 
 part 'book_state.dart';

@@ -265,7 +265,8 @@ Container _unDeletableMember(
                   (memberData.telegramLink != "-")
                       ? InkWell(
                           onTap: () {
-                            _launcher(memberData.telegramLink!);
+                            _launcher(
+                                memberData.telegramLink!.replaceAll("@", ""));
                           },
                           child: Text(
                             "${memberData.telegramLink}",

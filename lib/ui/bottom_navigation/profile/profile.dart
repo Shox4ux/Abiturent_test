@@ -169,10 +169,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           isStats = false;
                                         });
                                       },
-                                      icon: Icon(
-                                        Icons.settings,
-                                        color: AppColors.mainColor,
-                                        size: 28.h,
+                                      icon: Stack(
+                                        children: [
+                                          Icon(
+                                            Icons.settings,
+                                            color: AppColors.mainColor,
+                                            size: 28.h,
+                                          ),
+                                          CircleAvatar(
+                                            radius: 2.h,
+                                            backgroundColor: Colors.red,
+                                          )
+                                        ],
                                       ),
                                     )
                                   : const SizedBox.shrink()

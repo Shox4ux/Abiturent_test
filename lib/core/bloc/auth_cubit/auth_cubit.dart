@@ -24,7 +24,7 @@ class AuthCubit extends Cubit<AuthState> {
       final userId = await _storage.getUserId();
 
       if (userId == null) {
-        return;
+        return;  
       }
       final rowData = await _urepo.getUserProfile(userId);
       if (rowData.data == null) {

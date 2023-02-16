@@ -1,34 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:test_app/core/bloc/news_cubit/news_cubit.dart';
 import 'package:test_app/core/domain/news_models/main_news_model.dart';
-import 'package:test_app/core/helper/repos/news_repo.dart';
+import 'package:test_app/core/domain/news_models/news_model_notification.dart';
 import 'package:test_app/res/components/custom_simple_appbar.dart';
 import 'package:test_app/res/navigation/main_navigation.dart';
 import '../../../../../res/constants.dart';
 
-List<MainNewsModel> list = [];
+List<NewsWithNotificationModel> setList = [];
 
 class NewsScreen extends StatelessWidget {
-  NewsScreen({Key? key}) : super(key: key);
-
-  final _repo = NewsRepository();
-
-  Future<List<MainNewsModel>> getNews() async {
-    final response = await _repo.getMainNews();
-    final rowData = response.data as List;
-    print(rowData);
-
-    if (response.statusCode == 200) {
-      list.clear();
-      for (var element in rowData) {
-        list.add(MainNewsModel.fromJson(element));
-      }
-      return list;
-    } else {
-      return list;
-    }
-  }
+  const NewsScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -57,41 +41,34 @@ class NewsScreen extends StatelessWidget {
                   topRight: Radius.circular(28.r),
                 ),
               ),
-              child: FutureBuilder(
-                future: getNews(),
-                builder: (
-                  BuildContext context,
-                  AsyncSnapshot<dynamic> snapshot,
-                ) {
-                  if (!snapshot.hasData) {
+              child: BlocBuilder<NewsCubit, NewsState>(
+                builder: (context, state) {
+                  if (state is OnNewsProgress) {
                     return const Center(child: Text("Iltimos kuting..."));
                   }
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      list.isNotEmpty
-                          ? Expanded(
-                              child: ListView.builder(
-                                  padding: const EdgeInsets.only(bottom: 20),
-                                  itemCount: list.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    return GestureDetector(
-                                      onTap: () {
-                                        Navigator.pushNamed(
-                                            context, RouteNames.innerNews,
-                                            arguments: list[index]);
-                                      },
-                                      child: newsItem(list[index]),
-                                    );
-                                  }),
-                            )
-                          : const Expanded(
-                              child: Center(
-                                child: Text("Hozircha yangiliklar yo'q..."),
-                              ),
-                            ),
-                    ],
+                  if (state is OnNewsError) {
+                    return Center(child: Text(state.message));
+                  }
+                  if (state is OnNewsReceived) {
+                    setList = state.newsList;
+                    return Expanded(
+                      child: ListView.builder(
+                          padding: const EdgeInsets.only(bottom: 20),
+                          itemCount: setList.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.pushNamed(
+                                    context, RouteNames.innerNews,
+                                    arguments: setList[index]);
+                              },
+                              child: newsItem(setList[index].model),
+                            );
+                          }),
+                    );
+                  }
+                  return const Expanded(
+                    child: Center(child: Text("Hozircha yangiliklar yo'q...")),
                   );
                 },
               ),
