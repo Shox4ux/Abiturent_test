@@ -66,7 +66,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   child: CustomSimpleAppBar(
                     isIcon: false,
                     isSimple: true,
-                    titleText: "Maxfiy so’zni tiklash",
+                    titleText: "Parolni tiklash",
                     routeText: "routeText",
                     style: AppStyles.introButtonText.copyWith(
                       color: AppColors.titleColor,

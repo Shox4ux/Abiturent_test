@@ -52,7 +52,7 @@ class _ResetPassWordState extends State<ResetPassWord> {
             RouteNames.signin,
             (route) => false,
           );
-          showToast("Maxfiy so'z muvaffaqiyatli o'zgartirildi");
+          showToast("Parol muvaffaqiyatli o'zgartirildi");
         }
         if (state is AuthDenied) {
           showToast(state.error);
@@ -113,7 +113,7 @@ class _ResetPassWordState extends State<ResetPassWord> {
                     : Icons.visibility_outlined),
               ),
               counter: const SizedBox.shrink(),
-              labelText: "Yangi maxfiy so’zni kiritish",
+              labelText: "Yangi parolni kiritish",
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16.h),
                 borderSide: BorderSide(color: Colors.red, width: 2.w),
@@ -150,7 +150,7 @@ class _ResetPassWordState extends State<ResetPassWord> {
                     : Icons.visibility_outlined),
               ),
               counter: const SizedBox.shrink(),
-              labelText: "Qayta maxfiy so’zni kiritish",
+              labelText: "Parolni qayta kiritish",
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16.h),
                 borderSide: BorderSide(color: Colors.red, width: 2.w),

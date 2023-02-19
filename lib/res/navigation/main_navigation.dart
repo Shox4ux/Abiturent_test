@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:test_app/core/domain/news_models/main_news_model.dart';
+import 'package:test_app/core/domain/news_models/news_model_notification.dart';
 import 'package:test_app/ui/auth/forgot_password.dart';
 import 'package:test_app/ui/auth/login.dart';
 import 'package:test_app/ui/auth/sign_up.dart';
@@ -28,12 +28,11 @@ class MainNavigation {
     RouteNames.signup: (context) => const SignUpScreen(),
     RouteNames.signin: (context) => const LoginScreen(),
     RouteNames.onSmsCodeVarified: (context) => const SmsCodeVarifiedScreen(),
-    RouteNames.news: (context) => NewsScreen(),
+    RouteNames.news: (context) => const NewsScreen(),
     RouteNames.userBlockedWarning: (context) => const UserBlockedWarning(),
     RouteNames.subscriptionPreview: (context) =>
         const SubscriptionPreviewSceen(),
     RouteNames.makeSubscription: (context) => const MakeSubscriptionScreen(),
-    RouteNames.onPaymentDone: (context) => NewsScreen(),
     RouteNames.addCard: (context) => const AddCardScreen(),
     RouteNames.confirmCard: (context) => const CardConfirmationSceen(),
     RouteNames.makePayment: (context) => const MakePaymentScreen(),
@@ -48,7 +47,7 @@ class MainNavigation {
     switch (settings.name) {
       case RouteNames.innerNews:
         {
-          final model = settings.arguments as MainNewsModel;
+          final model = settings.arguments as NewsWithNotificationModel;
           return MaterialPageRoute(
             builder: (context) => InsideNewsScreen(
               model: model,

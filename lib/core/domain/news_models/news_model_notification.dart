@@ -8,4 +8,7 @@ class NewsWithNotificationModel {
     required this.model,
     required this.isNew,
   });
+  NewsWithNotificationModel copyWith({required bool changedIsNew}) {
+    return NewsWithNotificationModel(model: model, isNew: changedIsNew);
+  }
 }

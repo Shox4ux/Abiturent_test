@@ -153,7 +153,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       obscureText: _isObscure,
                       decoration: InputDecoration(
                         counter: const SizedBox.shrink(),
-                        labelText: "Maxfiy so’z",
+                        labelText: "Parol",
                         suffixIcon: GestureDetector(
                           onTap: () {
                             setState(() {

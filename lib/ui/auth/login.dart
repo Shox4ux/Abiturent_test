@@ -129,7 +129,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     obscureText: isObscure,
                     decoration: InputDecoration(
                       counter: const SizedBox.shrink(),
-                      labelText: "Maxfiy so’z",
+                      labelText: "Parol",
                       suffixIcon: GestureDetector(
                         onTap: changeObscureMode,
                         child: Icon(
@@ -192,7 +192,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     );
                   },
                   child: Text(
-                    "Maxfiy so’zni tiklash",
+                    "Parolni tiklash",
                     style: AppStyles.introButtonText
                         .copyWith(color: AppColors.mainColor),
                   ),

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:test_app/core/domain/news_models/main_news_model.dart';
+import 'package:test_app/core/domain/news_models/news_model_notification.dart';
 import 'package:test_app/res/constants.dart';
 import 'package:test_app/res/components/custom_simple_appbar.dart';
 import 'package:url_launcher/link.dart';
 
 class InsideNewsScreen extends StatefulWidget {
   const InsideNewsScreen({Key? key, required this.model}) : super(key: key);
-  final MainNewsModel model;
+  final NewsWithNotificationModel model;
   @override
   State<InsideNewsScreen> createState() => _InsideNewsScreenState();
 }
@@ -18,7 +18,6 @@ class _InsideNewsScreenState extends State<InsideNewsScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.red,
       body: SizedBox(
         height: size.height,
         width: size.width,
@@ -30,7 +29,7 @@ class _InsideNewsScreenState extends State<InsideNewsScreen> {
               width: double.maxFinite,
               child: FadeInImage.assetNetwork(
                 placeholder: AppIcons.newsError,
-                image: widget.model.imageLink!,
+                image: widget.model.model.imageLink!,
                 fit: BoxFit.cover,
                 imageErrorBuilder: (context, error, stackTrace) =>
                     Image.asset(AppIcons.noImage),
@@ -81,7 +80,7 @@ class _InsideNewsScreenState extends State<InsideNewsScreen> {
                         Gap(9.w),
                         Expanded(
                           child: Text(
-                            widget.model.title ?? "",
+                            widget.model.model.title ?? "",
                             style: AppStyles.subtitleTextStyle.copyWith(
                               color: AppColors.mainColor,
                               fontSize: 12.sp,
@@ -95,7 +94,7 @@ class _InsideNewsScreenState extends State<InsideNewsScreen> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Text(
-                          widget.model.createdText ?? "",
+                          widget.model.model.createdText ?? "",
                           style: AppStyles.subtitleTextStyle.copyWith(
                             color: AppColors.smsVerColor,
                             fontSize: 10.sp,
@@ -112,7 +111,7 @@ class _InsideNewsScreenState extends State<InsideNewsScreen> {
                       width: size.width,
                       child: Column(
                         children: [
-                          (widget.model.video != null)
+                          (widget.model.model.video != null)
                               ? Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -122,7 +121,7 @@ class _InsideNewsScreenState extends State<InsideNewsScreen> {
                                     ),
                                     Gap(10.w),
                                     Link(
-                                      uri: Uri.parse(widget.model.video!),
+                                      uri: Uri.parse(widget.model.model.video!),
                                       builder: ((context, followLink) =>
                                           InkWell(
                                             onTap: followLink,
@@ -140,7 +139,7 @@ class _InsideNewsScreenState extends State<InsideNewsScreen> {
                               : const SizedBox.shrink(),
                           Gap(10.h),
                           Text(
-                            widget.model.short ?? "",
+                            widget.model.model.short ?? "",
                             style: AppStyles.introButtonText.copyWith(
                               fontWeight: FontWeight.w300,
                               fontSize: 11.sp,
@@ -149,7 +148,7 @@ class _InsideNewsScreenState extends State<InsideNewsScreen> {
                           Gap(10.h),
                           Expanded(
                             child: Text(
-                              widget.model.content ?? "",
+                              widget.model.model.content ?? "",
                               style: AppStyles.introButtonText.copyWith(
                                   fontWeight: FontWeight.w300,
                                   fontSize: 11.sp,

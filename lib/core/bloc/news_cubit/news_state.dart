@@ -20,15 +20,15 @@ class OnInnerNewsReceived extends NewsState {
 
 class OnNewsReceived extends NewsState {
   final List<NewsWithNotificationModel> newsList;
-  final bool shouldNotify;
+  final bool shouldNotifyProfile;
 
   const OnNewsReceived({
     required this.newsList,
-    required this.shouldNotify,
+    required this.shouldNotifyProfile,
   });
 
   @override
-  List<Object> get props => [newsList, shouldNotify];
+  List<Object> get props => [newsList, shouldNotifyProfile];
 }
 
 class OnNewsError extends NewsState {

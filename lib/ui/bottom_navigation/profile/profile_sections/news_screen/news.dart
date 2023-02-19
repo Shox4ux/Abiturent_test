@@ -51,25 +51,37 @@ class NewsScreen extends StatelessWidget {
                   }
                   if (state is OnNewsReceived) {
                     setList = state.newsList;
-                    return Expanded(
-                      child: ListView.builder(
-                          padding: const EdgeInsets.only(bottom: 20),
-                          itemCount: setList.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return GestureDetector(
-                              onTap: () {
-                                Navigator.pushNamed(
-                                    context, RouteNames.innerNews,
-                                    arguments: setList[index]);
-                              },
-                              child: newsItem(setList[index].model),
-                            );
-                          }),
-                    );
+                    return ListView.builder(
+                        padding: const EdgeInsets.only(bottom: 20),
+                        itemCount: setList.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                RouteNames.innerNews,
+                                arguments: setList[index],
+                              );
+
+                              context.read<NewsCubit>().markOneNewsAsRead(
+                                    showcaseList: setList,
+                                    model: setList[index],
+                                  );
+                            },
+                            child: setList[index].isNew
+                                ? Stack(children: [
+                                    newsItem(setList[index].model),
+                                    CircleAvatar(
+                                      radius: 5.h,
+                                      backgroundColor: Colors.red,
+                                    )
+                                  ])
+                                : newsItem(setList[index].model),
+                          );
+                        });
                   }
-                  return const Expanded(
-                    child: Center(child: Text("Hozircha yangiliklar yo'q...")),
-                  );
+                  return const Center(
+                      child: Text("Hozircha yangiliklar yo'q..."));
                 },
               ),
             ),
@@ -87,7 +99,6 @@ Widget newsItem(MainNewsModel model) {
     child: Row(
       children: [
         Container(
-          height: 77.h,
           width: 74.w,
           margin: EdgeInsets.only(bottom: 10.h),
           clipBehavior: Clip.hardEdge,
@@ -107,29 +118,27 @@ Widget newsItem(MainNewsModel model) {
           ),
         ),
         Gap(11.w),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                model.createdText ?? "unknown",
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              model.createdText ?? "unknown",
+              style: AppStyles.subtitleTextStyle.copyWith(
+                fontSize: 12.sp,
+                color: AppColors.mainColor,
+              ),
+            ),
+            Gap(4.h),
+            Expanded(
+              child: Text(
+                model.title ?? "",
+                maxLines: 3,
                 style: AppStyles.subtitleTextStyle.copyWith(
                   fontSize: 12.sp,
-                  color: AppColors.mainColor,
                 ),
               ),
-              Gap(4.h),
-              Expanded(
-                child: Text(
-                  model.title ?? "",
-                  maxLines: 3,
-                  style: AppStyles.subtitleTextStyle.copyWith(
-                    fontSize: 12.sp,
-                  ),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         )
       ],
     ),

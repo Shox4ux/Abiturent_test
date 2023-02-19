@@ -3,30 +3,170 @@ import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:test_app/core/domain/news_models/main_news_model.dart';
 import 'package:test_app/core/domain/news_models/news_model_notification.dart';
+import 'package:test_app/core/helper/database/hive/news_hive/model/hive_news_model.dart';
 import 'package:test_app/core/helper/database/hive/news_hive/news_hive_storage.dart';
 import 'package:test_app/core/helper/repos/news_repo.dart';
 part 'news_state.dart';
 
 class NewsCubit extends Cubit<NewsState> {
-  NewsCubit() : super(NewsInitial());
+  NewsCubit() : super(NewsInitial()) {
+    getAllNews();
+  }
   final _newsRepo = NewsRepository();
   final _newsHiveStorage = NewsHiveStorage();
+  bool shouldNotifyProfile = false;
+
+  Set<NewsWithNotificationModel> setListToShow = {};
 
   void getAllNews() async {
     try {
-      ////
+      // deleteBoxFromDisk();
+
+      // print("formatted");
+      //-------get all data from storage and network-----//
       final response = await _newsRepo.getAllNews();
       final rowList = response.data as List;
-      final rowData = rowList.map((e) => MainNewsModel.fromJson(e)).toList();
-      ////
+      final newsList = rowList.map((e) => MainNewsModel.fromJson(e)).toList();
       final storageResponse = await _getAllNewsCreatedDates();
 
-      _crudDecider(rowData, storageResponse);
+      //---------------check is there any new news-------//
+      _compareNetworkAndStorageData(newsList, storageResponse);
+
+      //----------------Trouble shooting------------------//
     } on DioError catch (e) {
       emit(OnNewsError(message: e.response?.data ?? "tizimda nosozlik"));
     } catch (e) {
       emit(OnNewsError(message: e.toString()));
     }
+  }
+
+  void _compareNetworkAndStorageData(
+    List<MainNewsModel> networkList,
+    List<NewsHiveModel> storageList,
+  ) async {
+    if (networkList.isEmpty) {
+      emit(const OnNewsError(message: "Hozircha yangiliklar mavjud emas"));
+    } else {
+      if (storageList.isEmpty) {
+        _onStorageEmpty(networkList);
+      }
+
+      if (storageList.isNotEmpty && networkList.isNotEmpty) {
+        _onStorageIsNotEmpty(networkList, storageList);
+        // shouldNotifyProfile = false;
+      }
+    }
+  }
+
+  void _onStorageEmpty(List<MainNewsModel> networkList) {
+    shouldNotifyProfile = true;
+    setListToShow.clear();
+
+    for (MainNewsModel element in networkList) {
+      final m = NewsHiveModel(isNew: true, newsId: element.id!);
+      _saveNewDataIntoStorage(model: m);
+
+      setListToShow.add(NewsWithNotificationModel(model: element, isNew: true));
+    }
+
+    emit(OnNewsReceived(
+      newsList: setListToShow.toList(),
+      shouldNotifyProfile: shouldNotifyProfile,
+    ));
+  }
+
+  void _onStorageIsNotEmpty(
+      List<MainNewsModel> networkList, List<NewsHiveModel> storageList) async {
+    setListToShow.clear();
+
+    for (var networkElement in networkList) {
+      storageList.every((storageElement) {
+        final b = storageElement.newsId == networkElement.id;
+        //----------- if(b) is true we update existing storage data----------//
+        if (b) {
+          shouldNotifyProfile = false;
+          setListToShow.add(
+              NewsWithNotificationModel(model: networkElement, isNew: false));
+          final m = NewsHiveModel(newsId: networkElement.id!, isNew: false);
+          _updateStorageData(model: m);
+        }
+        //------------else it maybe new data ,so we store it----------//
+        else {
+          shouldNotifyProfile = true;
+          setListToShow.add(
+              NewsWithNotificationModel(model: networkElement, isNew: true));
+          final m = NewsHiveModel(newsId: networkElement.id!, isNew: true);
+          _saveNewDataIntoStorage(model: m);
+        }
+
+        return b;
+      });
+    }
+    emit(OnNewsReceived(
+        newsList: setListToShow.toList(),
+        shouldNotifyProfile: shouldNotifyProfile));
+  }
+
+  void markAllNewsAsRead({
+    required List<NewsWithNotificationModel> showcaseList,
+  }) {
+    emit(OnNewsProgress());
+    shouldNotifyProfile = false;
+    setListToShow.clear();
+    for (var element in showcaseList) {
+      setListToShow.add(
+        NewsWithNotificationModel(model: element.model, isNew: false),
+      );
+    }
+
+    emit(OnNewsReceived(
+      newsList: setListToShow.toList(),
+      shouldNotifyProfile: shouldNotifyProfile,
+    ));
+  }
+
+  void markOneNewsAsRead({
+    required List<NewsWithNotificationModel> showcaseList,
+    required NewsWithNotificationModel model,
+  }) {
+    emit(OnNewsProgress());
+
+    setListToShow.clear();
+    for (var element in showcaseList) {
+      if (element.model.id == model.model.id) {
+        setListToShow
+            .add(NewsWithNotificationModel(model: element.model, isNew: false));
+      } else {
+        setListToShow.add(element);
+      }
+    }
+
+    _checkIsAllDataIsOld();
+  }
+
+  void _checkIsAllDataIsOld() {
+    for (var element in setListToShow) {
+      if (element.isNew == false) {
+        shouldNotifyProfile = false;
+      } else {
+        shouldNotifyProfile = true;
+      }
+    }
+    emit(OnNewsReceived(
+      newsList: setListToShow.toList(),
+      shouldNotifyProfile: shouldNotifyProfile,
+    ));
+  }
+
+//-----------Storage functions----------------------------//
+  void _saveNewDataIntoStorage({required NewsHiveModel model}) async {
+    final box = await _newsHiveStorage.openBox();
+    await _newsHiveStorage.saveNewsState(box, model);
+  }
+
+  void _updateStorageData({required NewsHiveModel model}) async {
+    final box = await _newsHiveStorage.openBox();
+    await _newsHiveStorage.saveNewsState(box, model);
   }
 
   void getNewsWithPagination() async {
@@ -38,7 +178,7 @@ class NewsCubit extends Cubit<NewsState> {
       ////
       final storageResponse = await _getAllNewsCreatedDates();
 
-      _crudDecider(rowData, storageResponse);
+      _compareNetworkAndStorageData(rowData, storageResponse);
     } on DioError catch (e) {
       emit(OnNewsError(message: e.response?.data ?? "tizimda nosozlik"));
     } catch (e) {
@@ -46,77 +186,19 @@ class NewsCubit extends Cubit<NewsState> {
     }
   }
 
-  void getNewsById(int newsId) async {
-    try {
-      final response = await _newsRepo.getNewsById(newsId: newsId);
-      final rowData = MainNewsModel.fromJson(response.data);
-      emit(OnInnerNewsReceived(model: rowData));
-    } on DioError catch (e) {
-      emit(OnNewsError(message: e.response?.data ?? "tizimda nosozlik"));
-    } catch (e) {
-      emit(OnNewsError(message: e.toString()));
-    }
-  }
-
-  void _crudDecider(List<MainNewsModel> newsList, List<String> dateList) {
-    if (newsList.isEmpty) {
-      emit(const OnNewsError(message: "Hozircha yangiliklar mavjud emas"));
-    } else {
-      if (dateList.isEmpty) {
-        Set<NewsWithNotificationModel> dataList = {};
-
-        for (MainNewsModel element in newsList) {
-          dataList.add(NewsWithNotificationModel(model: element, isNew: true));
-        }
-        emit(OnNewsReceived(newsList: dataList.toList(), shouldNotify: true));
-        _saveNewsCreatedDateList(newsList);
-      }
-
-      if (dateList.isNotEmpty) {
-        bool shouldnotify = false;
-        Set<NewsWithNotificationModel> dataList = {};
-
-        for (MainNewsModel element in newsList) {
-          if (dateList.contains(element.createdText)) {
-            shouldnotify = false;
-            dataList.add(
-                NewsWithNotificationModel(model: element, isNew: shouldnotify));
-          } else {
-            shouldnotify = true;
-            dataList.add(
-                NewsWithNotificationModel(model: element, isNew: shouldnotify));
-            _saveNewsCreatedDate(element.createdText!, element.id!);
-          }
-        }
-
-        emit(OnNewsReceived(
-            newsList: dataList.toList(), shouldNotify: shouldnotify));
-      }
-    }
-  }
-
-  Future<List<String>> _getAllNewsCreatedDates() async {
+  Future<void> clearBox() async {
     final box = await _newsHiveStorage.openBox();
-    final dataList = _newsHiveStorage.getDateList(box);
+    await _newsHiveStorage.clearNewsStateList(box);
+  }
+
+  void deleteBoxFromDisk() async {
+    final box = await _newsHiveStorage.openBox();
+    _newsHiveStorage.deleteBoxFromDisk(box);
+  }
+
+  Future<List<NewsHiveModel>> _getAllNewsCreatedDates() async {
+    final box = await _newsHiveStorage.openBox();
+    final dataList = _newsHiveStorage.getNewsStateList(box);
     return dataList;
-  }
-
-  void _saveNewsCreatedDateList(List<MainNewsModel> newsList) async {
-    final box = await _newsHiveStorage.openBox();
-
-    for (MainNewsModel element in newsList) {
-      await _newsHiveStorage.saveDate(box, element.createdText!, element.id!);
-    }
-  }
-
-  void _saveNewsCreatedDate(String createdText, int id) async {
-    final box = await _newsHiveStorage.openBox();
-
-    await _newsHiveStorage.saveDate(box, createdText, id);
-  }
-
-  void _removeCreatedDate(int newsId) async {
-    final box = await _newsHiveStorage.openBox();
-    await _newsHiveStorage.removeDate(box, newsId);
   }
 }

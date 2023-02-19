@@ -1,37 +1,47 @@
 import 'package:hive/hive.dart';
+import 'package:test_app/core/helper/database/hive/news_hive/model/hive_news_model.dart';
 import 'package:test_app/core/helper/database/hive/news_hive/news_hive_interface.dart';
 
 class NewsHiveStorage extends NewsHiveInterface {
   final String _boxName = "news_date_box";
+
   @override
   Future<Box> openBox() async {
-    Box box = await Hive.openBox<String>(_boxName);
+    if (!Hive.isAdapterRegistered(1)) {
+      Hive.registerAdapter(NewsAdapter());
+    }
+    Box box = await Hive.openBox<NewsHiveModel>(_boxName);
 
     return box;
   }
 
   @override
-  Future<void> saveDate(Box box, String createdDate, int newsId) async {
-    await box.put(newsId, createdDate);
+  Future<void> saveNewsState(Box box, NewsHiveModel model) async {
+    await box.put(model.newsId, model);
   }
 
   @override
-  Future<void> removeDate(Box box, int newsId) async {
-    await box.delete(newsId);
+  Future<void> deleteNewsState(Box box, NewsHiveModel model) async {
+    await box.delete(model.newsId);
   }
 
   @override
-  List<String> getDateList(Box box) {
-    return box.values.toList() as List<String>;
+  List<NewsHiveModel> getNewsStateList(Box box) {
+    return box.values.toList() as List<NewsHiveModel>;
   }
 
   @override
-  Future<void> clearDateList(Box box) async {
+  Future<void> clearNewsStateList(Box box) async {
     await box.clear();
   }
 
   @override
   Future<void> closeBox(Box box) async {
     await box.close();
+  }
+
+  @override
+  Future<void> deleteBoxFromDisk(Box box) async {
+    await box.deleteFromDisk();
   }
 }

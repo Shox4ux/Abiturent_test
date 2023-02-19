@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:test_app/core/bloc/news_cubit/news_cubit.dart';
 import 'package:test_app/core/bloc/statistics_cubit/statistics_cubit.dart';
 import 'package:test_app/core/bloc/user_cubit/user_cubit.dart';
 import 'package:test_app/core/domain/p_h_model/payment_history_model.dart';
@@ -11,6 +12,7 @@ import 'package:test_app/res/constants.dart';
 import 'package:test_app/res/functions/number_formatter.dart';
 import 'package:test_app/ui/bottom_navigation/profile/profile_sections/refactor/refactor.dart';
 import 'package:test_app/ui/bottom_navigation/profile/widgets/payment_history_widger.dart';
+import 'package:test_app/ui/bottom_navigation/profile/widgets/profile_menu_item.dart';
 import 'package:test_app/ui/bottom_navigation/profile/widgets/statistics_widget.dart';
 import 'package:test_app/ui/main_screen/main_screen.dart';
 import '../../../core/bloc/auth_cubit/auth_cubit.dart';
@@ -169,19 +171,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           isStats = false;
                                         });
                                       },
-                                      icon: Stack(
-                                        children: [
-                                          Icon(
-                                            Icons.settings,
-                                            color: AppColors.mainColor,
-                                            size: 28.h,
-                                          ),
-                                          CircleAvatar(
-                                            radius: 2.h,
-                                            backgroundColor: Colors.red,
-                                          )
-                                        ],
-                                      ),
+                                      icon: context
+                                              .watch<NewsCubit>()
+                                              .shouldNotifyProfile
+                                          ? Stack(
+                                              children: [
+                                                Icon(
+                                                  Icons.settings,
+                                                  color: AppColors.mainColor,
+                                                  size: 28.h,
+                                                ),
+                                                CircleAvatar(
+                                                  radius: 3.h,
+                                                  backgroundColor: Colors.red,
+                                                )
+                                              ],
+                                            )
+                                          : Icon(
+                                              Icons.settings,
+                                              color: AppColors.mainColor,
+                                              size: 28.h,
+                                            ),
                                     )
                                   : const SizedBox.shrink()
                             ],
@@ -319,7 +329,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             InkWell(
               onTap: () {
                 setState(() {
-                  isInSubs = true;
+                  isInSubs = false;
                 });
               },
               child: Image.asset(
@@ -421,8 +431,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                         context.read<PaymentCubit>().getPaymentHistory();
                       },
-                      child: rowItem(
-                          AppIcons.purplePocket, "Mening hisoblarim", false),
+                      child: const ProfileMenuItem(
+                        imagePath: AppIcons.purplePocket,
+                        text: "Mening hisoblarim",
+                        isRed: false,
+                        withNotification: false,
+                      ),
+                      // child: rowItem(
+                      //     AppIcons.purplePocket, "Mening hisoblarim", false),
                     ),
                     spacer(),
                     InkWell(
@@ -435,22 +451,43 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         );
                       },
-                      child: rowItem(AppIcons.edit, "Tahrirlash", false),
+                      child: const ProfileMenuItem(
+                        imagePath: AppIcons.edit,
+                        text: "Tahrirlash",
+                        isRed: false,
+                        withNotification: false,
+                      ),
                     ),
                     spacer(),
                     InkWell(
                       onTap: () {
                         Navigator.pushNamed(context, RouteNames.news);
                       },
-                      child: rowItem(AppIcons.gallery, "Yangiliklar", false),
+                      child: context.watch<NewsCubit>().shouldNotifyProfile
+                          ? const ProfileMenuItem(
+                              imagePath: AppIcons.gallery,
+                              text: "Yangiliklar",
+                              isRed: false,
+                              withNotification: true,
+                            )
+                          : const ProfileMenuItem(
+                              imagePath: AppIcons.gallery,
+                              text: "Yangiliklar",
+                              isRed: false,
+                              withNotification: false,
+                            ),
                     ),
                     spacer(),
                     InkWell(
                       onTap: () {
                         Navigator.pushNamed(context, RouteNames.subscripts);
                       },
-                      child: rowItem(
-                          AppIcons.purpleDone, "Mening obunalarim", false),
+                      child: const ProfileMenuItem(
+                        imagePath: AppIcons.purpleDone,
+                        text: "Mening obunalarim",
+                        isRed: false,
+                        withNotification: false,
+                      ),
                     ),
                     spacer(),
                     InkWell(
@@ -458,31 +495,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Navigator.pushNamed(context, RouteNames.group);
                         context.read<GroupCubit>().getGroupsByUserId();
                       },
-                      child: rowItem(
-                          AppIcons.purpleDone, "Mening guruhlarim", false),
+                      child: const ProfileMenuItem(
+                        imagePath: AppIcons.purpleDone,
+                        text: "Mening guruhlarim",
+                        isRed: false,
+                        withNotification: false,
+                      ),
                     ),
                     spacer(),
                     InkWell(
                       onTap: () {
                         context.read<PaymentCubit>().getCards();
                       },
-                      child:
-                          rowItem(AppIcons.payme, "Hisobni to’ldirish", false),
+                      child: const ProfileMenuItem(
+                        imagePath: AppIcons.payme,
+                        text: "Hisobni to’ldirish",
+                        isRed: false,
+                        withNotification: false,
+                      ),
                     ),
                     spacer(),
                     InkWell(
                       onTap: () {
                         alertBottomSheet(context, isLogout: true);
                       },
-                      child: rowItem(AppIcons.logout, "Tizimdan chiqish", true),
+                      child: const ProfileMenuItem(
+                        imagePath: AppIcons.logout,
+                        text: "Tizimdan chiqish",
+                        isRed: true,
+                        withNotification: false,
+                      ),
                     ),
                     spacer(),
                     InkWell(
                       onTap: () {
                         alertBottomSheet(context, isLogout: false);
                       },
-                      child:
-                          rowItem(AppIcons.delete, "Akauntni o`chirish", true),
+                      child: const ProfileMenuItem(
+                        imagePath: AppIcons.delete,
+                        text: "Akauntni o`chirish",
+                        isRed: true,
+                        withNotification: false,
+                      ),
                     ),
                   ]),
                 ),
@@ -588,7 +642,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget rowItem(String imagePath, String text, bool isRed) {
+  Widget rowItem({
+    required String imagePath,
+    required String text,
+    required bool isRed,
+    required bool withNotification,
+  }) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 7.h, horizontal: 16.w),
       child: Row(
