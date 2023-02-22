@@ -318,7 +318,10 @@ class _TestScreenState extends State<TestScreen> {
                                   fit: BoxFit.cover,
                                 ),
                               )
-                            : Padding(
+                            : const SizedBox.shrink(),
+                        Gap(8.h),
+                        (state.innerTest.content != null)
+                            ? Padding(
                                 padding: EdgeInsets.only(left: 10.w, top: 4.h),
                                 child: Text(
                                   state.innerTest.content!,
@@ -327,7 +330,8 @@ class _TestScreenState extends State<TestScreen> {
                                     color: Colors.black,
                                   ),
                                 ),
-                              ),
+                              )
+                            : const SizedBox.shrink(),
                         Gap(40.h),
                         Column(
                           children: [

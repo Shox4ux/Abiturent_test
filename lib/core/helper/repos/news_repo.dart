@@ -9,10 +9,8 @@ class NewsRepository {
     return await _dio.get("/news/index");
   }
 
-  Future<Response> getNewsWithPagination({
-    required int page,
-    required int perPage,
-  }) async {
+  Future<Response> getNewsWithPagination(
+      {required int page, required int perPage}) async {
     final Map<String, dynamic> params = {"page": page, "per-page": perPage};
     return await _dio.get("news/index", queryParameters: params);
   }

@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:test_app/core/domain/news_models/main_news_model.dart';
 import 'package:test_app/core/domain/news_models/news_model_notification.dart';
 import 'package:test_app/core/helper/database/hive/news_hive/model/hive_news_model.dart';
@@ -80,27 +81,36 @@ class NewsCubit extends Cubit<NewsState> {
     setListToShow.clear();
 
     for (var networkElement in networkList) {
-      storageList.every((storageElement) {
-        final b = storageElement.newsId == networkElement.id;
-        //----------- if(b) is true we update existing storage data----------//
-        if (b) {
+      for (var storageElement in storageList) {
+        // do {
+        //   shouldNotifyProfile = false;
+        //   setListToShow.add(
+        //       NewsWithNotificationModel(model: networkElement, isNew: false));
+        //   final m = NewsHiveModel(newsId: networkElement.id!, isNew: false);
+        //   _updateStorageData(model: m);
+        // } while (storageElement.newsId == networkElement.id);
+
+        // setListToShow
+        //     .add(NewsWithNotificationModel(model: networkElement, isNew: true));
+
+        if (storageElement.newsId == networkElement.id) {
           shouldNotifyProfile = false;
           setListToShow.add(
               NewsWithNotificationModel(model: networkElement, isNew: false));
           final m = NewsHiveModel(newsId: networkElement.id!, isNew: false);
           _updateStorageData(model: m);
         }
-        //------------else it maybe new data ,so we store it----------//
-        else {
-          shouldNotifyProfile = true;
-          setListToShow.add(
-              NewsWithNotificationModel(model: networkElement, isNew: true));
-          final m = NewsHiveModel(newsId: networkElement.id!, isNew: true);
-          _saveNewDataIntoStorage(model: m);
-        }
+      }
 
-        return b;
-      });
+      // for (var storageElement in storageList) {
+      //   if (storageElement.newsId == networkElement.id) {
+      //     shouldNotifyProfile = false;
+      //     setListToShow.add(
+      //         NewsWithNotificationModel(model: networkElement, isNew: false));
+      //     final m = NewsHiveModel(newsId: networkElement.id!, isNew: false);
+      //     _updateStorageData(model: m);
+      //   }
+      // }
     }
     emit(OnNewsReceived(
         newsList: setListToShow.toList(),
