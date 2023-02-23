@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
@@ -14,7 +13,7 @@ class AuthCubit extends Cubit<AuthState> {
   final _storage = AppStorage();
   final _urepo = UserRepo();
   AuthCubit() : super(AuthInitial()) {
-    getUserData();
+    // getUserData();
   }
   final userBlocked = 9;
 
@@ -24,11 +23,11 @@ class AuthCubit extends Cubit<AuthState> {
       final userId = await _storage.getUserId();
 
       if (userId == null) {
-        return;  
+        return;
       }
       final rowData = await _urepo.getUserProfile(userId);
       if (rowData.data == null) {
-        emit(OnLoginDataEmpty());
+        emit(OnLogOut());
         return;
       }
       final userData = UserInfo.fromJson(rowData.data);

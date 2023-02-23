@@ -12,21 +12,19 @@ class PinPutWidget extends StatefulWidget {
     this.selectedPinSize,
     this.style,
     this.unselectedPinSize,
-    required this.context,
   });
   final int lenth;
   final ValueChanged<String> onChanged;
   final TextStyle? style;
   final Size? unselectedPinSize;
   final Size? selectedPinSize;
-  final BuildContext context;
 
   @override
   State<PinPutWidget> createState() => _PinPutWidgetState();
 }
 
-class _PinPutWidgetState extends State<PinPutWidget> {
-  var focusNode = FocusNode();
+class _PinPutWidgetState extends State<PinPutWidget>
+    with WidgetsBindingObserver {
   String code = '';
   final _pinController = TextEditingController();
   late SmsUserConsent smsUserConsent;
@@ -34,6 +32,11 @@ class _PinPutWidgetState extends State<PinPutWidget> {
   @override
   void initState() {
     super.initState();
+
+    WidgetsBinding.instance.addObserver(this);
+
+//-----------------------sms auto fill code----------------------//
+
     // smsUserConsent = SmsUserConsent(
     //   phoneNumberListener: () => setState(() {}),
     //   smsListener: () => setState(
@@ -57,7 +60,11 @@ class _PinPutWidgetState extends State<PinPutWidget> {
     //   ),
     // );
     // smsUserConsent.requestSms();
+
+    //-------------------------------------------------------------//
   }
+
+  final focusNode = FocusNode();
 
   void changeCode(String value) {
     code = value;
@@ -66,11 +73,28 @@ class _PinPutWidgetState extends State<PinPutWidget> {
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.paused) {
+      print("Paused");
+    } else if (state == AppLifecycleState.resumed) {
+      setState(() {});
+      focusNode.requestFocus();
+      print("Resumed");
+    } else if (state == AppLifecycleState.detached) {
+      print("detached");
+    } else if (state == AppLifecycleState.inactive) {
+      print("inactive");
+    }
+  }
+
+  @override
   void dispose() {
-    focusNode.dispose();
     // smsUserConsent.dispose();
-    _pinController.dispose();
+
     super.dispose();
+    _pinController.dispose();
+    WidgetsBinding.instance.removeObserver(this);
   }
 
   @override
@@ -83,7 +107,12 @@ class _PinPutWidgetState extends State<PinPutWidget> {
 
     return GestureDetector(
       onTap: () {
-        focusNode.requestFocus();
+        try {
+          setState(() {});
+          focusNode.requestFocus();
+        } catch (e) {
+          print(e);
+        }
         print("focus");
       },
       child: Column(
@@ -119,8 +148,8 @@ class _PinPutWidgetState extends State<PinPutWidget> {
           SizedBox(
             height: 0,
             child: TextField(
-              controller: _pinController,
               autofocus: true,
+              controller: _pinController,
               onChanged: changeCode,
               focusNode: focusNode,
               maxLength: null,

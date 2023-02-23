@@ -31,32 +31,6 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen>
   var _pinCode = "";
   var _isTime = false;
   var _isFilled = false;
-
-  void _checkFields() {
-    if (_pinCode.length >= 6) {
-      setState(() {
-        _isFilled = true;
-      });
-    } else {
-      setState(() {
-        _isFilled = false;
-      });
-    }
-  }
-
-  void _checkTime(String time) {
-    if (time == "00:00") {
-      setState(() {
-        _isTime = true;
-        stopTimer();
-      });
-    } else {
-      setState(() {
-        _isTime = false;
-      });
-    }
-  }
-
   Timer? countdownTimer;
   Duration myDuration = const Duration(minutes: 3);
 
@@ -70,49 +44,6 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen>
   void dispose() {
     super.dispose();
     countdownTimer!.cancel();
-  }
-
-  void startTimer() {
-    countdownTimer =
-        Timer.periodic(const Duration(seconds: 1), (_) => setCountDown());
-  }
-
-  // Step 4
-  void stopTimer() {
-    if (countdownTimer != null) {
-      setState(() {
-        countdownTimer!.cancel();
-      });
-    }
-  }
-
-  // Step 5
-  void resetTimer() {
-    stopTimer();
-    setState(() => myDuration = const Duration(minutes: 3));
-  }
-
-  // Step 6
-  void setCountDown() {
-    setState(() {
-      const reduceSecondsBy = 1;
-      final seconds = myDuration.inSeconds - reduceSecondsBy;
-      if (seconds < 0) {
-        countdownTimer!.cancel();
-      } else {
-        myDuration = Duration(seconds: seconds);
-      }
-    });
-  }
-
-  void sendMessage() {
-    final phoneNumber = '998${widget.phone}';
-    final id = widget.id;
-    if (widget.fromWhere == RouteNames.forgetPassword) {
-      context.read<AuthCubit>().checkResetPassword(id, phoneNumber, _pinCode);
-    } else {
-      context.read<AuthCubit>().checkSmsCode(id, phoneNumber, _pinCode);
-    }
   }
 
   @override
@@ -158,7 +89,7 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen>
                   CustomSimpleAppBar(
                     isIcon: false,
                     isSimple: true,
-                    titleText: "o`quvchini tasdiqlash",
+                    titleText: "O`quvchini tasdiqlash",
                     routeText: "routeText",
                     style: AppStyles.introButtonText.copyWith(
                       color: AppColors.titleColor,
@@ -172,12 +103,11 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen>
                   ),
                   Gap(12.h),
                   PinPutWidget(
-                    context: context,
-                    lenth: 6,
                     onChanged: (value) {
                       _pinCode = value;
                       _checkFields();
                     },
+                    lenth: 6,
                   ),
                   Gap(15.h),
                   Text(
@@ -256,5 +186,73 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen>
         ),
       ),
     );
+  }
+
+  void _checkFields() {
+    if (_pinCode.length >= 6) {
+      setState(() {
+        _isFilled = true;
+      });
+    } else {
+      setState(() {
+        _isFilled = false;
+      });
+    }
+  }
+
+  void _checkTime(String time) {
+    if (time == "00:00") {
+      setState(() {
+        _isTime = true;
+        stopTimer();
+      });
+    } else {
+      setState(() {
+        _isTime = false;
+      });
+    }
+  }
+
+  void startTimer() {
+    countdownTimer =
+        Timer.periodic(const Duration(seconds: 1), (_) => setCountDown());
+  }
+
+  // Step 4
+  void stopTimer() {
+    if (countdownTimer != null) {
+      setState(() {
+        countdownTimer!.cancel();
+      });
+    }
+  }
+
+  // Step 5
+  void resetTimer() {
+    stopTimer();
+    setState(() => myDuration = const Duration(minutes: 3));
+  }
+
+  // Step 6
+  void setCountDown() {
+    setState(() {
+      const reduceSecondsBy = 1;
+      final seconds = myDuration.inSeconds - reduceSecondsBy;
+      if (seconds < 0) {
+        countdownTimer!.cancel();
+      } else {
+        myDuration = Duration(seconds: seconds);
+      }
+    });
+  }
+
+  void sendMessage() {
+    final phoneNumber = '998${widget.phone}';
+    final id = widget.id;
+    if (widget.fromWhere == RouteNames.forgetPassword) {
+      context.read<AuthCubit>().checkResetPassword(id, phoneNumber, _pinCode);
+    } else {
+      context.read<AuthCubit>().checkSmsCode(id, phoneNumber, _pinCode);
+    }
   }
 }

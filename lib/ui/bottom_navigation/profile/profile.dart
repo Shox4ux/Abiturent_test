@@ -53,6 +53,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     isStats = true;
     super.initState();
+    context.read<AuthCubit>().getUserData();
   }
 
   @override

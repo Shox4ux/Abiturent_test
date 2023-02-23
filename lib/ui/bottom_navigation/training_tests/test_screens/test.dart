@@ -332,7 +332,7 @@ class _TestScreenState extends State<TestScreen> {
                                 ),
                               )
                             : const SizedBox.shrink(),
-                        Gap(40.h),
+                        Gap(100.h),
                         Column(
                           children: [
                             for (var i = 0;
@@ -354,6 +354,7 @@ class _TestScreenState extends State<TestScreen> {
                           ],
                         ),
                       ]),
+                  Gap(40.h),
                   _selectedAnswerIndex != null
                       ? Padding(
                           padding: EdgeInsets.only(bottom: 24.h),
