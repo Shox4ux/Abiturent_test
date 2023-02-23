@@ -315,7 +315,7 @@ class _TestScreenState extends State<TestScreen> {
                                 ),
                                 child: Image.network(
                                   state.innerTest.image ?? "",
-                                  fit: BoxFit.cover,
+                                  fit: BoxFit.contain,
                                 ),
                               )
                             : const SizedBox.shrink(),

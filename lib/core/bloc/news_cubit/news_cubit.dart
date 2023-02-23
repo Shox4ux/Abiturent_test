@@ -80,41 +80,31 @@ class NewsCubit extends Cubit<NewsState> {
       List<MainNewsModel> networkList, List<NewsHiveModel> storageList) async {
     setListToShow.clear();
 
-    for (var networkElement in networkList) {
-      for (var storageElement in storageList) {
-        // do {
-        //   shouldNotifyProfile = false;
-        //   setListToShow.add(
-        //       NewsWithNotificationModel(model: networkElement, isNew: false));
-        //   final m = NewsHiveModel(newsId: networkElement.id!, isNew: false);
-        //   _updateStorageData(model: m);
-        // } while (storageElement.newsId == networkElement.id);
+    for (int i = 0; i < networkList.length; i++) {
+      for (int j = 0; j < storageList.length; j++) {
+        print(j);
+      }
+      print(i);
+    }
 
-        // setListToShow
-        //     .add(NewsWithNotificationModel(model: networkElement, isNew: true));
-
-        if (storageElement.newsId == networkElement.id) {
+    for (int i = 0; i < networkList.length; i++) {
+      for (int j = 0; j < storageList.length; j++) {
+        if (networkList[i].id == storageList[j].newsId) {
           shouldNotifyProfile = false;
+
           setListToShow.add(
-              NewsWithNotificationModel(model: networkElement, isNew: false));
-          final m = NewsHiveModel(newsId: networkElement.id!, isNew: false);
+              NewsWithNotificationModel(model: networkList[i], isNew: false));
+
+          final m = NewsHiveModel(newsId: networkList[i].id!, isNew: false);
           _updateStorageData(model: m);
         }
       }
-
-      // for (var storageElement in storageList) {
-      //   if (storageElement.newsId == networkElement.id) {
-      //     shouldNotifyProfile = false;
-      //     setListToShow.add(
-      //         NewsWithNotificationModel(model: networkElement, isNew: false));
-      //     final m = NewsHiveModel(newsId: networkElement.id!, isNew: false);
-      //     _updateStorageData(model: m);
-      //   }
-      // }
     }
+
     emit(OnNewsReceived(
-        newsList: setListToShow.toList(),
-        shouldNotifyProfile: shouldNotifyProfile));
+      newsList: setListToShow.toList(),
+      shouldNotifyProfile: shouldNotifyProfile,
+    ));
   }
 
   void markAllNewsAsRead({
