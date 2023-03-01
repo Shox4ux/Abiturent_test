@@ -26,13 +26,13 @@ enum TestVertions {
 
 enum ImageEnum {
   bronze(
-    AppIcons.bronze,
+    AppIcons.bronze
   ),
   silver(
-    AppIcons.silver,
+    AppIcons.silver
   ),
   gold(
-    AppIcons.gold,
+    AppIcons.gold
   );
 
   final String iconPath;

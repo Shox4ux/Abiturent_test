@@ -115,39 +115,15 @@ class _PinPutWidgetState extends State<PinPutWidget>
         }
         print("focus");
       },
-      child: Column(
+      child: Stack(
         children: [
-          Material(
-            child: SizedBox(
-              height: 40.h,
-              child: Row(
-                children: [
-                  for (var i = 0; i < widget.lenth; i++)
-                    Row(
-                      children: [
-                        (code.length > i)
-                            ? Text(
-                                code[i],
-                                style: style,
-                              )
-                            : Container(
-                                height: 16.h,
-                                width: 16.h,
-                                decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: AppColors.gray,
-                                ),
-                              ),
-                        SizedBox(width: 16.w),
-                      ],
-                    )
-                ],
-              ),
-            ),
-          ),
           SizedBox(
-            height: 0,
+            height: 50.h,
+            width: double.maxFinite,
             child: TextField(
+              enableInteractiveSelection: false,
+              cursorWidth: 0,
+              cursorHeight: 0,
               autofocus: true,
               controller: _pinController,
               onChanged: changeCode,
@@ -162,7 +138,33 @@ class _PinPutWidgetState extends State<PinPutWidget>
                 border: InputBorder.none,
               ),
             ),
-          )
+          ),
+          SizedBox(
+            height: 40.h,
+            child: Row(
+              children: [
+                for (var i = 0; i < widget.lenth; i++)
+                  Row(
+                    children: [
+                      (code.length > i)
+                          ? Text(
+                              code[i],
+                              style: style,
+                            )
+                          : Container(
+                              height: 16.h,
+                              width: 16.h,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: AppColors.gray,
+                              ),
+                            ),
+                      SizedBox(width: 16.w),
+                    ],
+                  )
+              ],
+            ),
+          ),
         ],
       ),
     );

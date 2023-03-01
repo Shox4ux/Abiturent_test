@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:test_app/core/domain/news_models/main_news_model.dart';
 import 'package:test_app/core/domain/news_models/news_model_notification.dart';
 import 'package:test_app/core/helper/database/hive/news_hive/model/hive_news_model.dart';
@@ -77,28 +76,41 @@ class NewsCubit extends Cubit<NewsState> {
   }
 
   void _onStorageIsNotEmpty(
-      List<MainNewsModel> networkList, List<NewsHiveModel> storageList) async {
+    List<MainNewsModel> networkList,
+    List<NewsHiveModel> storageList,
+  ) async {
+    //-------prepare to begin operation------------\\
     setListToShow.clear();
+    List<NewsWithNotificationModel> newData = [];
+    List<NewsWithNotificationModel> oldData = [];
 
-    for (int i = 0; i < networkList.length; i++) {
-      for (int j = 0; j < storageList.length; j++) {
-        print(j);
-      }
-      print(i);
+    for (MainNewsModel element in networkList) {
+      newData.add(NewsWithNotificationModel(model: element, isNew: true));
     }
 
+    //-----------------filtering old and new data-----------------------\\
     for (int i = 0; i < networkList.length; i++) {
       for (int j = 0; j < storageList.length; j++) {
         if (networkList[i].id == storageList[j].newsId) {
-          shouldNotifyProfile = false;
-
-          setListToShow.add(
+          oldData.add(
               NewsWithNotificationModel(model: networkList[i], isNew: false));
-
-          final m = NewsHiveModel(newsId: networkList[i].id!, isNew: false);
-          _updateStorageData(model: m);
+          newData.removeWhere(
+              (element) => element.model.id == storageList[j].newsId);
         }
       }
+    }
+    //-----------------adding old and new data-----------------------\\
+    setListToShow.addAll(newData);
+    setListToShow.addAll(oldData);
+    if (newData.isNotEmpty) {
+      shouldNotifyProfile = true;
+    } else {
+      shouldNotifyProfile = false;
+    }
+    //---------------------storing new data into storage-----------\\
+    for (NewsWithNotificationModel element in newData) {
+      final m = NewsHiveModel(newsId: element.model.id!, isNew: false);
+      _updateStorageData(model: m);
     }
 
     emit(OnNewsReceived(
