@@ -83,7 +83,7 @@ class _InsideNewsScreenState extends State<InsideNewsScreen> {
                             widget.model.model.title ?? "",
                             style: AppStyles.subtitleTextStyle.copyWith(
                               color: AppColors.mainColor,
-                              fontSize: 12.sp,
+                              fontSize: 14.sp,
                               fontWeight: FontWeight.w400,
                             ),
                           ),
@@ -97,7 +97,7 @@ class _InsideNewsScreenState extends State<InsideNewsScreen> {
                           widget.model.model.createdText ?? "",
                           style: AppStyles.subtitleTextStyle.copyWith(
                             color: AppColors.smsVerColor,
-                            fontSize: 10.sp,
+                            fontSize: 12.sp,
                           ),
                         )
                       ],
@@ -105,7 +105,6 @@ class _InsideNewsScreenState extends State<InsideNewsScreen> {
                     Container(
                       padding: EdgeInsets.symmetric(
                         vertical: 13.h,
-                        horizontal: 23.w,
                       ),
                       height: 388.h,
                       width: size.width,
@@ -141,8 +140,9 @@ class _InsideNewsScreenState extends State<InsideNewsScreen> {
                           Text(
                             widget.model.model.short ?? "",
                             style: AppStyles.introButtonText.copyWith(
-                              fontWeight: FontWeight.w300,
-                              fontSize: 11.sp,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                              fontSize: 15.sp,
                             ),
                           ),
                           Gap(10.h),
@@ -151,7 +151,7 @@ class _InsideNewsScreenState extends State<InsideNewsScreen> {
                               widget.model.model.content ?? "",
                               style: AppStyles.introButtonText.copyWith(
                                   fontWeight: FontWeight.w300,
-                                  fontSize: 11.sp,
+                                  fontSize: 14.sp,
                                   overflow: TextOverflow.visible),
                             ),
                           ),
